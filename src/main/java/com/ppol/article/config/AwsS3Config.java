@@ -11,10 +11,15 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 	아마존 S3 파일 서버를 사용하기 위한 Config Class
+ */
 @Slf4j
 @Configuration
 public class AwsS3Config {
-	@Value("${cloud.aws.credentials.access-key}") // application.yml 에 명시한 내용
+
+
+	@Value("${cloud.aws.credentials.access-key}")
 	private String accessKey;
 
 	@Value("${cloud.aws.credentials.secret-key}")

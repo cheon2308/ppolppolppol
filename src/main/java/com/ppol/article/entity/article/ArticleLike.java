@@ -17,6 +17,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 	사용자와 게시글의 좋아요 관계를 나타내는 엔티티
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,21 +32,26 @@ public class ArticleLike extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// 사용자
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
+	// 대상 게시글
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Article article;
 
+	// 좋아요 여부
 	private Boolean isLike;
 
+	// 초기 생성시 isLike 값을 따로 지정해주지 않아도 true로 설정되도록 PrePersist를 설정
 	@PrePersist
 	public void prePersist() {
 		this.isLike = this.isLike == null || this.isLike;
 	}
 
+	// 좋아요 여부를 업데이트 하는 메서드
 	public void update() {
 		this.isLike = !this.isLike;
 	}

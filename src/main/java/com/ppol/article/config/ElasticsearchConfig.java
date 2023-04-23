@@ -8,9 +8,11 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 import lombok.NonNull;
 
+/**
+ * 	엘라스틱서치 Config Class
+ */
 @Configuration
 @EnableElasticsearchRepositories(basePackages = "com.ppol.article.repository.elasticsearch")
-// 이후 ElasticSearch repository 폴더 경로 넣을 것
 public class ElasticsearchConfig extends ElasticsearchConfiguration {
 
 	@Value("${elasticsearch.host}")

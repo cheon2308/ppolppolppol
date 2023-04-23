@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ppol.article.util.constatnt.classes.ArticleConstants;
 import com.ppol.article.util.constatnt.enums.OpenStatus;
 
 import jakarta.validation.constraints.NotNull;

@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.ppol.article.exception.exception.EnumConvertException;
 import com.ppol.article.util.constatnt.enums.global.BasicEnum;
 
-/*
-	특정 컨텐츠에 대한 공개 여부
-	Public : 공개
-	Private : 비공개
+/**
+ * 	특정 컨텐츠에 대한 공개 여부
+ * 	PUBLIC : 공개
+ * 	PRIVATE : 비공개
  */
 public enum OpenStatus implements BasicEnum {
 

@@ -1,7 +1,5 @@
 package com.ppol.article.dto.request;
 
-import com.ppol.article.util.constatnt.classes.ArticleConstants;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

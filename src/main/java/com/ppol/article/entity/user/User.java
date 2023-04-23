@@ -16,6 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 	사용자 정보 엔티티
+ * 	게시글 부분에서 필요한 정보만 사용한다.
+ */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,16 +33,21 @@ public class User extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	// 사용자 이름/닉네임 정보
 	@NotNull
 	@Column(length = 16, unique = true)
 	private String username;
 
+	// 사용자 프로필 이미지 경로
 	private String image;
 
+	// 사용자 소개 정보 (최대 50자)
 	@Column(length = 50)
 	private String intro;
 
+	// 사용자 전화번호 정보
 	private String phone;
 
+	// 사용자 상태 (1인 경우 삭제된 상태)
 	private int state;
 }

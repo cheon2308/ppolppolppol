@@ -9,6 +9,10 @@ import com.ppol.article.exception.exception.EnumConvertException;
  */
 public class CommonEnumValueConverter {
 
+	/**
+	 *	target enum의 value들을 돌면서 code에 해당하는 enum을 찾아서 반환한다.
+	 *	이때	비어있는 code를 허용하지 않는다.
+	 */
 	public static <T extends Enum<T> & BasicEnum> T ofCode(Class<T> enumClass, String code) {
 
 		if(code.isBlank()) {
@@ -21,6 +25,10 @@ public class CommonEnumValueConverter {
 			.orElseThrow(() -> new EnumConvertException(enumClass.getName(), code));
 	}
 
+	/**
+	 *	각 enum의 getCode 메서드를 활용한다.
+	 *	이때 null을 허용하지 않는다.
+	 */
 	public static <T extends Enum<T> & BasicEnum> String toCode(T enumValue) {
 
 		if(enumValue == null) {

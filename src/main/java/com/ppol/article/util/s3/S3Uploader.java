@@ -19,18 +19,27 @@ import com.ppol.article.exception.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 	아마존 S3 서버에 파일을 업로드, 삭제 기능을 하는 Util Class
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class S3Uploader {
+
 	private final AmazonS3Client amazonS3Client;
 
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+	/**
+	 *	S3 서버에 파일을 업로드하고 해당 파일의 경로(url)을 리턴하는 메서드
+	 */
 	public String upload(MultipartFile uploadFile) {
 		String ext = getExt(uploadFile);
 
+		// 업로드 파일 형식 체크 및 예외처리
+		// TODO image 파일 뿐 아니라 3D 에셋의 경우는?
 		if (uploadFile.getContentType() == null || !uploadFile.getContentType().contains("image")) {
 			throw new S3Exception("유효하지 않은 파일입니다.");
 		}
@@ -83,5 +92,3 @@ public class S3Uploader {
 		return imgFile.getOriginalFilename().substring(pos + 1);
 	}
 }
-
-

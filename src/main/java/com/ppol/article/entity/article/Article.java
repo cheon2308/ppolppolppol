@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.annotations.Where;
 
+import com.ppol.article.entity.global.BaseArticle;
 import com.ppol.article.entity.global.BaseEntity;
 import com.ppol.article.entity.user.User;
 import com.ppol.article.util.constatnt.enums.OpenStatus;
@@ -26,40 +27,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 	서비스의 게시글/피드를 나타내는 엔티티
+ */
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
 @Entity
 @Where(clause = "state = 0")
-public class Article extends BaseEntity {
+public class Article extends BaseArticle {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@NotNull
-	@Column(length = 2000)
-	private String content;
-
-	@ElementCollection
-	private List<String> imageList;
-
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "writer")
-	private User writer;
-
+	// 게시글의 공개여부 (PUBLIC, PRIVATE)
 	@Convert(converter = OpenStatusConverter.class)
 	private OpenStatus openStatus;
 
-	private int likeCount;
+	// Builder
+	@Builder
+	public Article(Long id, String content, List<String> imageList, User writer, int likeCount,
+		int state, OpenStatus openStatus) {
 
-	private int state;
+		// 부모 생성자
+		super(id, content, imageList, writer, likeCount, state);
 
-	public void delete() {
-		this.state = 1;
+		// Article 변수들
+		this.openStatus = openStatus;
 	}
 
 	public void updateOpenStatus(OpenStatus openStatus) {

@@ -2,7 +2,6 @@ package com.ppol.article.dto.request;
 
 import java.util.List;
 
-import com.ppol.article.util.constatnt.classes.ArticleConstants;
 import com.ppol.article.util.constatnt.enums.OpenStatus;
 
 import jakarta.validation.constraints.NotNull;

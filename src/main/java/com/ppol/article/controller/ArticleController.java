@@ -42,7 +42,7 @@ public class ArticleController {
 	private final CommentSaveService commentSaveService;
 	private final UserInteractionService userInteractionService;
 
-	// 게시글 불러오기
+	// 게시글 목록 불러오기
 	@GetMapping
 	public ResponseEntity<?> readArticleList(@RequestParam int size, @RequestParam LocalDateTime timestamp) {
 
@@ -52,6 +52,7 @@ public class ArticleController {
 		return ResponseBuilder.ok(returnObject);
 	}
 
+	// 게시글 상세 정보 불러오기
 	@GetMapping("/{articleId}")
 	public ResponseEntity<?> readArticle(@PathVariable Long articleId) {
 
@@ -61,6 +62,7 @@ public class ArticleController {
 		return ResponseBuilder.ok(returnObject);
 	}
 
+	// 게시글 작성하기
 	@PostMapping
 	public ResponseEntity<?> createArticle(ArticleCreateDto articleCreateDto) {
 
@@ -70,6 +72,7 @@ public class ArticleController {
 		return ResponseBuilder.created(returnObject);
 	}
 
+	// 게시글 수정하기
 	@PutMapping("/{articleId}")
 	public ResponseEntity<?> updateArticle(@PathVariable Long articleId,
 		@RequestBody ArticleUpdateDto articleUpdateDto) {
@@ -80,6 +83,7 @@ public class ArticleController {
 		return ResponseBuilder.created(returnObject);
 	}
 
+	// 게시글 삭제하기
 	@DeleteMapping("/{articleId}")
 	public ResponseEntity<?> deleteArticle(@PathVariable Long articleId) {
 
@@ -89,6 +93,7 @@ public class ArticleController {
 		return ResponseBuilder.ok(returnObject);
 	}
 
+	// 게시글의 댓글 목록 불러오기
 	@GetMapping("/{articleId}/comments")
 	public ResponseEntity<?> readCommentList(@PathVariable Long articleId, Pageable pageable) {
 
@@ -99,6 +104,7 @@ public class ArticleController {
 
 	}
 
+	// 게시글에 댓글 추가하기
 	@PostMapping("/{articleId}/comments")
 	public ResponseEntity<?> createComment(@PathVariable Long articleId,
 		@RequestBody CommentCreateDto commentCreateDto) {
@@ -109,6 +115,7 @@ public class ArticleController {
 		return ResponseBuilder.created(returnObject);
 	}
 
+	// 댓글 수정하기
 	@PutMapping("/{articleId}/comments/{commentId}")
 	public ResponseEntity<?> updateComment(@PathVariable Long articleId, @PathVariable Long commentId,
 		@RequestBody CommentUpdateDto commentUpdateDto) {
@@ -119,6 +126,7 @@ public class ArticleController {
 		return ResponseBuilder.created(returnObject);
 	}
 
+	// 댓글 삭제하기
 	@DeleteMapping("/{articleId}/comments/{commentId}")
 	public ResponseEntity<?> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
 
@@ -128,6 +136,7 @@ public class ArticleController {
 		return ResponseBuilder.created(returnObject);
 	}
 
+	// 게시글 좋아요/취소
 	@PutMapping("/{articleId}/like")
 	public ResponseEntity<?> updateArticleLike(@PathVariable Long articleId) {
 
@@ -136,6 +145,7 @@ public class ArticleController {
 		return ResponseBuilder.ok("");
 	}
 
+	// 게시글 북마크/취소
 	@PutMapping("/{articleId}/bookmark")
 	public ResponseEntity<?> updateArticleBookmark(@PathVariable Long articleId) {
 
@@ -144,6 +154,7 @@ public class ArticleController {
 		return ResponseBuilder.ok("");
 	}
 
+	// 댓글 좋아요/취소
 	@PutMapping("/{articleId}/comments/{commentId}/like")
 	public ResponseEntity<?> updateCommentLike(@PathVariable Long articleId, @PathVariable Long commentId) {
 

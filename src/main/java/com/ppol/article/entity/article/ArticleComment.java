@@ -1,5 +1,6 @@
 package com.ppol.article.entity.article;
 
+import com.ppol.article.entity.global.BaseComment;
 import com.ppol.article.entity.global.BaseEntity;
 import com.ppol.article.entity.user.User;
 
@@ -18,41 +19,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * 	서비스의 게시글/피드의 댓글을 나타내는 엔티티
+ */
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @ToString
 @Entity
-public class ArticleComment extends BaseEntity {
+public class ArticleComment extends BaseComment {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	@NotNull
-	@Column(length = 500)
-	private String content;
-
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "writer")
-	private User writer;
-
+	// 댓글이 달린 게시글
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Article article;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "parent")
-	private ArticleComment parent;
+	// Builder
+	@Builder
+	public ArticleComment(Long id, String content, User writer, Article article, long parent, int likeCount,
+		int state) {
 
-	private int likeCount;
+		// 부모 생성자
+		super(id, content, writer, parent, likeCount, state);
 
-	private int state;
-
-	public void delete() {
-		this.state = 1;
+		// ArticleComment 변수들
+		this.article = article;
 	}
 
 	public void updateContent(String content) {
