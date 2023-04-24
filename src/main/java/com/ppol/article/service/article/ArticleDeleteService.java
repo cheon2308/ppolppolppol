@@ -2,8 +2,8 @@ package com.ppol.article.service.article;
 
 import org.springframework.stereotype.Service;
 
-import com.ppol.article.repository.jpa.ArticleRepository;
-import com.ppol.article.service.ArticleElasticService;
+import com.ppol.article.entity.article.Article;
+import com.ppol.article.service.other.ArticleElasticService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ArticleDeleteService {
 
-	// repositories
-	private final ArticleRepository articleRepository;
-
 	// services
 	private final ArticleReadService articleReadService;
 	private final ArticleElasticService articleElasticService;
@@ -29,9 +26,9 @@ public class ArticleDeleteService {
 	 */
 	@Transactional
 	public void articleDelete(Long articleId, Long userId) {
-		articleReadService.getArticleWithAuth(articleId, userId);
+		Article article = articleReadService.getArticleWithAuth(articleId, userId);
 
-		articleRepository.deleteById(articleId);
+		article.delete();
 
 		articleElasticService.deleteArticleElasticsearch(articleId);
 	}

@@ -12,7 +12,7 @@ import com.ppol.article.entity.article.Article;
 import com.ppol.article.entity.user.User;
 import com.ppol.article.exception.exception.ImageCountException;
 import com.ppol.article.repository.jpa.ArticleRepository;
-import com.ppol.article.service.ArticleElasticService;
+import com.ppol.article.service.other.ArticleElasticService;
 import com.ppol.article.service.user.UserReadService;
 import com.ppol.article.util.constatnt.classes.ValidationConstants;
 import com.ppol.article.util.s3.S3Uploader;

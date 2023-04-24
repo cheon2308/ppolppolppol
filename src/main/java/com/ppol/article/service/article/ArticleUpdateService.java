@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.ppol.article.dto.request.ArticleUpdateDto;
 import com.ppol.article.dto.response.ArticleDetailDto;
 import com.ppol.article.entity.article.Article;
-import com.ppol.article.service.ArticleElasticService;
+import com.ppol.article.service.other.ArticleElasticService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

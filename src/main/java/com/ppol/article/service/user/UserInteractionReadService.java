@@ -17,12 +17,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 게시글/댓글에 대한 사용자 상호작용 기능들을 담당하는 서비스
+ * 게시글/댓글에 대한 사용자 상호작용 불러오기 기능들을 담당하는 서비스
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserInteractionService {
+public class UserInteractionReadService {
 
 	// repositories
 	private final ArticleLikeRepository articleLikeRepository;

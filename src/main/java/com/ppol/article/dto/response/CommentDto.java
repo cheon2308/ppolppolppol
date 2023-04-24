@@ -24,6 +24,8 @@ public class CommentDto {
 
 	private Long parent;
 
+	private CommentDto comment;
+
 	private UserDto writer;
 
 	private LocalDateTime createdAt;

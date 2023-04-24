@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 import com.ppol.article.dto.response.CommentDto;
 import com.ppol.article.dto.response.UserDto;
 import com.ppol.article.entity.article.ArticleComment;
+import com.ppol.article.exception.exception.ForbiddenException;
 import com.ppol.article.repository.jpa.ArticleCommentRepository;
-import com.ppol.article.service.user.UserInteractionService;
+import com.ppol.article.service.user.UserInteractionReadService;
 import com.ppol.article.util.DateTimeUtils;
 import com.ppol.article.util.constatnt.enums.CommentOrder;
 
@@ -33,7 +34,7 @@ public class CommentReadService {
 	private final ArticleCommentRepository commentRepository;
 
 	// services
-	private final UserInteractionService userInteractionService;
+	private final UserInteractionReadService userInteractionReadService;
 
 	// others
 
@@ -55,13 +56,11 @@ public class CommentReadService {
 		Slice<ArticleComment> slice = switch (commentOrder) {
 			case LIKE ->
 				commentRepository.findByArticleOrderByLike(articleId, likeCount, timestamp, lastCommentId, pageable);
-			case NEW ->
-				commentRepository.findByArticleOrderByCreatedAtDESC(articleId, timestamp, pageable);
-			case OLD ->
-				commentRepository.findByArticleOrderByCreatedAtASC(articleId, timestamp, pageable);
+			case NEW -> commentRepository.findByArticleOrderByCreatedAtDESC(articleId, timestamp, pageable);
+			case OLD -> commentRepository.findByArticleOrderByCreatedAtASC(articleId, timestamp, pageable);
 		};
 
-		List<CommentDto> content = slice.stream().map((comment -> commentMapping(comment, userId))).toList();
+		List<CommentDto> content = slice.stream().map((comment -> commentMappingWithPresent(comment, userId))).toList();
 
 		return new SliceImpl<>(content, slice.getPageable(), slice.hasNext());
 	}
@@ -114,8 +113,37 @@ public class CommentReadService {
 		return comment == null ? null : commentMapping(comment, userId);
 	}
 
+	/**
+	 * DB로 부터 댓글 엔티티를 불러오는 메서드, 예외처리를 포함한다.
+	 */
 	public ArticleComment getArticleComment(Long commentId) {
 		return commentRepository.findById(commentId).orElseThrow(() -> new EntityNotFoundException("댓글"));
+	}
+
+	/**
+	 * 댓글 수정, 삭제 시 권한 체크를 포함하고 엔티티를 불러오는 메서드
+	 */
+	public ArticleComment getArticleCommentWithAuth(Long commentId, Long userId) {
+		ArticleComment comment = getArticleComment(commentId);
+
+		if (!comment.getWriter().getId().equals(userId)) {
+			throw new ForbiddenException("댓글 수정/삭제");
+		}
+
+		return comment;
+	}
+
+	/**
+	 * 댓글에 대표댓글 정보를 포함해서 DTO로 매핑하는 메서드
+	 */
+	public CommentDto commentMappingWithPresent(ArticleComment comment, Long userId) {
+
+		CommentDto commentDto = commentMapping(comment, userId);
+		commentDto.setComment(
+			getCommentPresentComment(comment.getArticle().getId(), comment.getId(), comment.getWriter().getId(),
+				userId));
+
+		return commentDto;
 	}
 
 	/**
@@ -128,7 +156,7 @@ public class CommentReadService {
 			.articleId(comment.getArticle().getId())
 			.writer(UserDto.of(comment.getWriter()))
 			.parent(comment.getParent())
-			.isLike(userInteractionService.getArticleCommentLike(userId, comment.getId()))
+			.isLike(userInteractionReadService.getArticleCommentLike(userId, comment.getId()))
 			.createString(DateTimeUtils.getString(comment.getCreatedAt()))
 			.createdAt(comment.getCreatedAt())
 			.build();

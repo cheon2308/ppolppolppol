@@ -23,9 +23,12 @@ import com.ppol.article.service.article.ArticleDeleteService;
 import com.ppol.article.service.article.ArticleReadService;
 import com.ppol.article.service.article.ArticleSaveService;
 import com.ppol.article.service.article.ArticleUpdateService;
+import com.ppol.article.service.comment.CommentDeleteService;
 import com.ppol.article.service.comment.CommentReadService;
 import com.ppol.article.service.comment.CommentSaveService;
-import com.ppol.article.service.user.UserInteractionService;
+import com.ppol.article.service.comment.CommentUpdateService;
+import com.ppol.article.service.user.UserArticleReadService;
+import com.ppol.article.service.user.UserInteractionUpdateService;
 import com.ppol.article.util.constatnt.enums.CommentOrder;
 import com.ppol.article.util.request.RequestUtils;
 import com.ppol.article.util.response.ResponseBuilder;
@@ -42,13 +45,16 @@ public class ArticleController {
 	private final ArticleSaveService articleSaveService;
 	private final ArticleUpdateService articleUpdateService;
 	private final ArticleDeleteService articleDeleteService;
+	private final UserArticleReadService userArticleReadService;
 
 	// comment services
 	private final CommentReadService commentReadService;
 	private final CommentSaveService commentSaveService;
+	private final CommentUpdateService commentUpdateService;
+	private final CommentDeleteService commentDeleteService;
 
 	// user interaction service
-	private final UserInteractionService userInteractionService;
+	private final UserInteractionUpdateService userInteractionUpdateService;
 
 	// 게시글 목록 불러오기
 	@GetMapping
@@ -140,24 +146,24 @@ public class ArticleController {
 	}
 
 	// 댓글 수정하기
-	@PutMapping("/{articleId}/comments/{commentId}")
-	public ResponseEntity<?> updateComment(@PathVariable Long articleId, @PathVariable Long commentId,
+	@PutMapping("/comments/{commentId}")
+	public ResponseEntity<?> updateComment(@PathVariable Long commentId,
 		@RequestBody CommentUpdateDto commentUpdateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentDto returnObject = null;
+		CommentDto returnObject = commentUpdateService.commentUpdate(commentUpdateDto, commentId, userId);
 
 		return ResponseBuilder.created(returnObject);
 	}
 
 	// 댓글 삭제하기
-	@DeleteMapping("/{articleId}/comments/{commentId}")
-	public ResponseEntity<?> deleteComment(@PathVariable Long articleId, @PathVariable Long commentId) {
+	@DeleteMapping("/comments/{commentId}")
+	public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentDto returnObject = null;
+		commentDeleteService.commentDelete(commentId, userId);
 
-		return ResponseBuilder.created(returnObject);
+		return ResponseBuilder.created("");
 	}
 
 	// 게시글 좋아요/취소
@@ -165,6 +171,7 @@ public class ArticleController {
 	public ResponseEntity<?> updateArticleLike(@PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
+		userInteractionUpdateService.articleLikeUpdate(articleId, userId);
 
 		return ResponseBuilder.ok("");
 	}
@@ -174,16 +181,42 @@ public class ArticleController {
 	public ResponseEntity<?> updateArticleBookmark(@PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
+		userInteractionUpdateService.articleBookmarkUpdate(articleId, userId);
 
 		return ResponseBuilder.ok("");
 	}
 
 	// 댓글 좋아요/취소
-	@PutMapping("/{articleId}/comments/{commentId}/like")
-	public ResponseEntity<?> updateCommentLike(@PathVariable Long articleId, @PathVariable Long commentId) {
+	@PutMapping("/comments/{commentId}/like")
+	public ResponseEntity<?> updateCommentLike(@PathVariable Long commentId) {
 
 		Long userId = RequestUtils.getUserId();
+		userInteractionUpdateService.commentLikeUpdate(commentId, userId);
 
 		return ResponseBuilder.ok("");
+	}
+
+	// 특정 사용자의 작성 게시글 목록
+	@GetMapping("/users/{targetUserId}")
+	public ResponseEntity<?> readUserArticles(@PathVariable Long targetUserId,
+		@RequestParam(required = false) Long lastArticleId, @RequestParam(defaultValue = "10") int size) {
+
+		Long userId = RequestUtils.getUserId();
+		Slice<ArticleListDto> returnObject = userArticleReadService.userArticleListRead(targetUserId, userId,
+			lastArticleId, size);
+
+		return ResponseBuilder.ok(returnObject);
+	}
+
+	// 특정 사용자의 북마크한 게시글 목록
+	@GetMapping("/bookmarks")
+	public ResponseEntity<?> readBookmarkArticles(@RequestParam(required = false) Long lastArticleId,
+		@RequestParam(defaultValue = "10") int size) {
+
+		Long userId = RequestUtils.getUserId();
+		Slice<ArticleListDto> returnObject = userArticleReadService.bookmarkArticleListRead(userId, lastArticleId,
+			size);
+
+		return ResponseBuilder.ok(returnObject);
 	}
 }

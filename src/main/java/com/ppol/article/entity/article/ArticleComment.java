@@ -43,4 +43,12 @@ public class ArticleComment extends BaseComment {
 	public void updateContent(String content) {
 		this.content = content;
 	}
+
+	public void updateLikeCount(boolean isAdd) {
+		if (isAdd) {
+			likeCount++;
+		} else {
+			likeCount--;
+		}
+	}
 }

@@ -16,7 +16,7 @@ import com.ppol.article.entity.article.Article;
 import com.ppol.article.exception.exception.ForbiddenException;
 import com.ppol.article.repository.jpa.ArticleRepository;
 import com.ppol.article.service.comment.CommentReadService;
-import com.ppol.article.service.user.UserInteractionService;
+import com.ppol.article.service.user.UserInteractionReadService;
 import com.ppol.article.util.DateTimeUtils;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -36,23 +36,23 @@ public class ArticleReadService {
 	private final ArticleRepository articleRepository;
 
 	// services
-	private final UserInteractionService userInteractionService;
+	private final UserInteractionReadService userInteractionReadService;
 	private final CommentReadService commentReadService;
 
 	/**
 	 * 무한 스크롤 기능을 위해 timestamp 이전에 작성된 게시글들을 size 만큼 불러오는 메서드
 	 */
 	@Transactional
-	public Slice<ArticleListDto> findArticleList(Long userId, Long articleId, int size) {
+	public Slice<ArticleListDto> findArticleList(Long userId, Long lastArticleId, int size) {
 
-		Article article = articleId == null ? null : getArticle(articleId);
+		Article article =getArticlePermitNull(lastArticleId);
 
 		LocalDateTime timestamp = article == null ? LocalDateTime.now() : article.getCreatedAt();
-		articleId = articleId == null ? -1 : articleId;
+		lastArticleId = lastArticleId == null ? -1 : lastArticleId;
 
 		Pageable pageable = PageRequest.of(0, size);
 
-		Slice<Article> articleSlice = articleRepository.findArticlesByFollowedUsers(userId, timestamp, articleId,
+		Slice<Article> articleSlice = articleRepository.findArticlesByFollowedUsers(userId, timestamp, lastArticleId,
 			pageable);
 
 		List<ArticleListDto> contentList = articleSlice.stream().map(a -> articleListMapping(a, userId)).toList();
@@ -79,6 +79,13 @@ public class ArticleReadService {
 	}
 
 	/**
+	 * articleId가 null인 경우 null을 리턴하고 아니면 엔티티를 찾는 메서드
+	 */
+	public Article getArticlePermitNull(Long articleId) {
+		return articleId == null ? null : getArticle(articleId);
+	}
+
+	/**
 	 * 게시글 수정, 삭제 시 게시글을 불러올 때 사용자의 수정, 삭제 권한이 있는지 확인하는 메서드
 	 */
 	public Article getArticleWithAuth(Long articleId, Long userId) {
@@ -99,7 +106,7 @@ public class ArticleReadService {
 		return ArticleDetailDto.builder()
 			.articleId(article.getId())
 			.content(article.getContent())
-			.userInteraction(userInteractionService.getUserInteraction(userId, article))
+			.userInteraction(userInteractionReadService.getUserInteraction(userId, article))
 			.createString(DateTimeUtils.getString(article.getCreatedAt()))
 			.createdAt(article.getCreatedAt())
 			.imageList(article.getImageList())
@@ -116,7 +123,7 @@ public class ArticleReadService {
 		return ArticleListDto.builder()
 			.articleId(article.getId())
 			.content(article.getContent())
-			.userInteraction(userInteractionService.getUserInteraction(userId, article))
+			.userInteraction(userInteractionReadService.getUserInteraction(userId, article))
 			.createString(DateTimeUtils.getString(article.getCreatedAt()))
 			.createdAt(article.getCreatedAt())
 			.imageList(article.getImageList())

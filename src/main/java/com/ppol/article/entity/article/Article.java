@@ -5,30 +5,19 @@ import java.util.List;
 import org.hibernate.annotations.Where;
 
 import com.ppol.article.entity.global.BaseArticle;
-import com.ppol.article.entity.global.BaseEntity;
 import com.ppol.article.entity.user.User;
 import com.ppol.article.util.constatnt.enums.OpenStatus;
 import com.ppol.article.util.converter.OpenStatusConverter;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 	서비스의 게시글/피드를 나타내는 엔티티
+ * 서비스의 게시글/피드를 나타내는 엔티티
  */
 @Getter
 @NoArgsConstructor
@@ -62,7 +51,7 @@ public class Article extends BaseArticle {
 	}
 
 	public void updateLikeCount(boolean isAdd) {
-		if(isAdd) {
+		if (isAdd) {
 			likeCount++;
 		} else {
 			likeCount--;
