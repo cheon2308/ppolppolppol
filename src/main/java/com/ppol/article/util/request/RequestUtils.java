@@ -16,6 +16,10 @@ public class RequestUtils {
 		String userId = (String)RequestContextHolder.currentRequestAttributes()
 			.getAttribute("userId", RequestAttributes.SCOPE_REQUEST);
 
-		return userId == null ? null : Long.parseLong(userId);
+		if(userId == null) {
+			throw new RuntimeException();
+		}
+
+		return Long.parseLong(userId);
 	}
 }

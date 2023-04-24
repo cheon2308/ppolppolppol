@@ -2,10 +2,13 @@ package com.ppol.article.entity.global;
 
 
 
+import java.util.List;
+
 import com.ppol.article.entity.user.User;
 import com.ppol.article.util.constatnt.classes.ValidationConstants;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -45,8 +48,12 @@ public abstract class BaseComment extends BaseEntity {
 	@JoinColumn(name = "writer")
 	protected User writer;
 
-	// 댓글의 대댓글 ID (없는 경우 본인)
+	// 댓글의 대댓글 ID (없는 경우 NULL)
 	protected Long parent;
+
+	// 해당 댓글에 태그된 사용자 ID 리스트
+	@ElementCollection
+	protected List<Long> tagUserList;
 
 	// 댓글 좋아요 수
 	protected int likeCount;

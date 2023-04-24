@@ -1,5 +1,8 @@
 package com.ppol.article.dto.request;
 
+import com.ppol.article.util.constatnt.classes.ValidationConstants;
+import com.ppol.article.util.constatnt.classes.ValidationMessages;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -14,7 +17,6 @@ import lombok.ToString;
 public class CommentUpdateDto {
 
 	@NotNull(message = "댓글 내용을 입력해주세요.")
-	@Size(min = 1, max = ArticleConstants.MAX_COMMENT_SIZE, message = "댓글 내용은 최대 "
-		+ ArticleConstants.MAX_COMMENT_SIZE + "자 입니다.")
+	@Size(min = 1, max = ValidationConstants.COMMENT_CONTENT_MAX_SIZE, message = ValidationMessages.ARTICLE_SIZE_MSG)
 	private String content;
 }

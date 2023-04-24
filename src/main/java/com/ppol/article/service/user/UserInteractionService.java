@@ -1,4 +1,4 @@
-package com.ppol.article.service;
+package com.ppol.article.service.user;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,9 @@ import com.ppol.article.repository.jpa.FollowRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 게시글/댓글에 대한 사용자 상호작용 기능들을 담당하는 서비스
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -59,7 +62,7 @@ public class UserInteractionService {
 	}
 
 	public boolean getFollow(Long userId, Long target) {
-		Follow follow = followRepository.findByFollower_IdAndFollowing_Id(userId, target).orElse(null);
+		Follow follow = followRepository.findByFollower_IdAndFollowing_IdAndIsFollow(userId, target, true).orElse(null);
 
 		return follow != null;
 	}

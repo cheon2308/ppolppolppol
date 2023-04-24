@@ -42,4 +42,12 @@ public class Article {
 	// 검색 결과를 최신 순으로 정렬하기 위한 용도
 	@Field(type = FieldType.Date, format = {}, pattern = "uuuu:MM:dd HH:mm:ss")
 	private Date createdAt;
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
+
+	public void updateHashTags(List<String> hashTags) {
+		this.hashTags = hashTags;
+	}
 }

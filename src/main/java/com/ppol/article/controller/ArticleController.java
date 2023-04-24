@@ -1,8 +1,5 @@
 package com.ppol.article.controller;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,10 +19,14 @@ import com.ppol.article.dto.request.CommentUpdateDto;
 import com.ppol.article.dto.response.ArticleDetailDto;
 import com.ppol.article.dto.response.ArticleListDto;
 import com.ppol.article.dto.response.CommentDto;
-import com.ppol.article.service.ArticleReadService;
-import com.ppol.article.service.ArticleSaveService;
-import com.ppol.article.service.CommentSaveService;
-import com.ppol.article.service.UserInteractionService;
+import com.ppol.article.service.article.ArticleDeleteService;
+import com.ppol.article.service.article.ArticleReadService;
+import com.ppol.article.service.article.ArticleSaveService;
+import com.ppol.article.service.article.ArticleUpdateService;
+import com.ppol.article.service.comment.CommentReadService;
+import com.ppol.article.service.comment.CommentSaveService;
+import com.ppol.article.service.user.UserInteractionService;
+import com.ppol.article.util.constatnt.enums.CommentOrder;
 import com.ppol.article.util.request.RequestUtils;
 import com.ppol.article.util.response.ResponseBuilder;
 
@@ -36,18 +37,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ArticleController {
 
-	// services
+	// article services
 	private final ArticleReadService articleReadService;
 	private final ArticleSaveService articleSaveService;
+	private final ArticleUpdateService articleUpdateService;
+	private final ArticleDeleteService articleDeleteService;
+
+	// comment services
+	private final CommentReadService commentReadService;
 	private final CommentSaveService commentSaveService;
+
+	// user interaction service
 	private final UserInteractionService userInteractionService;
 
 	// 게시글 목록 불러오기
 	@GetMapping
-	public ResponseEntity<?> readArticleList(@RequestParam int size, @RequestParam LocalDateTime timestamp) {
+	public ResponseEntity<?> readArticleList(@RequestParam(defaultValue = "20") int size,
+		@RequestParam(required = false) Long lastArticleId) {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<ArticleListDto> returnObject = articleReadService.findArticleList(userId, timestamp, size);
+		Slice<ArticleListDto> returnObject = articleReadService.findArticleList(userId, lastArticleId, size);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -78,7 +87,7 @@ public class ArticleController {
 		@RequestBody ArticleUpdateDto articleUpdateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		ArticleDetailDto returnObject = null;
+		ArticleDetailDto returnObject = articleUpdateService.articleUpdate(articleUpdateDto, articleId, userId);
 
 		return ResponseBuilder.created(returnObject);
 	}
@@ -88,20 +97,35 @@ public class ArticleController {
 	public ResponseEntity<?> deleteArticle(@PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
-		ArticleDetailDto returnObject = null;
+		articleDeleteService.articleDelete(articleId, userId);
 
-		return ResponseBuilder.ok(returnObject);
+		return ResponseBuilder.ok("");
 	}
 
 	// 게시글의 댓글 목록 불러오기
 	@GetMapping("/{articleId}/comments")
-	public ResponseEntity<?> readCommentList(@PathVariable Long articleId, Pageable pageable) {
+	public ResponseEntity<?> readCommentList(@PathVariable Long articleId, @RequestParam(defaultValue = "20") int size,
+		@RequestParam(required = false) Long lastCommentId,
+		@RequestParam(defaultValue = "NEW") CommentOrder commentOrder) {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<CommentDto> returnObject = null;
+		Slice<CommentDto> returnObject = commentReadService.findCommentList(articleId, lastCommentId, size,
+			commentOrder, userId);
 
 		return ResponseBuilder.ok(returnObject);
+	}
 
+	// 게시글의 댓글의 대댓글 목록 불러오기
+	@GetMapping("/{articleId}/comments/{commentId}/reply")
+	public ResponseEntity<?> readCommentReplyList(@PathVariable Long articleId,
+		@RequestParam(defaultValue = "20") int size, @RequestParam(required = false) Long lastCommentId,
+		@PathVariable Long commentId) {
+
+		Long userId = RequestUtils.getUserId();
+		Slice<CommentDto> returnObject = commentReadService.findReplyList(articleId, commentId, size, lastCommentId,
+			userId);
+
+		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 게시글에 댓글 추가하기
@@ -110,7 +134,7 @@ public class ArticleController {
 		@RequestBody CommentCreateDto commentCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentDto returnObject = null;
+		CommentDto returnObject = commentSaveService.createComment(articleId, commentCreateDto, userId);
 
 		return ResponseBuilder.created(returnObject);
 	}

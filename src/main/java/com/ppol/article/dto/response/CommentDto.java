@@ -22,7 +22,7 @@ public class CommentDto {
 
 	private Long articleId;
 
-	private List<CommentDto> replyList;
+	private Long parent;
 
 	private UserDto writer;
 

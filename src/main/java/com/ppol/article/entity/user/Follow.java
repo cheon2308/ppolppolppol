@@ -28,7 +28,6 @@ import lombok.ToString;
 @Builder
 @ToString
 @Entity
-@Where(clause = "state = 0")
 public class Follow extends BaseEntity {
 
 	@Id

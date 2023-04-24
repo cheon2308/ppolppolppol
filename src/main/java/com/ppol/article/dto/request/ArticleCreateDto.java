@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ppol.article.util.constatnt.classes.ValidationConstants;
+import com.ppol.article.util.constatnt.classes.ValidationMessages;
 import com.ppol.article.util.constatnt.enums.OpenStatus;
 
 import jakarta.validation.constraints.NotNull;
@@ -20,8 +22,7 @@ import lombok.ToString;
 public class ArticleCreateDto {
 
 	@NotNull(message = "게시글 내용을 입력해주세요.")
-	@Size(min = 1, max = ArticleConstants.MAX_ARTICLE_SIZE, message = "게시글 내용은 최대 "
-		+ ArticleConstants.MAX_ARTICLE_SIZE + "자 입니다.")
+	@Size(min = 1, max = ValidationConstants.ARTICLE_CONTENT_MAX_SIZE, message = ValidationMessages.ARTICLE_SIZE_MSG)
 	private String content;
 
 	private List<MultipartFile> imageList;

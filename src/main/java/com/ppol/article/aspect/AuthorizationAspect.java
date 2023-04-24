@@ -25,7 +25,7 @@ public class AuthorizationAspect {
 
 		String userId = getUserIdFromAuthorization(accessToken);
 
-		RequestContextHolder.currentRequestAttributes().setAttribute(userId, userId, RequestAttributes.SCOPE_REQUEST);
+		RequestContextHolder.currentRequestAttributes().setAttribute("userId", userId, RequestAttributes.SCOPE_REQUEST);
 	}
 
 	// TODO 토큰을 가지고 userId를 가져오는 로직 필요, 다른 클래스로 분리 필요
