@@ -15,9 +15,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import com.ppol.message.document.Message;
+import com.ppol.message.document.mongodb.Message;
 import com.ppol.message.dto.response.MessageResponseDto;
-import com.ppol.message.util.constatnt.classes.MessageConstants;
+import com.ppol.message.util.constatnt.classes.ValidationConstants;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +30,15 @@ public class MessageReadService {
 	private final MongoTemplate mongoTemplate;
 	private final RedisTemplate<String, Object> redisTemplate;
 
-	public Slice<MessageResponseDto> findLastMessages(Long messageChannelId) {
+	public Slice<MessageResponseDto> findLastMessages(String messageChannelId) {
 
-		Pageable pageable = PageRequest.of(0, MessageConstants.CACHE_SIZE);
+		Pageable pageable = PageRequest.of(0, ValidationConstants.CACHE_SIZE);
 
 		return new SliceImpl<>(getLastMessages(messageChannelId).stream().map(MessageResponseDto::of).toList(),
 			pageable, true);
 	}
 
-	public Slice<MessageResponseDto> findPreviousMessages(Long messageChannelId, ObjectId messageId, int size) {
+	public Slice<MessageResponseDto> findPreviousMessages(String messageChannelId, ObjectId messageId, int size) {
 
 		Pageable pageable = PageRequest.of(0, size);
 
@@ -52,7 +52,7 @@ public class MessageReadService {
 	}
 
 	// Redis에서 해당 채팅방의 캐쉬 사이즈 만큼의 메시지를 가져옴
-	public List<Message> getLastMessages(Long messageChannelId) {
+	public List<Message> getLastMessages(String messageChannelId) {
 
 		List<Message> lastMessages = (List<Message>) redisTemplate.opsForValue().get(messageChannelId);
 
@@ -64,7 +64,7 @@ public class MessageReadService {
 	}
 
 	// MongoDB에서 이전 메시지를 불러옴 (무한 스크롤 처리)
-	public List<Message> getPreviousMessages(Long messageChannelId, ObjectId messageId, int size) {
+	public List<Message> getPreviousMessages(String messageChannelId, ObjectId messageId, int size) {
 
 		Query query = new Query();
 		query.addCriteria(Criteria.where("messageChannelId").is(messageChannelId).and("_id").lt(messageId));

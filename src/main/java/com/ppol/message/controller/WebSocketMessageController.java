@@ -1,5 +1,6 @@
 package com.ppol.message.controller;
 
+import org.bson.types.ObjectId;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -22,7 +23,7 @@ public class WebSocketMessageController {
 	// 메시지 전송 요청 처리
 	@MessageMapping("/{messageChannelId}")
 	public void sendMessage(@RequestHeader(name = "Authorization") String accessToken,
-		@DestinationVariable Long messageChannelId, @Payload MessageRequestDto messageRequestDto) {
+		@DestinationVariable String messageChannelId, @Payload MessageRequestDto messageRequestDto) {
 
 		messageSaveService.saveChatMessage(messageRequestDto, accessToken, messageChannelId); // MongoDB에 채팅 메시지 저장
 

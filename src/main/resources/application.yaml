@@ -1,6 +1,12 @@
 spring:
   profiles:
-    active: local
+    active:
+      - local
+      - secret
+
+  jpa:
+    properties:
+      jdbc.time_zone: Asia/Seoul
 
   mvc:
     path match:

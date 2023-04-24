@@ -2,7 +2,9 @@ package com.ppol.message.dto.response;
 
 import java.time.format.DateTimeFormatter;
 
-import com.ppol.message.document.Message;
+import com.ppol.message.document.mongodb.Message;
+import com.ppol.message.document.mongodb.MessageUser;
+import com.ppol.message.util.constatnt.classes.DateTimeFormatString;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,9 +25,9 @@ public class MessageResponseDto {
 
 	private String content;
 
-	private Long messageChannelId;
+	private String messageChannelId;
 
-	private UserDto sender;
+	private MessageUser sender;
 
 	private String timestamp;
 
@@ -33,9 +35,9 @@ public class MessageResponseDto {
 		return MessageResponseDto.builder()
 			.messageId(message.getId().toString())
 			.content(message.getContent())
-			.messageChannelId(message.getMessageChannelId())
+			.messageChannelId(message.getMessageChannelId().toString())
 			.sender(message.getSender())
-			.timestamp(message.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+			.timestamp(message.getTimestamp().format(DateTimeFormatter.ofPattern(DateTimeFormatString.BASIC)))
 			.build();
 	}
 }

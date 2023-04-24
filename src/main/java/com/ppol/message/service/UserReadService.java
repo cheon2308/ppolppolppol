@@ -2,7 +2,7 @@ package com.ppol.message.service;
 
 import org.springframework.stereotype.Service;
 
-import com.ppol.message.dto.response.UserDto;
+import com.ppol.message.document.mongodb.MessageUser;
 import com.ppol.message.entity.user.User;
 import com.ppol.message.repository.UserRepository;
 
@@ -17,8 +17,8 @@ public class UserReadService {
 
 	private final UserRepository userRepository;
 
-	public UserDto findUser(Long userId) {
-		return UserDto.of(getUser(userId));
+	public MessageUser findUser(Long userId) {
+		return MessageUser.of(getUser(userId));
 	}
 
 	public User getUser(Long userId) {
