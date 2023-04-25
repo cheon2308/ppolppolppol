@@ -23,8 +23,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		// 웹소켓 엔드포인트 설정
-		registry.addEndpoint("/ws-message")
-			.setAllowedOrigins("http://localhost:3000") // TODO host 설정
-			.withSockJS(); // SockJS 지원
+		registry.addEndpoint("/ws-message").setAllowedOriginPatterns("*").withSockJS(); // SockJS 지원
 	}
 }

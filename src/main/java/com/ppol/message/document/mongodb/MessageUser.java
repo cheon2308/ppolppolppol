@@ -3,6 +3,8 @@ package com.ppol.message.document.mongodb;
 import java.io.Serial;
 import java.io.Serializable;
 
+import org.bson.types.ObjectId;
+
 import com.ppol.message.entity.user.User;
 
 import lombok.AllArgsConstructor;
@@ -33,6 +35,13 @@ public class MessageUser implements Serializable {
 
 	// 사용자의 프로필 이미지
 	private String profileImage;
+
+	// 해당 채팅방에서 해당 사용자가 읽은 가장 최근의 메시지의 ID
+	private ObjectId lastReadMessageId;
+
+	public void updateLastReadMessage(ObjectId messageId) {
+		this.lastReadMessageId = messageId;
+	}
 
 	public static MessageUser of(User user) {
 		return MessageUser.builder()

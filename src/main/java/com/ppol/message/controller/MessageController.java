@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,15 +16,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ppol.message.dto.response.ChannelResponseDto;
 import com.ppol.message.dto.response.MessageResponseDto;
-import com.ppol.message.service.ChannelReadService;
-import com.ppol.message.service.MessageReadService;
+import com.ppol.message.service.channel.ChannelReadService;
+import com.ppol.message.service.channel.ChannelUserUpdateService;
+import com.ppol.message.service.message.MessageReadService;
 import com.ppol.message.util.request.RequestUtils;
 import com.ppol.message.util.response.ResponseBuilder;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/messages")
 @RequiredArgsConstructor
 public class MessageController {
 
@@ -32,6 +34,7 @@ public class MessageController {
 
 	// channels
 	private final ChannelReadService channelReadService;
+	private final ChannelUserUpdateService channelUserUpdateService;
 
 	// 채팅방의 마지막 N개의 메시지를 가져옴
 	@GetMapping("/last-messages/{messageChannelId}")
@@ -43,8 +46,8 @@ public class MessageController {
 	}
 
 	// 이전 메시지를 불러옴 (무한 스크롤 처리)
-	@GetMapping("/previous-messages/{messageChannelId}/{messageId}")
-	public ResponseEntity<?> readPreviousMessages(@PathVariable String messageChannelId, @PathVariable String messageId,
+	@GetMapping("/previous-messages/{messageChannelId}")
+	public ResponseEntity<?> readPreviousMessages(@PathVariable String messageChannelId, @RequestParam String messageId,
 		@RequestParam int size) {
 
 		Slice<MessageResponseDto> returnObject = messageReadService.findPreviousMessages(messageChannelId,
@@ -81,6 +84,16 @@ public class MessageController {
 		ChannelResponseDto returnObject = channelReadService.groupChannelRead(userId, groupId);
 
 		return ResponseBuilder.ok(returnObject);
+	}
+
+	// 사용자가 특정 채널의 특정 메시지를 읽었다고 표시
+	@PutMapping("/channels/{channelId}/{messageId}")
+	public ResponseEntity<?> updateUserLastReadMassage(@PathVariable String channelId, @PathVariable String messageId) {
+
+		Long userId = RequestUtils.getUserId();
+		channelUserUpdateService.updateUserLastReadMessage(channelId, messageId, userId);
+
+		return ResponseBuilder.ok("");
 	}
 
 	// 메시지에 사진을 추가하기 위해 저장

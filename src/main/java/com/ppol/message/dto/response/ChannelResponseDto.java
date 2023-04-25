@@ -34,6 +34,12 @@ public class ChannelResponseDto {
 	// 	해당 채팅방의 제목 (그룹의 경우 그룹의 제목, 1대1 채팅방의 경우 따로 없음)
 	private String title;
 
+	// 해당 유저가 읽지 않은 채팅 메시지의 개수
+	private int newMessageCount;
+
+	// 해당 채널의 최근 메시지의 내용
+	private String newContent;
+
 	/*
 	 	최근 메시지 발생 시간
 	 	사용자에게 채팅 채널 목록을 줄 때 최근 메시지 발생 시간으로 정렬해서 보여주기 위함

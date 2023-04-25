@@ -1,16 +1,21 @@
-package com.ppol.message.service;
+package com.ppol.message.service.channel;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ppol.message.document.mongodb.Message;
 import com.ppol.message.document.mongodb.MessageChannel;
 import com.ppol.message.document.mongodb.MessageUser;
 import com.ppol.message.dto.response.ChannelResponseDto;
+import com.ppol.message.exception.exception.ForbiddenException;
 import com.ppol.message.repository.mongo.MessageChannelRepository;
+import com.ppol.message.service.UserReadService;
+import com.ppol.message.service.message.MessageReadService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +34,7 @@ public class ChannelReadService {
 
 	// services
 	private final UserReadService userReadService;
+	private final MessageReadService messageReadService;
 
 	/**
 	 * 1대1 Direct 채팅방을 찾는 메서드
@@ -53,13 +59,15 @@ public class ChannelReadService {
 	}
 
 	/**
-	 * 사용자가 참여중인 채팅방 목록을 Slice 형태로 받아오는 메서드
+	 * 사용자가 참여중인 채팅방 목록을 List 형태로 받아오는 메서드
 	 */
 	public List<ChannelResponseDto> channelListRead(Long userId) {
 
-		return channelRepository.findByUserIdInUserList(userId)
+		Sort sort = Sort.by(Sort.Direction.DESC, "lastMessageTimestamp");
+
+		return channelRepository.findByUserIdInUserList(userId, sort)
 			.stream()
-			.map(channel -> channelMapping(channel, userId))
+			.map(channel -> channelListMapping(channel, userId))
 			.toList();
 	}
 
@@ -81,6 +89,31 @@ public class ChannelReadService {
 		userList.add(userReadService.findUser(receiverId));
 
 		return MessageChannel.builder().userList(userList).build();
+	}
+
+	/**
+	 * 채팅방 목록 DTO에 부가 데이터들을 (읽지않은 메시지 수, 최근 메시지) 설정해주는 메서드
+	 */
+	public ChannelResponseDto channelListMapping(MessageChannel channel, Long userId) {
+
+		Message newMessage = messageReadService.getNewMessage(channel.getId());
+		String newContent = newMessage == null ? "" : newMessage.getContent();
+
+		ObjectId messageId = channel.getUserList()
+			.stream()
+			.filter(user -> user.getUserId().equals(userId))
+			.findAny()
+			.orElseThrow(() -> new ForbiddenException("채널"))
+			.getLastReadMessageId();
+
+		int newMessageCount = messageReadService.getNewMessageCount(channel.getId(), messageId);
+
+		ChannelResponseDto responseDto = channelMapping(channel, userId);
+
+		responseDto.setNewContent(newContent);
+		responseDto.setNewMessageCount(newMessageCount);
+
+		return responseDto;
 	}
 
 	/**
