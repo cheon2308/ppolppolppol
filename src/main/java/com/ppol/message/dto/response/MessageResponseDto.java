@@ -4,7 +4,7 @@ import java.time.format.DateTimeFormatter;
 
 import com.ppol.message.document.mongodb.Message;
 import com.ppol.message.document.mongodb.MessageUser;
-import com.ppol.message.util.constatnt.classes.DateTimeFormatString;
+import com.ppol.message.util.constatnt.DateTimeFormatString;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +31,8 @@ public class MessageResponseDto {
 
 	private String timestamp;
 
+	private String image;
+
 	public static MessageResponseDto of(Message message) {
 		return MessageResponseDto.builder()
 			.messageId(message.getId().toString())
@@ -38,6 +40,7 @@ public class MessageResponseDto {
 			.messageChannelId(message.getMessageChannelId().toString())
 			.sender(message.getSender())
 			.timestamp(message.getTimestamp().format(DateTimeFormatter.ofPattern(DateTimeFormatString.BASIC)))
+			.image(message.getImage())
 			.build();
 	}
 }

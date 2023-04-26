@@ -43,4 +43,7 @@ public class Message implements Serializable {
 
 	// 메시지 전송 시간
 	private LocalDateTime timestamp;
+
+	// 메시지에 포함된 사진의 경로 정보
+	private String image;
 }

@@ -14,7 +14,7 @@ import com.ppol.message.document.mongodb.MessageUser;
 import com.ppol.message.dto.response.ChannelResponseDto;
 import com.ppol.message.exception.exception.ForbiddenException;
 import com.ppol.message.repository.mongo.MessageChannelRepository;
-import com.ppol.message.service.UserReadService;
+import com.ppol.message.service.user.UserReadService;
 import com.ppol.message.service.message.MessageReadService;
 
 import jakarta.persistence.EntityNotFoundException;

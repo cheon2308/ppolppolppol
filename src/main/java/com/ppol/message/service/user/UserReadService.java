@@ -1,10 +1,10 @@
-package com.ppol.message.service;
+package com.ppol.message.service.user;
 
 import org.springframework.stereotype.Service;
 
 import com.ppol.message.document.mongodb.MessageUser;
 import com.ppol.message.entity.user.User;
-import com.ppol.message.repository.UserRepository;
+import com.ppol.message.repository.jpa.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

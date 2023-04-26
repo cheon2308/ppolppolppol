@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import com.ppol.message.document.mongodb.Message;
 import com.ppol.message.dto.response.MessageResponseDto;
 import com.ppol.message.repository.mongo.MessageRepository;
-import com.ppol.message.util.constatnt.classes.ValidationConstants;
+import com.ppol.message.util.constatnt.ValidationConstants;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class MessageReadService {
 	private final RedisTemplate<String, Object> redisTemplate;
 
 	/**
-	 * 레디스에 저장된 특정 채팅방의 최근 메시지들을 불러오는 메서드
+	 * Redis에 저장된 특정 채팅방의 최근 메시지들을 불러오는 메서드
 	 */
 	public Slice<MessageResponseDto> findLastMessages(String messageChannelId) {
 
@@ -50,7 +50,7 @@ public class MessageReadService {
 	}
 
 	/**
-	 * 몽고 디비로 부터 특정 채팅방의 이전 메시지들을 size 만큼 불러오는 메서드
+	 * Mongo 디비로 부터 특정 채팅방의 이전 메시지들을 size 만큼 불러오는 메서드
 	 */
 	public Slice<MessageResponseDto> findPreviousMessages(String messageChannelId, ObjectId messageId, int size) {
 

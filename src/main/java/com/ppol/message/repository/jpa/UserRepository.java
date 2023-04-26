@@ -1,4 +1,4 @@
-package com.ppol.message.repository;
+package com.ppol.message.repository.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

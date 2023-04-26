@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ppol.message.exception.exception.ForbiddenException;
+import com.ppol.message.exception.exception.S3Exception;
 import com.ppol.message.util.response.ResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -46,6 +47,19 @@ public class CommonExceptionHandler {
 		exception.printStackTrace();
 
 		return ResponseBuilder.forbidden("해당 " + exception.getMsg() + "에 대한 접근 권한이 없습니다.");
+	}
+
+	/**
+	 * {@link S3Exception} S3 파일 서버 관련 에러들을 처리한다.
+	 * 서버 내부 에러이므로 500 코드를 반환한다.
+	 */
+	@ExceptionHandler({S3Exception.class})
+	public ResponseEntity<?> handleS3Exception(S3Exception exception) {
+
+		log.error("S3 server 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.internalServerError("파일 서버 에러입니다.\n관리자에게 문의해주세요.");
 	}
 
 	/**

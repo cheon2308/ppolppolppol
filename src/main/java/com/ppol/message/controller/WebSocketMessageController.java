@@ -27,10 +27,9 @@ public class WebSocketMessageController {
 	public void sendMessage(@RequestHeader(name = "Authorization") String accessToken,
 		@DestinationVariable String messageChannelId, @Payload MessageRequestDto messageRequestDto) {
 
-		messageSaveService.saveChatMessage(messageRequestDto, accessToken, messageChannelId); // MongoDB에 채팅 메시지 저장
+		messageSaveService.createMessage(messageRequestDto, accessToken, messageChannelId); // MongoDB에 채팅 메시지 저장
 
-		String destinationTopic = "/pub/chat/room/" + messageChannelId;
-
+		String destinationTopic = "/pub/channels/" + messageChannelId;
 		messagingTemplate.convertAndSend(destinationTopic, messageRequestDto);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Slice;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.ppol.message.dto.response.ChannelResponseDto;
 import com.ppol.message.dto.response.MessageResponseDto;
 import com.ppol.message.service.channel.ChannelReadService;
 import com.ppol.message.service.channel.ChannelUserUpdateService;
 import com.ppol.message.service.message.MessageReadService;
+import com.ppol.message.service.message.MessageSaveService;
+import com.ppol.message.service.message.MessageSseService;
 import com.ppol.message.util.request.RequestUtils;
 import com.ppol.message.util.response.ResponseBuilder;
 
@@ -31,6 +35,8 @@ public class MessageController {
 
 	// messages
 	private final MessageReadService messageReadService;
+	private final MessageSseService messageSseService;
+	private final MessageSaveService messageSaveService;
 
 	// channels
 	private final ChannelReadService channelReadService;
@@ -97,11 +103,19 @@ public class MessageController {
 	}
 
 	// 메시지에 사진을 추가하기 위해 저장
-	@PostMapping("/channels/{channelId}/images")
-	public ResponseEntity<?> createMessageImage(@PathVariable String channelId, MultipartFile image) {
+	@PostMapping("/images")
+	public ResponseEntity<?> createMessageImage(MultipartFile image) {
 
-		String url = "1234";
+		String url = messageSaveService.createMessageImage(image);
 
 		return ResponseBuilder.created(url);
+	}
+
+	// 채넒 목록에서 SSE 연결
+	@GetMapping(value = "/list/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public SseEmitter subscribe() {
+
+		Long userId = RequestUtils.getUserId();
+		return messageSseService.subscribe(userId);
 	}
 }

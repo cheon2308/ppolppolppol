@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.ppol.message.util.constatnt.classes.DateTimeFormatString;
+import com.ppol.message.util.constatnt.DateTimeFormatString;
 
 /**
  * 	서비스에서 일관적인 시간 형식을 클라이언트로 보내주기 위한 Util Class

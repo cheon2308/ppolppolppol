@@ -1,7 +1,7 @@
 package com.ppol.message.dto.request;
 
-import com.ppol.message.util.constatnt.classes.ValidationConstants;
-import com.ppol.message.util.constatnt.classes.ValidationMessages;
+import com.ppol.message.util.constatnt.ValidationConstants;
+import com.ppol.message.util.constatnt.ValidationMessages;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -23,4 +23,6 @@ public class MessageRequestDto {
 	@NotNull
 	@Size(min = 1, max = ValidationConstants.MESSAGE_MAX_LENGTH, message = ValidationMessages.MESSAGE_SIZE_MSG)
 	private String content;
+
+	private String image;
 }

@@ -1,4 +1,4 @@
-package com.ppol.message.util.constatnt.classes;
+package com.ppol.message.util.constatnt;
 
 /**
  * 서비스에서 가져갈 기본적인 시간 형식을 상수로 정의해 놓은 Class

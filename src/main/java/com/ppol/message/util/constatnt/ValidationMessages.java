@@ -1,4 +1,4 @@
-package com.ppol.message.util.constatnt.classes;
+package com.ppol.message.util.constatnt;
 
 public class ValidationMessages {
 
