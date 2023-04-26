@@ -37,4 +37,8 @@ public class RefreshToken {
 
 	// 리프레쉬 토큰
 	private String refreshToken;
+
+	public void updateRefresh(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
 }

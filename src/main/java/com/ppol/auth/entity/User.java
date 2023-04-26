@@ -2,6 +2,10 @@ package com.ppol.auth.entity;
 
 import org.hibernate.annotations.Where;
 
+import com.ppol.auth.util.constatnt.classes.ValidationConstants;
+import com.ppol.auth.util.constatnt.enums.Provider;
+import com.ppol.auth.util.converter.ProviderConverter;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -57,38 +61,7 @@ public class User {
 	@Column(length = ValidationConstants.USERNAME_MAX_SIZE, unique = true)
 	private String username;
 
-	// 사용자 프로필 이미지 경로
-	private String image;
-
-	// 사용자 소개 정보 (최대 50자)
-	@Column(length = ValidationConstants.USER_INTRO_MAX_SIZE)
-	private String intro;
-
-	// 사용자 전화번호 정보
-	private String phone;
-
 	// 사용자 상태 (1인 경우 삭제된 상태)
 	private int state;
 
-	// 사용자 삭제 메서드
-	public void delete() {
-		this.state = 1;
-	}
-
-	// 각 정보들을 업데이트 하는 메서드들
-	public void updateUsername(String username) {
-		this.username = username;
-	}
-
-	public void updateImage(String image) {
-		this.image = image;
-	}
-
-	public void updateIntro(String intro) {
-		this.intro = intro;
-	}
-
-	public void updatePassword(String password) {
-		this.password = password;
-	}
 }
