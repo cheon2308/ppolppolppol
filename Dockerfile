@@ -1,13 +1,5 @@
-FROM openjdk:17-ea-33-jdk-buster AS builder
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle .
-COPY settings.gradle .
-COPY src src
-RUN chmod +x ./gradlew
-RUN ./gradlew bootJAR
-
-FROM openjdk:17-ea-33-jdk-buster
-COPY --from=builder build/libs/*.jar eureka.jar
+FROM azul/zulu-openjdk:17
+COPY build/libs/*.jar eureka.jar
 EXPOSE 8761
+VOLUME /tmp
 ENTRYPOINT ["java", "-jar", "/eureka.jar"]
