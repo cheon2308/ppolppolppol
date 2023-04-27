@@ -54,7 +54,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		try {
 			authDto = om.readValue(request.getInputStream(), AuthDto.class);
 		} catch (IOException e) {
-			throw new BadRequestException("로그인");
+			throw new BadRequestException("로그인 형식 요청");
 		}
 
 		log.info("{}", authDto);

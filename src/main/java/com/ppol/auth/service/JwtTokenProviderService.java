@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ppol.auth.dto.response.JwtToken;
-import com.ppol.auth.exception.exception.ForbiddenException;
+import com.ppol.auth.exception.exception.TokenExpiredException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -70,7 +70,7 @@ public class JwtTokenProviderService {
 	public String getUid(String token) {
 
 		if (verifyToken(token)) {
-			throw new ForbiddenException("Access Token Expired");
+			throw new TokenExpiredException("ACCESS TOKEN");
 		}
 
 		return createJwtParser().parseClaimsJws(token).getBody().getSubject();

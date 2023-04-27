@@ -3,14 +3,15 @@ package com.ppol.auth.exception.handler;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ppol.auth.exception.exception.BadRequestException;
 import com.ppol.auth.exception.exception.EnumConvertException;
-import com.ppol.auth.exception.exception.ForbiddenException;
-import com.ppol.auth.exception.exception.S3Exception;
+import com.ppol.auth.exception.exception.TokenExpiredException;
 import com.ppol.auth.util.response.ResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -38,19 +39,6 @@ public class CommonExceptionHandler {
 	}
 
 	/**
-	 * {@link S3Exception} S3 파일 서버 관련 에러들을 처리한다.
-	 * 서버 내부 에러이므로 500 코드를 반환한다.
-	 */
-	@ExceptionHandler({S3Exception.class})
-	public ResponseEntity<?> handleS3Exception(S3Exception exception) {
-
-		log.error("S3 server 에러");
-		exception.printStackTrace();
-
-		return ResponseBuilder.internalServerError("파일 서버 에러입니다.\n관리자에게 문의해주세요.");
-	}
-
-	/**
 	 * {@link EntityNotFoundException} repository에서 Id값 혹은 다른 값을 통해 Entity를 찾을 때 없다면 발생하는 에러
 	 * 클라이언트로 부터 받은 parameter가 잘못되어 발생했기 때문에 400 코드를 반환한다.
 	 */
@@ -64,16 +52,42 @@ public class CommonExceptionHandler {
 	}
 
 	/**
-	 * {@link ForbiddenException} 사용자가 접근 권한이 없는 서비스에 접근할 때 발생하는 에러
-	 * 권한 관련 에러이므로 403 코드를 반환한다.
+	 * {@link BadRequestException} 잘못된 파라미터 형식의 요청을 받았을 경우의 에러
+	 * 400 코드를 반환한다.
 	 */
-	@ExceptionHandler({ForbiddenException.class})
-	public ResponseEntity<?> handleForbiddenException(ForbiddenException exception) {
+	@ExceptionHandler({BadRequestException.class})
+	public ResponseEntity<?> handleBadRequestException(BadRequestException exception) {
 
-		log.error("권한 에러");
+		log.error("Bad Request 에러");
 		exception.printStackTrace();
 
-		return ResponseBuilder.forbidden("해당 " + exception.getMsg() + "에 대한 접근 권한이 없습니다.");
+		return ResponseBuilder.badRequest("잘못된 " + exception.getMessage() + "에서 요청입니다.");
+	}
+
+	/**
+	 * {@link TokenExpiredException} 토큰 만료 에러
+	 * 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({TokenExpiredException.class})
+	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
+
+		log.error("토큰 만료 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("만료된 " + exception.getMessage());
+	}
+
+	/**
+	 * {@link UsernameNotFoundException} 이메일 로그인 시 accountId에 해당하는 정보를 찾지 못한 에러
+	 * 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({UsernameNotFoundException.class})
+	public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException exception) {
+
+		log.error("username not found 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("존재하지 않는 이메일입니다.");
 	}
 
 	/**

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.ppol.auth.dto.response.JwtToken;
 import com.ppol.auth.exception.exception.ForbiddenException;
+import com.ppol.auth.exception.exception.TokenExpiredException;
 import com.ppol.auth.repository.RefreshTokenRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -34,8 +35,7 @@ public class JwtTokenService {
 	private void validRefreshToken(String refresh) {
 		if (refresh == null || jwtTokenProviderService.verifyToken(refresh) || !refreshRepository.existsByRefreshToken(
 			refresh)) {
-			// TODO valid 예외 처리
-			throw new ForbiddenException("REFRESH EXPIRED");
+			throw new TokenExpiredException("REFRESH TOKEN");
 		}
 	}
 }

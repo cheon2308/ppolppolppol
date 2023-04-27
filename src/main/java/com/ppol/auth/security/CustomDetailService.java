@@ -8,7 +8,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ppol.auth.entity.User;
-import com.ppol.auth.exception.exception.ForbiddenException;
 import com.ppol.auth.repository.UserRepository;
 import com.ppol.auth.util.constatnt.enums.Provider;
 import com.ppol.auth.util.constatnt.enums.global.CommonEnumValueConverter;
@@ -34,9 +33,8 @@ public class CustomDetailService implements UserDetailsService {
 		username = username.substring(1);
 
 		if (code.equals("E")) {
-			// TODO 올바르지 않은 이메일 발생
 			User user = userRepository.findByAccountIdAndProvider(username, Provider.EMAIL)
-				.orElseThrow(() -> new ForbiddenException("user load fail"));
+				.orElseThrow(() -> new UsernameNotFoundException(""));
 
 			return new CustomUserDetails(user);
 		} else {
