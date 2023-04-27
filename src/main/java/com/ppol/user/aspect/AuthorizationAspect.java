@@ -8,20 +8,23 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
- * 	사용자 권한 인증 및 사용자 ID를 저장하기 위한 AOP Class
+ * 사용자 권한 인증 및 사용자 ID를 저장하기 위한 AOP Class
  */
 @Aspect
 @Component
 public class AuthorizationAspect {
 
 	/**
-	 * 	모든 컨트롤러의 메서드들 실행이전에 실행한다.
-	 * 	헤더의 Authorization으로 부터 엑세스 토큰을 받아서 인증 서버로 부터 userId를 받고 REQUEST에 저장한다.
+	 * 모든 컨트롤러의 메서드들 실행이전에 실행한다.
+	 * 헤더의 Authorization으로 부터 엑세스 토큰을 받아서 인증 서버로 부터 userId를 받고 REQUEST에 저장한다.
 	 */
-	@Before("execution(* com.ppol.*.controller.*.*(..))")
+	@Before("execution(* com.ppol.*.controller.*.*(..)) "
+		+ "&& !execution(* com.ppol.user.controller.UserController.createUser(..))"
+		+ "&& !execution(* com.ppol.user.controller.UserController.checkAccountId(..))"
+		+ "&& !execution(* com.ppol.user.controller.UserController.checkUsername(..))")
 	public void getUserIdFromHeader() {
-		String accessToken = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
-			.getRequest().getHeader("Authorization");
+		String accessToken = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()
+			.getHeader("Authorization");
 
 		String userId = getUserIdFromAuthorization(accessToken);
 

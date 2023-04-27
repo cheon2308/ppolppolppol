@@ -34,6 +34,9 @@ dependencies {
     // aws
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 
+    // password encoder 사용을 위해 추가
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'

@@ -72,6 +72,12 @@ public class User extends BaseEntity {
 	// 사용자 전화번호 정보
 	private String phone;
 
+	// 팔로워 수
+	private int followerCount;
+
+	// 팔로잉 수
+	private int followingCount;
+
 	// 사용자 상태 (1인 경우 삭제된 상태)
 	private int state;
 
@@ -95,5 +101,15 @@ public class User extends BaseEntity {
 
 	public void updatePassword(String password) {
 		this.password = password;
+	}
+
+	public void updateFollowerCount(boolean isFollow) {
+		int count = isFollow ? 1 : -1;
+		followerCount += count;
+	}
+
+	public void updateFollowingCount(boolean isFollow) {
+		int count = isFollow ? 1 : -1;
+		followingCount += count;
 	}
 }
