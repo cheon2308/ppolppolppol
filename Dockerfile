@@ -5,7 +5,10 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN apt-get update && apt-get install -y xargs
+RUN apt-get update && apt-get install -y \
+    apt-utils \
+    && apt-get install -y \
+    xargs
 RUN ./gradlew bootJAR
 
 FROM openjdk:17-jdk
