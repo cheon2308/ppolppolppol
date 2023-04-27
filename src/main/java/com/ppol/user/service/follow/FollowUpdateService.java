@@ -28,23 +28,21 @@ public class FollowUpdateService {
 	@Transactional
 	public boolean updateFollow(Long followerId, Long targetUserId) {
 
-		Follow follow = followRepository.findByFollower_IdAndFollowing_Id(followerId, targetUserId)
-			.orElse(null);
+		Follow follow = followRepository.findByFollower_IdAndFollowing_Id(followerId, targetUserId).orElse(null);
 
 		User follower = userReadService.getUser(followerId);
 		User following = userReadService.getUser(targetUserId);
 
 		if (follow == null) {
-			follow = followRepository.save(Follow.builder()
-				.follower(follower)
-				.following(following)
-				.build());
+			follow = followRepository.save(Follow.builder().follower(follower).following(following).build());
 		} else {
 			follow.updateFollow();
 		}
 
-		follower.updateFollowingCount(follow.getIsFollow());
-		following.updateFollowerCount(follow.getIsFollow());
+		if (!followerId.equals(targetUserId)) {
+			follower.updateFollowingCount(follow.getIsFollow());
+			following.updateFollowerCount(follow.getIsFollow());
+		}
 
 		return follow.getIsFollow();
 	}

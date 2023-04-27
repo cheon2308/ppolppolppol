@@ -9,9 +9,7 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import com.ppol.user.dto.response.UserResponseDto;
-import com.ppol.user.entity.user.Follow;
 import com.ppol.user.entity.user.User;
-import com.ppol.user.repository.jpa.FollowRepository;
 import com.ppol.user.repository.jpa.UserRepository;
 import com.ppol.user.service.user.UserReadService;
 
@@ -25,7 +23,6 @@ public class FollowReadService {
 
 	// repository
 	private final UserRepository userRepository;
-	private final FollowRepository followRepository;
 
 	// service
 	private final UserReadService userReadService;
@@ -71,12 +68,4 @@ public class FollowReadService {
 		return new SliceImpl<>(content, pageable, slice.hasNext());
 	}
 
-	/**
-	 * 특정 유저가 특정 유저를 팔로우 했는지 여부를 확인하는 메서드, null인 경우 false
-	 */
-	public boolean isFollow(Long userId, Long targetUserId) {
-		Follow follow = followRepository.findByFollower_IdAndFollowing_Id(userId, targetUserId).orElse(null);
-
-		return follow != null && follow.getIsFollow();
-	}
 }

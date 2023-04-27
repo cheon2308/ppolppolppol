@@ -54,6 +54,7 @@ public class UserSaveService {
 		return User.builder()
 			.accountId(userCreateDto.getAccountId())
 			.password(passwordEncoder.encode(userCreateDto.getPassword()))
+			.provider(userCreateDto.getProvider())
 			.username(userCreateDto.getUsername())
 			.build();
 	}
