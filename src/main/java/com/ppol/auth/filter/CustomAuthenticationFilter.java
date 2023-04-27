@@ -3,27 +3,30 @@ package com.ppol.auth.filter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.oauth2.sdk.token.AccessToken;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ppol.auth.dto.request.AuthDto;
 import com.ppol.auth.dto.response.JwtToken;
 import com.ppol.auth.entity.RefreshToken;
 import com.ppol.auth.entity.User;
 import com.ppol.auth.exception.exception.BadRequestException;
 import com.ppol.auth.repository.RefreshTokenRepository;
-import com.ppol.auth.security.CustomAuthenticationToken;
 import com.ppol.auth.security.CustomUserDetails;
 import com.ppol.auth.service.JwtTokenProviderService;
-import com.ppol.auth.service.JwtTokenService;
+import com.ppol.auth.util.constatnt.enums.Provider;
 import com.ppol.auth.util.response.Response;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +38,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProviderService jwtTokenProviderService;
-	private final JwtTokenService jwtTokenService;
 	private final RefreshTokenRepository refreshTokenRepository;
+
+	@Value("${social.password-key}")
+	private String PASSWORD_KEY;
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws
@@ -54,10 +59,23 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
 		log.info("{}", authDto);
 
-		CustomAuthenticationToken authenticationToken = new CustomAuthenticationToken(authDto.getAccountId(),
-			authDto.getPassword(), authDto.getProvider());
+		String username = authDto.getProvider().getCode() + authDto.getAccountId();
+		String password = authDto.getProvider().equals(Provider.EMAIL) ? authDto.getPassword() :
+			authDto.getAccountId() + PASSWORD_KEY;
+
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+			password);
 
 		return authenticationManager.authenticate(authenticationToken);
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException, ServletException {
+
+		failed.printStackTrace();
+
+		super.unsuccessfulAuthentication(request, response, failed);
 	}
 
 	@Override
@@ -67,21 +85,23 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		CustomUserDetails userDetails = (CustomUserDetails)authResult.getPrincipal();
 
 		//token 생성
-		JwtToken jwtToken = jwtTokenProviderService.generateToken(userDetails.getUser().getId().toString(), null);
+		JwtToken jwtToken = jwtTokenProviderService.generateToken(userDetails.user().getId().toString(), null);
 
-		saveRefresh(jwtToken.getRefreshToken(), userDetails.getUser());
-
-		// TODO refresh 토큰 새로 생성해서 저장하고 클라이언트로 토큰 두개 보내는거
-
-		jwtTokenService.saveRefreshToken(response, jwtToken.getRefreshToken());
-
-		AccessToken accessToken = AccessToken.of(jwtToken);
+		saveRefresh(jwtToken.getRefreshToken(), userDetails.user());
 
 		// 커스텀 Response 객체 생성
-		Response<String> responseBody = Response.of(accessToken.getAccessToken(), 200, "Success");
+		Response<?> responseBody = Response.ok(jwtToken);
 
 		// 응답 데이터를 JSON으로 변환
-		String jsonResponse = JsonParser.toJson(responseBody);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+
+		String jsonResponse;
+		try {
+			jsonResponse = objectMapper.writeValueAsString(responseBody);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
 
 		// JSON 응답 작성
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);

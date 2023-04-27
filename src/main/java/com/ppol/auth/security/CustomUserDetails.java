@@ -7,12 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ppol.auth.entity.User;
 
-import lombok.Getter;
-
-@Getter
-public class CustomUserDetails implements UserDetails {
-
-	private final User user;
+public record CustomUserDetails(User user) implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -21,35 +16,32 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return user.getPassword();
+		return this.user.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return user.getAccountId();
+		return this.user.getAccountId();
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return false;
+		return true;
 	}
 
-	public CustomUserDetails(User user) {
-		this.user = user;
-	}
 }

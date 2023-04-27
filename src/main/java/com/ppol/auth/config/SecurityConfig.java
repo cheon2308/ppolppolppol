@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -16,24 +15,16 @@ import org.springframework.web.filter.CorsFilter;
 import com.ppol.auth.filter.CustomAuthenticationFilter;
 import com.ppol.auth.repository.RefreshTokenRepository;
 import com.ppol.auth.service.JwtTokenProviderService;
-import com.ppol.auth.service.JwtTokenService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
 	private final JwtTokenProviderService jwtTokenProviderService;
-	private final JwtTokenService jwtTokenService;
 	private final RefreshTokenRepository refreshTokenRepository;
-
-	//PasswordEncoder
-	@Bean
-	public BCryptPasswordEncoder encodePassword() {
-		return new BCryptPasswordEncoder();
-	}
 
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
@@ -66,10 +57,11 @@ public class SecurityConfig {
 			.disable()
 			.csrf()
 			.disable()
-			.formLogin().disable()
+			.formLogin()
+			.disable()
 			.addFilter(corsFilter)
-			.addFilter(new CustomAuthenticationFilter(authenticationManager, jwtTokenProviderService, jwtTokenService,
-				refreshTokenRepository))
+			.addFilter(
+				new CustomAuthenticationFilter(authenticationManager, jwtTokenProviderService, refreshTokenRepository))
 			.sessionManagement()
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()

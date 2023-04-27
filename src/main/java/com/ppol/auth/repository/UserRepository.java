@@ -9,7 +9,5 @@ import com.ppol.auth.util.constatnt.enums.Provider;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findByAccountId(String accountId);
-
-	Optional<User> findByAccountIdAndPasswordAndProvider(String accountId, String password, Provider provider);
+	Optional<User> findByAccountIdAndProvider(String accountId, Provider provider);
 }

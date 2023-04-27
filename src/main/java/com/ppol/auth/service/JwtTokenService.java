@@ -1,6 +1,5 @@
 package com.ppol.auth.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.ppol.auth.dto.response.JwtToken;
@@ -18,8 +17,9 @@ public class JwtTokenService {
 	private final RefreshTokenRepository refreshRepository;
 	private final JwtTokenProviderService jwtTokenProviderService;
 
-	@Value("${token.domain}")
-	private String tokenDomain;
+	public Long getUserId(String accessToken) {
+		return Long.parseLong(jwtTokenProviderService.getUid(accessToken));
+	}
 
 	public String refreshToken(String refreshToken) {
 
