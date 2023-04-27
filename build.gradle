@@ -15,7 +15,7 @@ configurations {
 }
 
 bootJar {
-	mainClass = 'com.ppol.api_gateway.ApiGatewayApplication'
+	mainClass = 'com.ppol.apigateway.ApiGatewayApplication'
 }
 
 repositories {
