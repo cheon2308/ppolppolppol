@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ppol.auth.exception.exception.BadRequestException;
 import com.ppol.auth.exception.exception.EnumConvertException;
+import com.ppol.auth.exception.exception.ForbiddenException;
 import com.ppol.auth.exception.exception.TokenExpiredException;
 import com.ppol.auth.util.response.ResponseBuilder;
 
@@ -62,6 +63,19 @@ public class CommonExceptionHandler {
 		exception.printStackTrace();
 
 		return ResponseBuilder.badRequest("잘못된 " + exception.getMessage() + "에서 요청입니다.");
+	}
+
+	/**
+	 * {@link ForbiddenException} 사용자가 접근 권한이 없는 서비스에 접근할 때 발생하는 에러
+	 * 권한 관련 에러이므로 403 코드를 반환한다.
+	 */
+	@ExceptionHandler({ForbiddenException.class})
+	public ResponseEntity<?> handleForbiddenException(ForbiddenException exception) {
+
+		log.error("권한 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.forbidden("해당 " + exception.getMsg() + "에 대한 접근 권한이 없습니다.");
 	}
 
 	/**
