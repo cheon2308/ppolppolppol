@@ -4,7 +4,11 @@ import org.hibernate.annotations.Where;
 
 import com.ppol.alarm.entity.global.BaseEntity;
 import com.ppol.alarm.entity.user.User;
+import com.ppol.alarm.util.constatnt.enums.AlarmType;
+import com.ppol.alarm.util.converter.AlarmTypeConverter;
 
+import jakarta.persistence.Convert;
+import jakarta.persistence.Converter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,17 +39,15 @@ public class Alarm extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	/*
-		알람의 내용 content
-		아마 content 자체를 html 형식으로 가져가서 서버에서 링크를 달아주도록 하는 것이 좋을듯?
-	 */
-	@NotNull
-	private String content;
-
 	// 알람 대상 사용자
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
+
+	// 알람의 종류
+	@NotNull
+	@Convert(converter = AlarmTypeConverter.class)
+	private AlarmType alarmType;
 
 	/*
 	  	이 때 state를 통해 알람의 상태를 나타낸다
