@@ -30,6 +30,11 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    // eureka client
+    // https://mvnrepository.com/artifact/com.netflix.eureka/eureka-client
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.1'
+
+
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
