@@ -5,6 +5,7 @@ spring:
   application:
     name: article
 
+  profiles:
     active:
       - local
       - secret
