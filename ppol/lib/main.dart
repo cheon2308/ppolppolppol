@@ -1,22 +1,26 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import './login/landingPage.dart';
+import 'package:ppol/login/loginPage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp()  )  ;
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
-
   @override
-  Widget build(BuildContext context){
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
-      home: landingPage2(),
+        debugShowCheckedModeBanner: false,
+        home:loginPage()
     );
   }
-
-
 }
+
+
+
+
