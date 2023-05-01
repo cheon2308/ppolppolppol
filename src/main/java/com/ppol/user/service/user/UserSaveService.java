@@ -8,6 +8,7 @@ import com.ppol.user.dto.response.UserResponseDto;
 import com.ppol.user.entity.user.User;
 import com.ppol.user.repository.jpa.UserRepository;
 import com.ppol.user.service.follow.FollowUpdateService;
+import com.ppol.user.util.constatnt.enums.Provider;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,11 @@ public class UserSaveService {
 	 */
 	@Transactional
 	public UserResponseDto createUser(UserCreateDto userCreateDto) {
+
+		// Provider 정보가 없다면 EMAIL
+		if (userCreateDto.getProvider() == null) {
+			userCreateDto.setProvider(Provider.EMAIL);
+		}
 
 		// MariaDB에 저장
 		User user = userRepository.save(userCreateMapping(userCreateDto));
