@@ -8,27 +8,24 @@ void main() {
 }
 
 class loginPage extends StatefulWidget {
-
   @override
   State<loginPage> createState() => _loginPageState();
 }
 
 class _loginPageState extends State<loginPage> {
-
   final String imageLogoName = "assets/main_logo/ppol_logo.png";
 
   // final main_Color=Color( 0xff000000);
-  final main_Color=Color(0xffADD8E6);
+  final main_Color = Color(0xffADD8E6);
 
-  TextEditingController controller1=TextEditingController();
-  TextEditingController controller2=TextEditingController();
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
 
-  changeController(TextEditingController controller,input) {
+  changeController(TextEditingController controller, input) {
     setState(() {
-      controller.text=input;
+      controller.text = input;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,34 +63,46 @@ class _loginPageState extends State<loginPage> {
                         borderRadius: BorderRadius.all(Radius.circular(70.0)),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(imageLogoName,width: 150,height:150,),
+                          child: Image.asset(
+                            imageLogoName,
+                            width: 150,
+                            height: 150,
+                          ),
                         )),
-                    customInputField(
-                        Icon(Icons.person, color: Colors.white), 'ID',controller1,main_Color),
-                    customInputField(
-                        Icon(Icons.lock, color: Colors.white), 'Password',controller2,main_Color),
+                    customInputField(Icon(Icons.person, color: Colors.white),
+                        'ID', controller1, main_Color),
+                    customInputField(Icon(Icons.lock, color: Colors.white),
+                        'Password', controller2, main_Color),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0,0,0,0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Container(
                         height: 50,
                         width: 250,
                         decoration: BoxDecoration(
-                            color: main_Color, borderRadius: BorderRadius.circular(20)),
+                            color: main_Color,
+                            borderRadius: BorderRadius.circular(20)),
                         child: TextButton(
                           onPressed: () {
-                            if(controller1.text!=""&&controller2.text!=""){
-                              print("ID : ${controller1.text} PW : ${controller2.text} 로그인했음");
+                            if (controller1.text != "" &&
+                                controller2.text != "") {
+                              print(
+                                  "ID : ${controller1.text} PW : ${controller2.text} 로그인했음");
                               Navigator.push(
-                                  context, MaterialPageRoute(builder: (c) => homePage()));
-                            }
-                            else if(controller1.text==""&&controller2.text!=""){
-                              showSnackBar(context, Text('아이디를 입력해주세요'),main_Color);
-                            }
-                            else if(controller1.text!=""&&controller2.text==""){
-                              showSnackBar(context, Text('패스워드를 입력해주세요'),main_Color);
-                            }
-                            else if(controller1.text==""&&controller2.text==""){
-                              showSnackBar(context, Text('정보를 입력해주세요'),main_Color);
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (c) => homePage()));
+                            } else if (controller1.text == "" &&
+                                controller2.text != "") {
+                              showSnackBar(
+                                  context, Text('아이디를 입력해주세요'), main_Color);
+                            } else if (controller1.text != "" &&
+                                controller2.text == "") {
+                              showSnackBar(
+                                  context, Text('패스워드를 입력해주세요'), main_Color);
+                            } else if (controller1.text == "" &&
+                                controller2.text == "") {
+                              showSnackBar(
+                                  context, Text('정보를 입력해주세요'), main_Color);
                             }
                           },
                           child: Text(
@@ -104,18 +113,21 @@ class _loginPageState extends State<loginPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0,0,0,0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Container(
                         height: 50,
                         width: 250,
                         decoration: BoxDecoration(
-                            color: main_Color, borderRadius: BorderRadius.circular(20)),
+                            color: main_Color,
+                            borderRadius: BorderRadius.circular(20)),
                         child: TextButton(
                           onPressed: () {
                             // Navigator.push(
                             //     context, MaterialPageRoute(builder: (_) => homePage()));
                             Navigator.push(
-                                context, MaterialPageRoute(builder: (c) => registPage()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (c) => registPage()));
                             print("회원가입");
                           },
                           child: Text(
@@ -135,7 +147,8 @@ class _loginPageState extends State<loginPage> {
     );
   }
 }
-void showSnackBar(BuildContext context, Text text ,Color color) {
+
+void showSnackBar(BuildContext context, Text text, Color color) {
   final snackBar = SnackBar(
     content: text,
     backgroundColor: color.withOpacity(0.7),

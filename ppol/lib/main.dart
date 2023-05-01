@@ -7,10 +7,10 @@ import 'package:ppol/login/homePage.dart';
 import 'package:ppol/widgets/profile_list_item.dart';
 
 void main() {
-  runApp(const MyApp()  )  ;
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   State<MyApp> createState() => _MyAppState();
@@ -40,33 +40,28 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-
-
-
-
-
 class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   CrossFadeState _crossFadeState = CrossFadeState.showSecond;
-  changeState(){
+  changeState() {
     setState(() {
-      if(_crossFadeState==CrossFadeState.showFirst){
-        _crossFadeState=CrossFadeState.showSecond;
-      }
-      else{
-        _crossFadeState=CrossFadeState.showFirst;
+      if (_crossFadeState == CrossFadeState.showFirst) {
+        _crossFadeState = CrossFadeState.showSecond;
+      } else {
+        _crossFadeState = CrossFadeState.showFirst;
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context,
-        designSize: Size(414, 896),
+    ScreenUtil.init(
+      context,
+      designSize: Size(414, 896),
     );
 
     var profileInfo = Expanded(
@@ -96,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       heightFactor: kSpacingUnit.w * 1.5,
                       widthFactor: kSpacingUnit.w * 1.5,
                       child: IconButton(
-                        onPressed: (){
+                        onPressed: () {
                           print("수정클릭");
                         },
                         icon: Icon(LineAwesomeIcons.pen),
@@ -122,7 +117,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'wndjf11@naver.com',
             // style: kCaptionTextStyle,
             style: TextStyle(fontSize: 20),
-
           ),
           SizedBox(height: kSpacingUnit.w * 2),
         ],
@@ -134,7 +128,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return AnimatedCrossFade(
           duration: Duration(milliseconds: 200),
           crossFadeState: _crossFadeState,
-
           firstChild: GestureDetector(
             child: Icon(
               LineAwesomeIcons.sun,
@@ -158,7 +151,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(width: kSpacingUnit.w * 3),
-        IconButton(onPressed: (){Navigator.push(context,MaterialPageRoute(builder: (context) => homePage(),));}, icon: Icon(LineAwesomeIcons.arrow_left)),
+        IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => homePage(),
+                  ));
+            },
+            icon: Icon(LineAwesomeIcons.arrow_left)),
         profileInfo,
         themeSwitcher,
         SizedBox(width: kSpacingUnit.w * 3),
