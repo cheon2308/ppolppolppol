@@ -34,7 +34,6 @@ class _registPageState extends State<registPage> {
                 heightFactor: 0.6,
                 child: Material(
                   borderRadius: BorderRadius.all(Radius.circular(200)),
-                  // color: Color.fromRGBO(255, 255, 255, 0.2),
                   color: main_Color,
                   child: Container(
                     width: 300,

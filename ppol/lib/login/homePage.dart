@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:ppol/main.dart';
 
 class homePage extends StatelessWidget {
   const homePage({Key? key}) : super(key: key);
@@ -38,8 +39,13 @@ class homePage extends StatelessWidget {
           ),
           SpeedDialChild(
             child: Icon(Icons.account_circle),
-            label: 'Message',
-            onTap: () => {print("하이3")},
+            label: 'account',
+            onTap: () => {
+              // Navigator.pushNamed(context, '/profile')
+              // print("프로필 나와라"),
+            Navigator.push(
+            context, MaterialPageRoute(builder: (c) => ProfileScreen())),
+            },
           ),
         ]
 

@@ -4,16 +4,16 @@ import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
 
 void main() {
-  runApp(MaterialApp(title: 'Login App', home: HomeScreen()));
+  runApp(MaterialApp(title: 'Login App', home: loginPage()));
 }
 
-class HomeScreen extends StatefulWidget {
+class loginPage extends StatefulWidget {
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<loginPage> createState() => _loginPageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _loginPageState extends State<loginPage> {
 
   final String imageLogoName = "assets/main_logo/ppol_logo.png";
 
