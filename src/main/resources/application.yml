@@ -36,3 +36,17 @@ spring:
           uri: lb://USER
           predicates:
             - Path=/user-service/**
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: search
+          uri: lb://SEARCH
+          predicates:
+            - Path=/search-service/**
+          filters:
+            - RewritePath=/search-service/(?<segment>.*), /$\{segment}
+        - id: alarm
+          uri: lb://ALARM
+          predicates:
+            - Path=/alarm-service/**
+          filters:
+            - RewritePath=/alarm-service/(?<segment>.*), /$\{segment}
