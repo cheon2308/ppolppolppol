@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import './login/landingPage.dart';
+import 'screen/landingPage.dart';
 
 void main() {
   runApp(const MyApp());

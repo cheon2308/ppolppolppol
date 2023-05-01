@@ -86,7 +86,7 @@ class _landingPage2State extends State<landingPage2> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(0,50,0,20),
+                        margin: EdgeInsets.fromLTRB(0,40,0,0),
                         child: Image.asset(
                           pjtname,
                           width: screenWidth * 0.56179,
