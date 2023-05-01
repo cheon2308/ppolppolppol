@@ -1,5 +1,6 @@
 package com.ppol.search.entity.article;
 
+import com.ppol.search.entity.user.User;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 import com.ppol.search.entity.global.BaseEntity;
@@ -36,7 +37,7 @@ public class ArticleLike extends BaseEntity {
 	// 사용자
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	private SecurityProperties.User user;
+	private User user;
 
 	// 대상 게시글
 	@NotNull
