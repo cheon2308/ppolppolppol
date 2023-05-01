@@ -8,9 +8,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ppol.personal.exception.exception.AlbumExceededException;
 import com.ppol.personal.exception.exception.EnumConvertException;
 import com.ppol.personal.exception.exception.ForbiddenException;
+import com.ppol.personal.exception.exception.InvalidParameterException;
 import com.ppol.personal.exception.exception.S3Exception;
+import com.ppol.personal.util.constatnt.classes.ValidationConstants;
 import com.ppol.personal.util.response.ResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -35,6 +38,33 @@ public class CommonExceptionHandler {
 		exception.printStackTrace();
 
 		return ResponseBuilder.internalServerError("서버 내부 에러입니다.\n관리자에게 문의해주세요.");
+	}
+
+	/**
+	 * {@link AlbumExceededException} Enum 변환 시 발생하는 에러들을 처리한다.
+	 * 사용자가 초과한 요청을 보냈으므로 잘못된 요청으로 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({AlbumExceededException.class})
+	public ResponseEntity<?> handleAlbumExceededException(AlbumExceededException exception) {
+
+		log.error("앨범 초과 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest(
+			"앨범은 최대 " + ValidationConstants.ROOM_MAX_ALBUM + " 개 까지 생성할 수 있습니다. 기존의 앨범을 삭제 후 진행해 주세요.");
+	}
+
+	/**
+	 * {@link InvalidParameterException} Enum 변환 시 발생하는 에러들을 처리한다.
+	 * 사용자가 초과한 요청을 보냈으므로 잘못된 요청으로 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({InvalidParameterException.class})
+	public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException exception) {
+
+		log.error("잘못된 요청");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("잘못된 요청입니다.\n(" + exception.getMsg() + ")");
 	}
 
 	/**

@@ -41,13 +41,6 @@ public class User extends BaseEntity {
 	// 사용자 프로필 이미지 경로
 	private String image;
 
-	// 사용자 소개 정보 (최대 50자)
-	@Column(length = ValidationConstants.USER_INTRO_MAX_SIZE)
-	private String intro;
-
-	// 사용자 전화번호 정보
-	private String phone;
-
 	// 팔로워 수
 	private int followerCount;
 

@@ -24,6 +24,7 @@ public class AlbumDeleteService {
 
 	// service
 	private final AlbumReadService albumReadService;
+	private final AlbumContentReadService contentReadService;
 
 	// others
 	private final S3Uploader s3Uploader;
@@ -34,7 +35,7 @@ public class AlbumDeleteService {
 	@Transactional
 	public void deleteAlbum(Long albumId, Long userId, Long roomId) {
 
-		Album album = albumReadService.getAlbumWithAuth(albumId, roomId, userId);
+		Album album = albumReadService.getAlbumWithUser(albumId, roomId, userId);
 
 		album.delete();
 
@@ -47,7 +48,7 @@ public class AlbumDeleteService {
 	@Transactional
 	public void deleteAlbumContent(Long contentId, Long albumId, Long userId, Long roomId) {
 
-		AlbumContent albumContent = albumReadService.getAlbumContentWithAuth(contentId, albumId, roomId, userId);
+		AlbumContent albumContent = contentReadService.getAlbumContentWithAuth(contentId, albumId, roomId, userId);
 
 		deleteAlbumContent(albumContent);
 	}

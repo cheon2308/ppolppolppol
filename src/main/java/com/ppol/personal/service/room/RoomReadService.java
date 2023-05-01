@@ -2,6 +2,7 @@ package com.ppol.personal.service.room;
 
 import org.springframework.stereotype.Service;
 
+import com.ppol.personal.dto.response.RoomResponseDto;
 import com.ppol.personal.entity.personal.PersonalRoom;
 import com.ppol.personal.exception.exception.ForbiddenException;
 import com.ppol.personal.repository.PersonalRoomRepository;
@@ -21,7 +22,12 @@ public class RoomReadService {
 	// repository
 	private final PersonalRoomRepository personalRoomRepository;
 
-	// service
+	/**
+	 * 방 정보를 DTO로 불러오는 메서드
+	 */
+	public RoomResponseDto readRoom(Long userId, Long roomId) {
+		return RoomResponseDto.of(roomId == null ? getRoomByUser(userId) : getRoom(roomId));
+	}
 
 	/**
 	 * 기본 ID를 통해 방 엔티티를 찾고 사용자 ID를 통해 권한이 있는지 확인하는 메서드 (반드시 소유주만 접근해야 하는 경우 사용)
@@ -42,5 +48,12 @@ public class RoomReadService {
 	 */
 	public PersonalRoom getRoom(Long roomId) {
 		return personalRoomRepository.findById(roomId).orElseThrow(() -> new EntityNotFoundException("개인 방"));
+	}
+
+	/**
+	 * 특정 사용자의 개인 방 엔티티를 불러오는 메서드
+	 */
+	public PersonalRoom getRoomByUser(Long userId) {
+		return personalRoomRepository.findByOwner_Id(userId).orElseThrow(() -> new EntityNotFoundException("개인 방"));
 	}
 }
