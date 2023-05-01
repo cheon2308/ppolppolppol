@@ -1,6 +1,6 @@
 spring:
   application:
-    name: alarm
+    name: search
 
   profiles:
     active:
