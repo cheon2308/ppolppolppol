@@ -85,8 +85,8 @@ class _loginPageState extends State<loginPage> {
                           onPressed: () {
                             if (controller1.text != "" &&
                                 controller2.text != "") {
-                              print(
-                                  "ID : ${controller1.text} PW : ${controller2.text} 로그인했음");
+                              print("ID : ${controller1.text} PW : ${controller2.text} 로그인했음");
+                              //테스트입니다
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
