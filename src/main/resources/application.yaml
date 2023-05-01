@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: alarm
+    
   profiles:
     active:
       - local
