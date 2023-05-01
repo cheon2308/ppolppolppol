@@ -25,7 +25,8 @@ class _MyAppState extends State<MyApp> {
     //     home:ProfileScreen()
     // );
     return ThemeProvider(
-      initTheme: kDarkTheme,
+      // initTheme: kDarkTheme,
+      initTheme: kLightTheme,
       child: Builder(
         builder: (context) {
           return MaterialApp(
@@ -51,7 +52,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  CrossFadeState _crossFadeState = CrossFadeState.showFirst;
+  CrossFadeState _crossFadeState = CrossFadeState.showSecond;
   changeState(){
     setState(() {
       if(_crossFadeState==CrossFadeState.showFirst){
@@ -66,7 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context,
         designSize: Size(414, 896),
-        // , , allowFontScaling: true
     );
 
     var profileInfo = Expanded(
@@ -81,6 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   radius: kSpacingUnit.w * 5,
                   backgroundImage: AssetImage('assets/main_logo/ppol_logo.png'),
+                  backgroundColor: Colors.white,
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
@@ -99,7 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           print("수정클릭");
                         },
                         icon: Icon(LineAwesomeIcons.pen),
-                        color: kDarkPrimaryColor,
+                        // color: kDarkPrimaryColor,
+                        color: kLightPrimaryColor,
                         iconSize: ScreenUtil().setSp(kSpacingUnit.r * 1.0),
                         alignment: AlignmentDirectional.center,
                       ),
