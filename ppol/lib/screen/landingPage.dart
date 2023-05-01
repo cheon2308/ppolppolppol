@@ -2,14 +2,57 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 
-
-class landingPage extends StatefulWidget {
+class landingPage extends StatelessWidget {
   const landingPage({Key? key}) : super(key: key);
+
+
   @override
-  State<landingPage> createState() => _landingPageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/main_logo/ppol_logo.png',
+            ),
+            Image.asset(
+              'assets/main_logo/pjt_name_black.png',
+              scale: 1.2,
+            ),
+            Image.asset(
+              'assets/main_logo/with_us.png',
+              scale: 2,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class _landingPageState extends State<landingPage> {
+class landingPage2 extends StatefulWidget {
+  const landingPage2({Key? key}) : super(key: key);
+
+  @override
+  void initState(context) {
+    Timer(Duration(milliseconds: 1500), () {
+      Navigator.push(context, MaterialPageRoute(
+          builder: (context) => landingPage()
+      )
+      );
+    });
+  }
+
+  @override
+  State<landingPage2> createState() => _landingPage2State();
+}
+
+class _landingPage2State extends State<landingPage2> {
+
+
   @override
   Widget build(BuildContext context) {
     final String imageLogoName = "assets/main_logo/ppol_logo.png";
@@ -43,7 +86,7 @@ class _landingPageState extends State<landingPage> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(0,50,0,20),
+                        margin: EdgeInsets.fromLTRB(0,40,0,0),
                         child: Image.asset(
                           pjtname,
                           width: screenWidth * 0.56179,
