@@ -17,19 +17,19 @@ spring:
         - id: message
           uri: lb://MESSAGE
           predicates:
-            - Path=/message/**
+            - Path=/message-service/**
           filters:
             - RewritePath=/message-service/(?<segment>.*), /$\{segment}
         - id: auth
           uri: lb://AUTH
           predicates:
-            - Path=/auth/**
+            - Path=/auth-service/**
           filters:
             - RewritePath=/auth-service/(?<segment>.*), /$\{segment}
         - id: article
           uri: lb://ARTICLE
           predicates:
-            - Path=/article/**
+            - Path=/article-service/**
           filters:
             - RewritePath=/article-service/(?<segment>.*), /$\{segment}
         - id: user
