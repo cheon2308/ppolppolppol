@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ppol.article.dto.response.ArticleDetailDto;
 import com.ppol.article.dto.response.ArticleListDto;
-import com.ppol.article.dto.response.UserDto;
+import com.ppol.article.dto.response.UserResponseDto;
 import com.ppol.article.entity.article.Article;
 import com.ppol.article.exception.exception.ForbiddenException;
 import com.ppol.article.repository.jpa.ArticleRepository;
@@ -52,12 +52,10 @@ public class ArticleReadService {
 
 		Pageable pageable = PageRequest.of(0, size);
 
-		Slice<Article> articleSlice = articleRepository.findArticlesByFollowedUsers(userId, timestamp, lastArticleId,
+		Slice<Article> slice = articleRepository.findArticlesByFollowedUsers(userId, timestamp, lastArticleId,
 			pageable);
 
-		List<ArticleListDto> contentList = articleSlice.stream().map(a -> articleListMapping(a, userId)).toList();
-
-		return new SliceImpl<>(contentList, pageable, articleSlice.hasNext());
+		return slice.map(a -> articleListMapping(a, userId));
 	}
 
 	/**
@@ -110,7 +108,7 @@ public class ArticleReadService {
 			.createString(DateTimeUtils.getString(article.getCreatedAt()))
 			.createdAt(article.getCreatedAt())
 			.imageList(article.getImageList())
-			.writer(UserDto.of(article.getWriter()))
+			.writer(UserResponseDto.of(article.getWriter()))
 			.openStatus(article.getOpenStatus())
 			.build();
 	}
@@ -127,7 +125,7 @@ public class ArticleReadService {
 			.createString(DateTimeUtils.getString(article.getCreatedAt()))
 			.createdAt(article.getCreatedAt())
 			.imageList(article.getImageList())
-			.writer(UserDto.of(article.getWriter()))
+			.writer(UserResponseDto.of(article.getWriter()))
 			.openStatus(article.getOpenStatus())
 			.comment(commentReadService.getArticlePresentComment(article.getId(), article.getWriter().getId(), userId))
 			.build();

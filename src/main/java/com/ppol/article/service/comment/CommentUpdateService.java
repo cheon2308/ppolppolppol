@@ -3,7 +3,7 @@ package com.ppol.article.service.comment;
 import org.springframework.stereotype.Service;
 
 import com.ppol.article.dto.request.CommentUpdateDto;
-import com.ppol.article.dto.response.CommentDto;
+import com.ppol.article.dto.response.CommentResponseDto;
 import com.ppol.article.entity.article.ArticleComment;
 
 import jakarta.transaction.Transactional;
@@ -25,7 +25,7 @@ public class CommentUpdateService {
 	 *	해당 댓글에 대해 삭제 권한을 확인하고 불러온 뒤 내용을 수정한다.
 	 */
 	@Transactional
-	public CommentDto commentUpdate(CommentUpdateDto commentUpdateDto, Long commentId, Long userId) {
+	public CommentResponseDto commentUpdate(CommentUpdateDto commentUpdateDto, Long commentId, Long userId) {
 
 		ArticleComment comment = commentReadService.getArticleCommentWithAuth(commentId, userId);
 

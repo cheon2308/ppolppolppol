@@ -26,9 +26,9 @@ public class ArticleListDto {
 
 	private String content;
 
-	private CommentDto comment;
+	private CommentResponseDto comment;
 
-	private UserDto writer;
+	private UserResponseDto writer;
 
 	private OpenStatus openStatus;
 

@@ -1,7 +1,6 @@
 package com.ppol.article.dto.response;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CommentDto {
+public class CommentResponseDto {
 
 	private Long commentId;
 
@@ -24,9 +23,11 @@ public class CommentDto {
 
 	private Long parent;
 
-	private CommentDto comment;
+	private String content;
 
-	private UserDto writer;
+	private CommentResponseDto comment;
+
+	private UserResponseDto writer;
 
 	private LocalDateTime createdAt;
 

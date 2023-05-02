@@ -26,7 +26,7 @@ public class ArticleDetailDto {
 
 	private List<String> imageList;
 
-	private UserDto writer;
+	private UserResponseDto writer;
 
 	private OpenStatus openStatus;
 

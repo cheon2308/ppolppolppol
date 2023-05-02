@@ -18,7 +18,7 @@ import com.ppol.article.dto.request.CommentCreateDto;
 import com.ppol.article.dto.request.CommentUpdateDto;
 import com.ppol.article.dto.response.ArticleDetailDto;
 import com.ppol.article.dto.response.ArticleListDto;
-import com.ppol.article.dto.response.CommentDto;
+import com.ppol.article.dto.response.CommentResponseDto;
 import com.ppol.article.service.article.ArticleDeleteService;
 import com.ppol.article.service.article.ArticleReadService;
 import com.ppol.article.service.article.ArticleSaveService;
@@ -115,7 +115,7 @@ public class ArticleController {
 		@RequestParam(defaultValue = "NEW") CommentOrder commentOrder) {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<CommentDto> returnObject = commentReadService.findCommentList(articleId, lastCommentId, size,
+		Slice<CommentResponseDto> returnObject = commentReadService.findCommentList(articleId, lastCommentId, size,
 			commentOrder, userId);
 
 		return ResponseBuilder.ok(returnObject);
@@ -128,7 +128,7 @@ public class ArticleController {
 		@PathVariable Long commentId) {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<CommentDto> returnObject = commentReadService.findReplyList(articleId, commentId, size, lastCommentId,
+		Slice<CommentResponseDto> returnObject = commentReadService.findReplyList(articleId, commentId, size, lastCommentId,
 			userId);
 
 		return ResponseBuilder.ok(returnObject);
@@ -140,7 +140,7 @@ public class ArticleController {
 		@RequestBody CommentCreateDto commentCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentDto returnObject = commentSaveService.createComment(articleId, commentCreateDto, userId);
+		CommentResponseDto returnObject = commentSaveService.createComment(articleId, commentCreateDto, userId);
 
 		return ResponseBuilder.created(returnObject);
 	}
@@ -151,7 +151,7 @@ public class ArticleController {
 		@RequestBody CommentUpdateDto commentUpdateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentDto returnObject = commentUpdateService.commentUpdate(commentUpdateDto, commentId, userId);
+		CommentResponseDto returnObject = commentUpdateService.commentUpdate(commentUpdateDto, commentId, userId);
 
 		return ResponseBuilder.created(returnObject);
 	}

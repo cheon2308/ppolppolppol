@@ -15,7 +15,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class UserDto {
+public class UserResponseDto {
 
 	private Long userId;
 
@@ -23,8 +23,8 @@ public class UserDto {
 
 	private String profileImage;
 
-	public static UserDto of(User user) {
-		return UserDto.builder()
+	public static UserResponseDto of(User user) {
+		return UserResponseDto.builder()
 			.userId(user.getId())
 			.username(user.getUsername())
 			.profileImage(user.getImage())

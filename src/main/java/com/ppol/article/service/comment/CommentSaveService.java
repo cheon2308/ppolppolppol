@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Service;
 
 import com.ppol.article.dto.request.CommentCreateDto;
-import com.ppol.article.dto.response.CommentDto;
+import com.ppol.article.dto.response.CommentResponseDto;
 import com.ppol.article.entity.article.Article;
 import com.ppol.article.entity.article.ArticleComment;
 import com.ppol.article.entity.user.User;
@@ -41,7 +41,7 @@ public class CommentSaveService {
 	 * 댓글을 저장하는 메서드
 	 */
 	@Transactional
-	public CommentDto createComment(Long articleId, CommentCreateDto commentCreateDto, Long userId) {
+	public CommentResponseDto createComment(Long articleId, CommentCreateDto commentCreateDto, Long userId) {
 
 		Article article = articleReadService.getArticle(articleId);
 		User user = userReadService.getUser(userId);

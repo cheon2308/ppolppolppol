@@ -9,8 +9,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
-import com.ppol.article.dto.response.CommentDto;
-import com.ppol.article.dto.response.UserDto;
+import com.ppol.article.dto.response.CommentResponseDto;
+import com.ppol.article.dto.response.UserResponseDto;
 import com.ppol.article.entity.article.ArticleComment;
 import com.ppol.article.exception.exception.ForbiddenException;
 import com.ppol.article.repository.jpa.ArticleCommentRepository;
@@ -41,7 +41,8 @@ public class CommentReadService {
 	/**
 	 * 특정 게시글에 대해 댓글들을 불러오는 메서드
 	 */
-	public Slice<CommentDto> findCommentList(Long articleId, Long lastCommentId, int size, CommentOrder commentOrder,
+	public Slice<CommentResponseDto> findCommentList(Long articleId, Long lastCommentId, int size,
+		CommentOrder commentOrder,
 		Long userId) {
 
 		ArticleComment lastComment = lastCommentId == null ? null : getArticleComment(lastCommentId);
@@ -60,15 +61,14 @@ public class CommentReadService {
 			case OLD -> commentRepository.findByArticleOrderByCreatedAtASC(articleId, timestamp, pageable);
 		};
 
-		List<CommentDto> content = slice.stream().map((comment -> commentMappingWithPresent(comment, userId))).toList();
-
-		return new SliceImpl<>(content, slice.getPageable(), slice.hasNext());
+		return slice.map(comment -> commentMappingWithPresent(comment, userId));
 	}
 
 	/**
 	 * 특정 댓글의 대댓글들을 불러오는 메서드
 	 */
-	public Slice<CommentDto> findReplyList(Long articleId, Long parent, int size, Long lastCommentId, Long userId) {
+	public Slice<CommentResponseDto> findReplyList(Long articleId, Long parent, int size, Long lastCommentId,
+		Long userId) {
 
 		ArticleComment lastComment = getArticleComment(lastCommentId);
 
@@ -78,7 +78,7 @@ public class CommentReadService {
 		Slice<ArticleComment> slice = commentRepository.findByParentOrderByCreatedAtDESC(articleId, timestamp,
 			lastCommentId, parent, pageable);
 
-		List<CommentDto> content = slice.stream().map((comment -> commentMapping(comment, userId))).toList();
+		List<CommentResponseDto> content = slice.stream().map((comment -> commentMapping(comment, userId))).toList();
 
 		return new SliceImpl<>(content, slice.getPageable(), slice.hasNext());
 	}
@@ -87,7 +87,7 @@ public class CommentReadService {
 	 * 특정 게시글에 대해 대표 댓글을 불러오는 메서드
 	 * 대표 댓글의 우선순위 : 1순위 게시글 작성자의 댓글 중 좋아요 순서, 2순위 좋아요 순서
 	 */
-	public CommentDto getArticlePresentComment(Long articleId, Long writerId, Long userId) {
+	public CommentResponseDto getArticlePresentComment(Long articleId, Long writerId, Long userId) {
 
 		ArticleComment comment = commentRepository.findTopByArticle_IdAndWriter_IdOrderByLikeCountDesc(articleId,
 			writerId).orElse(null);
@@ -102,7 +102,7 @@ public class CommentReadService {
 	 * 특정 댓글에 대해 대표 댓글을 불러오는 메서드
 	 * 대표 댓글의 우선순위는 위와 같음
 	 */
-	public CommentDto getCommentPresentComment(Long articleId, Long parent, Long writerId, Long userId) {
+	public CommentResponseDto getCommentPresentComment(Long articleId, Long parent, Long writerId, Long userId) {
 
 		ArticleComment comment = commentRepository.findTopByArticle_IdAndParentAndWriter_IdOrderByLikeCountDesc(
 			articleId, parent, writerId).orElse(null);
@@ -136,25 +136,26 @@ public class CommentReadService {
 	/**
 	 * 댓글에 대표댓글 정보를 포함해서 DTO로 매핑하는 메서드
 	 */
-	public CommentDto commentMappingWithPresent(ArticleComment comment, Long userId) {
+	public CommentResponseDto commentMappingWithPresent(ArticleComment comment, Long userId) {
 
-		CommentDto commentDto = commentMapping(comment, userId);
-		commentDto.setComment(
+		CommentResponseDto commentResponseDto = commentMapping(comment, userId);
+		commentResponseDto.setComment(
 			getCommentPresentComment(comment.getArticle().getId(), comment.getId(), comment.getWriter().getId(),
 				userId));
 
-		return commentDto;
+		return commentResponseDto;
 	}
 
 	/**
 	 * 댓글에 엔티티를 DTO로 매핑하는 메서드
 	 */
-	public CommentDto commentMapping(ArticleComment comment, Long userId) {
+	public CommentResponseDto commentMapping(ArticleComment comment, Long userId) {
 
-		return CommentDto.builder()
+		return CommentResponseDto.builder()
 			.commentId(comment.getId())
 			.articleId(comment.getArticle().getId())
-			.writer(UserDto.of(comment.getWriter()))
+			.writer(UserResponseDto.of(comment.getWriter()))
+			.content(comment.getContent())
 			.parent(comment.getParent())
 			.isLike(userInteractionReadService.getArticleCommentLike(userId, comment.getId()))
 			.createString(DateTimeUtils.getString(comment.getCreatedAt()))
