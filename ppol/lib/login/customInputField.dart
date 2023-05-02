@@ -42,6 +42,7 @@ class _customInputFieldState extends State<customInputField> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
                     controller: widget.controller,
+                    obscureText: (widget.hintText=="PASSWORD"||widget.hintText=="PW"?true:false),
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: widget.hintText,

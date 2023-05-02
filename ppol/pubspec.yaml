@@ -39,6 +39,7 @@ dependencies:
   line_awesome_flutter: ^1.0.1
   flutter_screenutil: ^5.7.0
   animated_theme_switcher: ^2.0.8
+  flutter_native_splash: ^2.2.19
 
 dev_dependencies:
   flutter_test:
@@ -57,7 +58,21 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+flutter_native_splash:
+  color: "#000000"
+  color_dark: "#272727"
+  image: assets/main_logo/Ellipse 70.png
+  image_dark: assets/main_logo/Ellipse 70.png
+  android: true
+  ios: true
+  android_gravity: fill
+  fullscreen: true
 
+  android_12:
+    image: assets/main_logo/Ellipse 70.png
+    icon_background_color: "#f7f6f1"
+    image_dark: assets/main_logo/Ellipse 70.png
+    icon_background_color_dark: "#272727"
 # The following section is specific to Flutter packages.
 flutter:
   assets:
