@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.ppol.group.dto.response.group.GroupDetailDto;
 import com.ppol.group.dto.response.group.GroupListDto;
 import com.ppol.group.entity.group.Group;
 import com.ppol.group.exception.exception.ForbiddenException;
@@ -31,6 +32,14 @@ public class GroupReadService {
 	@Transactional
 	public List<GroupListDto> findGroupList(Long userId) {
 		return groupRepository.findByUserList_Id(userId).stream().map(GroupListDto::of).toList();
+	}
+
+	/**
+	 * 특정 그룹 상세정보를 불러오는 메서드
+	 */
+	@Transactional
+	public GroupDetailDto findGroup(Long groupId, Long userId) {
+		return GroupDetailDto.of(getGroupWithParticipant(groupId, userId));
 	}
 
 	/**

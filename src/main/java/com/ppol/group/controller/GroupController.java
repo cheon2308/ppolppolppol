@@ -1,5 +1,7 @@
 package com.ppol.group.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,12 +22,25 @@ import com.ppol.group.dto.request.group.GroupCreateDto;
 import com.ppol.group.dto.request.group.GroupUpdateDto;
 import com.ppol.group.dto.request.invite.InviteAnswerDto;
 import com.ppol.group.dto.request.invite.InviteCreateDto;
+import com.ppol.group.dto.response.CommentResponseDto;
+import com.ppol.group.dto.response.InviteResponseDto;
 import com.ppol.group.dto.response.article.ArticleDetailDto;
 import com.ppol.group.dto.response.article.ArticleListDto;
-import com.ppol.group.dto.response.CommentResponseDto;
 import com.ppol.group.dto.response.group.GroupDetailDto;
 import com.ppol.group.dto.response.group.GroupListDto;
-import com.ppol.group.dto.response.InviteResponseDto;
+import com.ppol.group.service.article.ArticleCreateService;
+import com.ppol.group.service.article.ArticleDeleteService;
+import com.ppol.group.service.article.ArticleReadService;
+import com.ppol.group.service.article.ArticleUpdateService;
+import com.ppol.group.service.comment.CommentCreateService;
+import com.ppol.group.service.comment.CommentDeleteService;
+import com.ppol.group.service.comment.CommentReadService;
+import com.ppol.group.service.comment.CommentUpdateService;
+import com.ppol.group.service.group.GroupCreateService;
+import com.ppol.group.service.group.GroupDeleteService;
+import com.ppol.group.service.group.GroupReadService;
+import com.ppol.group.service.group.GroupUpdateService;
+import com.ppol.group.service.invite.InviteService;
 import com.ppol.group.util.request.RequestUtils;
 import com.ppol.group.util.response.ResponseBuilder;
 
@@ -36,6 +51,27 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GroupController {
 
+	// Group
+	private final GroupReadService groupReadService;
+	private final GroupCreateService groupCreateService;
+	private final GroupUpdateService groupUpdateService;
+	private final GroupDeleteService groupDeleteService;
+
+	// Article
+	private final ArticleReadService articleReadService;
+	private final ArticleCreateService articleCreateService;
+	private final ArticleUpdateService articleUpdateService;
+	private final ArticleDeleteService articleDeleteService;
+
+	// comment
+	private final CommentReadService commentReadService;
+	private final CommentCreateService commentCreateService;
+	private final CommentUpdateService commentUpdateService;
+	private final CommentDeleteService commentDeleteService;
+
+	// Invite
+	private final InviteService inviteService;
+
 	/**
 	 * Groups
 	 */
@@ -44,7 +80,7 @@ public class GroupController {
 	public ResponseEntity<?> createGroup(@RequestBody GroupCreateDto groupCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		GroupDetailDto returnObject = null;
+		GroupDetailDto returnObject = groupCreateService.createGroup(userId, groupCreateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -54,7 +90,7 @@ public class GroupController {
 	public ResponseEntity<?> updateGroup(@RequestBody GroupUpdateDto groupUpdateDto, @PathVariable Long groupId) {
 
 		Long userId = RequestUtils.getUserId();
-		GroupDetailDto returnObject = null;
+		GroupDetailDto returnObject = groupUpdateService.updateGroup(groupId, userId, groupUpdateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -64,8 +100,9 @@ public class GroupController {
 	public ResponseEntity<?> deleteGroup(@PathVariable Long groupId) {
 
 		Long userId = RequestUtils.getUserId();
+		groupDeleteService.deleteGroup(groupId, userId);
 
-		return ResponseBuilder.ok("");
+		return ResponseBuilder.ok("Group Deleted");
 	}
 
 	// 특정 그룹 상세정보 불러오기
@@ -73,7 +110,7 @@ public class GroupController {
 	public ResponseEntity<?> getGroup(@PathVariable Long groupId) {
 
 		Long userId = RequestUtils.getUserId();
-		GroupDetailDto returnObject = null;
+		GroupDetailDto returnObject = groupReadService.findGroup(groupId, userId);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -83,7 +120,7 @@ public class GroupController {
 	public ResponseEntity<?> getGroupList() {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<GroupListDto> returnObject = null;
+		List<GroupListDto> returnObject = groupReadService.findGroupList(userId);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -96,7 +133,7 @@ public class GroupController {
 	public ResponseEntity<?> createArticle(@PathVariable Long groupId, ArticleCreateDto articleCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		ArticleDetailDto returnObject = null;
+		ArticleDetailDto returnObject = articleCreateService.createArticle(groupId, userId, articleCreateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -107,7 +144,8 @@ public class GroupController {
 		@RequestBody ArticleUpdateDto articleUpdateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		ArticleDetailDto returnObject = null;
+		ArticleDetailDto returnObject = articleUpdateService.updateArticle(groupId, articleId, userId,
+			articleUpdateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -117,6 +155,7 @@ public class GroupController {
 	public ResponseEntity<?> updateArticle(@PathVariable Long groupId, @PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
+		articleDeleteService.deleteArticle(groupId, articleId, userId);
 
 		return ResponseBuilder.ok("Deleted");
 	}
@@ -126,8 +165,7 @@ public class GroupController {
 	public ResponseEntity<?> readArticleList(@PathVariable Long groupId, @RequestParam(required = false) Long lastId,
 		@RequestParam(defaultValue = "20") int size) {
 
-		Long userId = RequestUtils.getUserId();
-		Slice<ArticleListDto> returnObject = null;
+		Slice<ArticleListDto> returnObject = articleReadService.readArticleList(groupId, lastId, size);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -137,7 +175,7 @@ public class GroupController {
 	public ResponseEntity<?> readArticle(@PathVariable Long groupId, @PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
-		ArticleDetailDto returnObject = null;
+		ArticleDetailDto returnObject = articleReadService.readArticle(groupId, articleId, userId);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -151,7 +189,8 @@ public class GroupController {
 		@RequestBody CommentCreateDto commentCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentResponseDto returnObject = null;
+		CommentResponseDto returnObject = commentCreateService.createComment(groupId, articleId, userId,
+			commentCreateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -162,7 +201,8 @@ public class GroupController {
 		@PathVariable Long commentId, @RequestBody CommentUpdateDto commentUpdateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentResponseDto returnObject = null;
+		CommentResponseDto returnObject = commentUpdateService.updateComment(groupId, articleId, commentId, userId,
+			commentUpdateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -173,6 +213,7 @@ public class GroupController {
 		@PathVariable Long commentId) {
 
 		Long userId = RequestUtils.getUserId();
+		commentDeleteService.deleteComment(groupId, articleId, commentId, userId);
 
 		return ResponseBuilder.ok("Deleted");
 	}
@@ -182,8 +223,7 @@ public class GroupController {
 	public ResponseEntity<?> readCommentList(@PathVariable Long groupId, @PathVariable Long articleId,
 		@RequestParam(required = false) Long lastId, @RequestParam(defaultValue = "20") int size) {
 
-		Long userId = RequestUtils.getUserId();
-		Slice<CommentResponseDto> returnObject = null;
+		Slice<CommentResponseDto> returnObject = commentReadService.readCommentList(articleId, lastId, size);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -193,20 +233,22 @@ public class GroupController {
 	 */
 	// 그룹에 사용자 초대
 	@PostMapping("/{groupId}/invite")
-	public ResponseEntity<?> createUserInvite(@PathVariable Long groupId, @RequestBody InviteCreateDto inviteCreateDto) {
+	public ResponseEntity<?> createUserInvite(@PathVariable Long groupId,
+		@RequestBody InviteCreateDto inviteCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		InviteResponseDto returnObject = null;
+		InviteResponseDto returnObject = inviteService.createInvite(groupId, userId, inviteCreateDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 초대에 대한 사용자 응답
 	@PostMapping("/{groupId}/users")
-	public ResponseEntity<?> createUserInvite(@PathVariable Long groupId, @RequestBody InviteAnswerDto inviteCreateDto) {
+	public ResponseEntity<?> createUserInvite(@PathVariable Long groupId,
+		@RequestBody InviteAnswerDto inviteAnswerDto) {
 
 		Long userId = RequestUtils.getUserId();
-		String returnObject = null;
+		String returnObject = inviteService.answerInvite(groupId, userId, inviteAnswerDto);
 
 		return ResponseBuilder.ok(returnObject);
 	}
@@ -219,9 +261,9 @@ public class GroupController {
 	public ResponseEntity<?> updateArticleFixTop(@PathVariable Long groupId, @PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
-		String returnObject = null;
+		articleUpdateService.updateArticleFixed(groupId, articleId, userId);
 
-		return ResponseBuilder.ok(returnObject);
+		return ResponseBuilder.ok("Article Fixed");
 	}
 
 }

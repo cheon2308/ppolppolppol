@@ -65,9 +65,11 @@ public class InviteService {
 	 * 두 경우 모두 초대 객체는 삭제 처리함
 	 */
 	@Transactional
-	public void answerInvite(Long groupId, Long userId, InviteAnswerDto inviteAnswerDto) {
+	public String answerInvite(Long groupId, Long userId, InviteAnswerDto inviteAnswerDto) {
 
 		GroupInvite invite = getInvite(userId, groupId);
+
+		String returnString = "거절함";
 
 		if (inviteAnswerDto.getAccept()) {
 			Group group = groupReadService.getGroup(groupId);
@@ -84,9 +86,13 @@ public class InviteService {
 				.orElseThrow(() -> new EntityNotFoundException("메시지/채팅 채널"));
 
 			channel.addUser(user);
+
+			returnString = "참여함";
 		}
 
 		invite.delete();
+
+		return returnString;
 	}
 
 	/**

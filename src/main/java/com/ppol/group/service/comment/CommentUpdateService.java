@@ -3,6 +3,7 @@ package com.ppol.group.service.comment;
 import org.springframework.stereotype.Service;
 
 import com.ppol.group.dto.request.comment.CommentUpdateDto;
+import com.ppol.group.dto.response.CommentResponseDto;
 import com.ppol.group.entity.group.GroupArticleComment;
 
 import jakarta.transaction.Transactional;
@@ -24,11 +25,13 @@ public class CommentUpdateService {
 	 * 특정 댓글을 삭제하는 메서드
 	 */
 	@Transactional
-	public void updateComment(Long groupId, Long articleId, Long commentId, Long userId,
+	public CommentResponseDto updateComment(Long groupId, Long articleId, Long commentId, Long userId,
 		CommentUpdateDto commentUpdateDto) {
 
 		GroupArticleComment comment = commentReadService.getComment(commentId, groupId, articleId, userId);
 
 		comment.updateContent(commentUpdateDto.getContent());
+
+		return CommentResponseDto.of(comment);
 	}
 }
