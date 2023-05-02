@@ -8,6 +8,8 @@ import java.util.Set;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.ppol.group.entity.user.User;
+
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 	서비스의 채팅 메시지 채널을 나타내는 Document
+ * 서비스의 채팅 메시지 채널을 나타내는 Document
  */
 @Getter
 @NoArgsConstructor
@@ -49,4 +51,8 @@ public class MessageChannel implements Serializable {
 	 	사용자에게 채팅 채널 목록을 줄 때 최근 메시지 발생 시간으로 정렬해서 보여주기 위함
 	 */
 	private LocalDateTime lastMessageTimestamp;
+
+	public void addUser(User user) {
+		userList.add(MessageUser.of(user));
+	}
 }

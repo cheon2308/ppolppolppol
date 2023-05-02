@@ -30,18 +30,29 @@ public class GroupArticle extends BaseArticle {
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "uer_group")
+	@JoinColumn(name = "user_group")
 	private Group group;
+
+	private boolean fixed;
 
 	// Builder
 	@Builder
 	public GroupArticle(Long id, String content, List<String> imageList, User writer, int likeCount, int state,
-		Group group) {
+		Group group, boolean fixed) {
 
 		// 부모 생성자
 		super(id, content, imageList, writer, likeCount, state);
 
 		// GroupArticle 변수들
 		this.group = group;
+		this.fixed = fixed;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
+
+	public void updateFixed() {
+		this.fixed = !this.fixed;
 	}
 }

@@ -39,4 +39,8 @@ public class GroupArticleComment extends BaseComment {
 		// GroupArticleComment 변수들
 		this.groupArticle = groupArticle;
 	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
 }

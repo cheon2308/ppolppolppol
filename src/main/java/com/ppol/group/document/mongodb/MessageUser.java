@@ -3,6 +3,8 @@ package com.ppol.group.document.mongodb;
 import java.io.Serial;
 import java.io.Serializable;
 
+import com.ppol.group.entity.user.User;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,4 +33,12 @@ public class MessageUser implements Serializable {
 
 	// 사용자의 프로필 이미지
 	private String profileImage;
+
+	public static MessageUser of(User user) {
+		return MessageUser.builder()
+			.userId(user.getId())
+			.username(user.getUsername())
+			.profileImage(user.getImage())
+			.build();
+	}
 }

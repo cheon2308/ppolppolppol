@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 	서비스에서 사용자들간의 그룹을 나타내는 엔티티
+ * 서비스에서 사용자들간의 그룹을 나타내는 엔티티
  */
 @Getter
 @NoArgsConstructor
@@ -54,11 +54,7 @@ public class Group extends BaseEntity {
 
 	// 그룹에 참여중인 사용자들
 	@ManyToMany
-	@JoinTable(
-		name = "group_users",
-		joinColumns = @JoinColumn(name = "group_id"),
-		inverseJoinColumns = @JoinColumn(name = "user_id")
-	)
+	@JoinTable(name = "group_users", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private final Set<User> userList = new HashSet<>();
 
 	// 그룹 상태 (0: 정상, 1: 삭제)
@@ -67,5 +63,13 @@ public class Group extends BaseEntity {
 	// 그룹을 삭제하는 메서드
 	public void delete() {
 		this.state = 1;
+	}
+
+	public void addUser(User user) {
+		userList.add(user);
+	}
+
+	public void updateTitle(String title) {
+		this.title = title;
 	}
 }
