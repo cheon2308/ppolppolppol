@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:ppol/login/constancts.dart';
 import 'package:ppol/login/homePage.dart';
+import 'package:ppol/login/loginPage.dart';
 import 'package:ppol/widgets/profile_list_item.dart';
 
 void main() {
@@ -33,7 +34,8 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: kLightTheme,
-            home: homePage(),
+            // home: homePage(),
+            home: loginPage(),
           );
         },
       ),
@@ -181,27 +183,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ProfileListItem(
                         icon: LineAwesomeIcons.user_shield,
                         text: '내정보',
+                        fun: (){
+                          print("내정보");
+                        },
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.history,
                         text: '기록',
+                        fun: (){
+                          print("기록");
+                        },
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.question_circle,
                         text: '도움',
+                        fun: (){
+                          print("도움");
+                        },
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.cog,
                         text: '설정',
+                        fun: (){
+                          print("설정");
+                        },
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.user_plus,
                         text: '초대',
+                        fun: (){
+                          print("초대");
+                        },
                       ),
                       ProfileListItem(
                         icon: LineAwesomeIcons.alternate_sign_out,
                         text: '로그아웃',
                         hasNavigation: false,
+                        fun: (){
+                          // Navigator.pop(context);
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => loginPage(),));
+                          // Navigator.popUntil(context, (route) => true);
+                          var count = 0;
+                          Navigator.popUntil(context, (route) {
+                            return count++ == 2;
+                          });
+                          // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => loginPage(),));
+                          print("로그아웃");
+
+                        },
                       ),
                     ],
                   ),

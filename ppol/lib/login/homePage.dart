@@ -30,7 +30,9 @@ class homePage extends StatelessWidget {
           SpeedDialChild(
             child: Icon(Icons.add),
             label: 'Upload',
-            onTap: () => {print("하이1")},
+            onTap: () => {
+              print("하이1")
+            },
           ),
           SpeedDialChild(
             child: Icon(Icons.message_outlined),

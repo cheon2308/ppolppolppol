@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ppol/login/customInputField.dart';
 import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(MaterialApp(title: 'Login App', home: loginPage()));
@@ -26,6 +28,37 @@ class _loginPageState extends State<loginPage> {
       controller.text = input;
     });
   }
+
+  Future<void> fetchData() async {
+    var data = {
+      "accountId" : controller1.text,
+      "password" : controller2.text,
+      "provider":"EMAIL"
+    };
+    var body = json.encode(data);
+    // var apiUrl = 'http://k8e106.p.ssafy.io:8000/user-service/users';
+    var apiUrl = Uri.parse('http://k8e106.p.ssafy.io:8000/auth-service/login');
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {"Content-Type": "application/json"},
+        body: body,
+      );
+      if (response.statusCode == 200) {
+        // The API call was successful, and you can parse the response body here.
+        print('Response data: ${response.body}');
+        Navigator.push(context,MaterialPageRoute(
+                builder: (c) => homePage()));
+      } else {
+        // The API call failed. You can handle the error here.
+        print('Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // An exception occurred during the API call. You can handle the exception here.
+      print('Error: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +105,7 @@ class _loginPageState extends State<loginPage> {
                     customInputField(Icon(Icons.person, color: Colors.white),
                         'ID', controller1, main_Color),
                     customInputField(Icon(Icons.lock, color: Colors.white),
-                        'Password', controller2, main_Color),
+                        'PASSWORD', controller2, main_Color),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Container(
@@ -85,14 +118,11 @@ class _loginPageState extends State<loginPage> {
                           onPressed: () {
                             if (controller1.text != "" &&
                                 controller2.text != "") {
-                              print(
-                                  "ID : ${controller1.text} PW : ${controller2.text} 로그인했음");
-                              //테스트입니다
-                              // 테스트 2
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (c) => homePage()));
+                              // print(
+                              //     "ID : ${controller1.text} PW : ${controller2.text} 로그인했음");
+                              // //테스트입니다
+                              // // 테스트 2
+                              fetchData();
                             } else if (controller1.text == "" &&
                                 controller2.text != "") {
                               showSnackBar(
