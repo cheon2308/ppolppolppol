@@ -8,10 +8,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.ppol.erd.exception.exception.EnumConvertException;
-import com.ppol.erd.exception.exception.ForbiddenException;
-import com.ppol.erd.exception.exception.S3Exception;
-import com.ppol.erd.util.response.ResponseBuilder;
+import com.ppol.group.exception.exception.EnumConvertException;
+import com.ppol.group.exception.exception.ForbiddenException;
+import com.ppol.group.exception.exception.GroupMemberExceededException;
+import com.ppol.group.exception.exception.ImageCountException;
+import com.ppol.group.exception.exception.InvalidParameterException;
+import com.ppol.group.exception.exception.S3Exception;
+import com.ppol.group.exception.exception.UserGroupLimitException;
+import com.ppol.group.util.constatnt.classes.ValidationConstants;
+import com.ppol.group.util.response.ResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +28,47 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class CommonExceptionHandler {
+
+	/**
+	 * {@link GroupMemberExceededException} 그룹에 다른사용자 초대 혹은 다른 사용자 참여 시 인원초과된 경우 발생하는 예외
+	 * 사용자 요청 파라미터 에러이므로 400코드를 반환한다.
+	 */
+	@ExceptionHandler({GroupMemberExceededException.class})
+	public ResponseEntity<?> handleGroupMemberExceededException(GroupMemberExceededException exception) {
+
+		log.error("그룹 인원 초과 예외");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest(
+			"그룹의 현재 인원이 최대인원(" + ValidationConstants.GROUP_USER_MAX + ")에 도달했습니다.");
+	}
+
+	/**
+	 * {@link UserGroupLimitException} 사용자 그룹 생성 시 생성할 수 있는 최대 수를 초과한 경우 발생하는 예외
+	 * 사용자 요청 파라미터 에러이므로 400코드를 반환한다.
+	 */
+	@ExceptionHandler({UserGroupLimitException.class})
+	public ResponseEntity<?> handleUserGroupLimitException(UserGroupLimitException exception) {
+
+		log.error("사용자가 생성할 수 있는 그룹 개수 넘음 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest(
+			"그룹은 최대 " + ValidationConstants.USER_CREATE_GROUP_MAX + "개를 생성 할 수있습니다.\n다른 그룹을 삭제 후 진행해주세요.");
+	}
+
+	/**
+	 * {@link ImageCountException} 하나의 게시글에 10개를 초과하는 사진 파일을 저장하려고 할 때 발생하는 에러
+	 * 클라이언트로 부터 받은 parameter가 잘못되어 발생했기 때문에 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({ImageCountException.class})
+	public ResponseEntity<?> handleImageCountException(ImageCountException exception) {
+
+		log.error("게시글 이미지 개수 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("게시글에는 최대 10개의 사진을 등록할 수 있습니다.");
+	}
 
 	/**
 	 * {@link EnumConvertException} Enum 변환 시 발생하는 에러들을 처리한다.
@@ -61,6 +107,19 @@ public class CommonExceptionHandler {
 		exception.printStackTrace();
 
 		return ResponseBuilder.badRequest("존재하지 않는 " + exception.getMessage() + "입니다.");
+	}
+
+	/**
+	 * {@link InvalidParameterException} Enum 변환 시 발생하는 에러들을 처리한다.
+	 * 사용자가 잘못된 요청을 보냈으므로 잘못된 요청으로 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({InvalidParameterException.class})
+	public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException exception) {
+
+		log.error("잘못된 요청");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("잘못된 요청입니다.\n(" + exception.getMsg() + ")");
 	}
 
 	/**
