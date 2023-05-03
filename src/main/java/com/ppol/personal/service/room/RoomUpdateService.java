@@ -28,5 +28,8 @@ public class RoomUpdateService {
 
 		PersonalRoom room = roomReadService.getRoomByUser(userId);
 
+		room.updateOpenStatus(roomUpdateDto.getOpenStatus());
+		room.updateQuiz(roomUpdateDto.getQuiz());
+		room.updateAnswer(roomUpdateDto.getAnswer());
 	}
 }

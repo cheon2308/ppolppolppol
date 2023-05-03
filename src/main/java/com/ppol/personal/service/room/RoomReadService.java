@@ -25,8 +25,8 @@ public class RoomReadService {
 	/**
 	 * 방 정보를 DTO로 불러오는 메서드
 	 */
-	public RoomResponseDto readRoom(Long userId, Long roomId) {
-		return RoomResponseDto.of(roomId == null ? getRoomByUser(userId) : getRoom(roomId));
+	public RoomResponseDto readRoom(Long userId, Long targetUserId) {
+		return RoomResponseDto.of(targetUserId == null ? getRoomByUser(userId) : getRoomByUser(targetUserId));
 	}
 
 	/**

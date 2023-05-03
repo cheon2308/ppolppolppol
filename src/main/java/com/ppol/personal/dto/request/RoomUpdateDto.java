@@ -1,5 +1,7 @@
 package com.ppol.personal.dto.request;
 
+import com.ppol.personal.util.constatnt.enums.OpenStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,4 +19,8 @@ import lombok.ToString;
 @Builder
 @ToString
 public class RoomUpdateDto {
+
+	private OpenStatus openStatus;
+	private String quiz;
+	private String answer;
 }

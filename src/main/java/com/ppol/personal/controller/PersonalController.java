@@ -19,6 +19,7 @@ import com.ppol.personal.dto.request.AlbumUpdateDto;
 import com.ppol.personal.dto.request.CommentCreateDto;
 import com.ppol.personal.dto.request.ContentCreateDto;
 import com.ppol.personal.dto.request.ContentUpdateDto;
+import com.ppol.personal.dto.request.RoomCreateDto;
 import com.ppol.personal.dto.request.RoomUpdateDto;
 import com.ppol.personal.dto.response.AlbumDetailDto;
 import com.ppol.personal.dto.response.AlbumListDto;
@@ -69,10 +70,9 @@ public class PersonalController {
 
 	// 개인 룸 생성 (회원 가입 시)
 	@PostMapping
-	public ResponseEntity<?> createPersonalRoom() {
+	public ResponseEntity<?> createPersonalRoom(@RequestBody RoomCreateDto roomCreateDto) {
 
-		Long userId = RequestUtils.getUserId();
-		roomCreateService.createRoom(userId);
+		roomCreateService.createRoom(roomCreateDto.getUserId());
 
 		return ResponseBuilder.ok("");
 	}
@@ -99,16 +99,16 @@ public class PersonalController {
 
 	// 사용자의 개인 룸 정보 불러오기
 	@GetMapping
-	public ResponseEntity<?> readPersonalRoom(@RequestParam(required = false) Long roomId) {
+	public ResponseEntity<?> readPersonalRoom(@RequestParam(required = false) Long targetUserId) {
 
 		Long userId = RequestUtils.getUserId();
-		RoomResponseDto returnObject = roomReadService.readRoom(userId, roomId);
+		RoomResponseDto returnObject = roomReadService.readRoom(userId, targetUserId);
 
 		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 무작위 개인 룸 불러오기
-	@GetMapping
+	@GetMapping("/random")
 	public ResponseEntity<?> readRandomRoom() {
 
 		return ResponseBuilder.ok("");
@@ -239,7 +239,7 @@ public class PersonalController {
 	}
 
 	// 특정 앨범의 특정 댓글 삭제하기
-	@PostMapping("/{personalRoomId}/albums/{albumId}/comments/{commentId}")
+	@DeleteMapping("/{personalRoomId}/albums/{albumId}/comments/{commentId}")
 	public ResponseEntity<?> deleteAlbumComment(@PathVariable Long personalRoomId, @PathVariable Long albumId,
 		@PathVariable Long commentId) {
 

@@ -56,7 +56,7 @@ public class CommonExceptionHandler {
 
 	/**
 	 * {@link InvalidParameterException} Enum 변환 시 발생하는 에러들을 처리한다.
-	 * 사용자가 초과한 요청을 보냈으므로 잘못된 요청으로 400 코드를 반환한다.
+	 * 사용자가 잘못된 요청을 보냈으므로 잘못된 요청으로 400 코드를 반환한다.
 	 */
 	@ExceptionHandler({InvalidParameterException.class})
 	public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException exception) {

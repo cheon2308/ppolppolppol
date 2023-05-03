@@ -47,6 +47,7 @@ public class AlbumContent extends BaseEntity {
 	private String image;
 
 	@NotNull
+	@Column(name = "content_order")
 	private Integer order;
 
 	@NotNull
