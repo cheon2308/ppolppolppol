@@ -156,11 +156,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         SizedBox(width: kSpacingUnit.w * 3),
         IconButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => homePage(),
-                  ));
+              Navigator.pop(context);
             },
             icon: Icon(LineAwesomeIcons.arrow_left)),
         profileInfo,
