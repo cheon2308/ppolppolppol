@@ -41,6 +41,7 @@ import com.ppol.group.service.group.GroupDeleteService;
 import com.ppol.group.service.group.GroupReadService;
 import com.ppol.group.service.group.GroupUpdateService;
 import com.ppol.group.service.invite.InviteService;
+import com.ppol.group.service.user.UserDeleteService;
 import com.ppol.group.util.request.RequestUtils;
 import com.ppol.group.util.response.ResponseBuilder;
 
@@ -69,8 +70,9 @@ public class GroupController {
 	private final CommentUpdateService commentUpdateService;
 	private final CommentDeleteService commentDeleteService;
 
-	// Invite
+	// others
 	private final InviteService inviteService;
+	private final UserDeleteService userDeleteService;
 
 	/**
 	 * Groups
@@ -151,7 +153,7 @@ public class GroupController {
 	}
 
 	// 특정 게시글/피드 삭제
-	@PutMapping("/{groupId}/articles/{articleId}")
+	@DeleteMapping("/{groupId}/articles/{articleId}")
 	public ResponseEntity<?> updateArticle(@PathVariable Long groupId, @PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
@@ -171,7 +173,7 @@ public class GroupController {
 	}
 
 	// 특정 게시글/피드 상세정보 불러오기
-	@PutMapping("/{groupId}/articles/{articleId}")
+	@GetMapping("/{groupId}/articles/{articleId}")
 	public ResponseEntity<?> readArticle(@PathVariable Long groupId, @PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
@@ -196,7 +198,7 @@ public class GroupController {
 	}
 
 	// 특정 게시글/피드에 댓글 수정
-	@PostMapping("/{groupId}/articles/{articleId}/comments/{commentId}")
+	@PutMapping("/{groupId}/articles/{articleId}/comments/{commentId}")
 	public ResponseEntity<?> updateComment(@PathVariable Long groupId, @PathVariable Long articleId,
 		@PathVariable Long commentId, @RequestBody CommentUpdateDto commentUpdateDto) {
 
@@ -208,7 +210,7 @@ public class GroupController {
 	}
 
 	// 특정 게시글/피드에 댓글 삭제
-	@PostMapping("/{groupId}/articles/{articleId}/comments/{commentId}")
+	@DeleteMapping("/{groupId}/articles/{articleId}/comments/{commentId}")
 	public ResponseEntity<?> deleteComment(@PathVariable Long groupId, @PathVariable Long articleId,
 		@PathVariable Long commentId) {
 
@@ -253,17 +255,27 @@ public class GroupController {
 		return ResponseBuilder.ok(returnObject);
 	}
 
+	// 사용자 그룹 탈퇴
+	@DeleteMapping("/{groupId}/users")
+	public ResponseEntity<?> deleteUserFromGroup(@PathVariable Long groupId) {
+
+		Long userId = RequestUtils.getUserId();
+		userDeleteService.deleteUserFromGroup(userId, groupId);
+
+		return ResponseBuilder.ok("");
+	}
+
 	/**
 	 * others
 	 */
 	// 특정 게시글/피드 상단 고정
-	@PutMapping("/{groupId}/articles{articleId}/top")
+	@PutMapping("/{groupId}/articles/{articleId}/top")
 	public ResponseEntity<?> updateArticleFixTop(@PathVariable Long groupId, @PathVariable Long articleId) {
 
 		Long userId = RequestUtils.getUserId();
-		articleUpdateService.updateArticleFixed(groupId, articleId, userId);
+		ArticleDetailDto returnObject = articleUpdateService.updateArticleFixed(groupId, articleId, userId);
 
-		return ResponseBuilder.ok("Article Fixed");
+		return ResponseBuilder.ok(returnObject);
 	}
 
 }

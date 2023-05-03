@@ -72,4 +72,8 @@ public class Group extends BaseEntity {
 	public void updateTitle(String title) {
 		this.title = title;
 	}
+
+	public void updateOwner(User owner) {
+		this.owner = owner;
+	}
 }

@@ -10,9 +10,11 @@ import com.ppol.group.document.mongodb.MessageUser;
 import com.ppol.group.dto.request.group.GroupCreateDto;
 import com.ppol.group.dto.response.group.GroupDetailDto;
 import com.ppol.group.entity.group.Group;
+import com.ppol.group.entity.group.GroupUserAlarm;
 import com.ppol.group.entity.user.User;
 import com.ppol.group.exception.exception.UserGroupLimitException;
 import com.ppol.group.repository.jpa.GroupRepository;
+import com.ppol.group.repository.jpa.GroupUserAlarmRepository;
 import com.ppol.group.repository.mongo.MessageChannelRepository;
 import com.ppol.group.service.user.UserReadService;
 import com.ppol.group.util.constatnt.classes.ValidationConstants;
@@ -31,10 +33,10 @@ public class GroupCreateService {
 
 	// repository
 	private final GroupRepository groupRepository;
+	private final GroupUserAlarmRepository alarmRepository;
 	private final MessageChannelRepository channelRepository;
 
 	// services
-	private final GroupReadService groupReadService;
 	private final UserReadService userReadService;
 
 	/**
@@ -53,6 +55,8 @@ public class GroupCreateService {
 			group.addUser(owner);
 
 			createMessageChannel(group);
+
+			alarmRepository.save(GroupUserAlarm.builder().user(owner).group(group).build());
 
 			return GroupDetailDto.of(group);
 		}

@@ -8,10 +8,13 @@ import com.ppol.group.dto.request.invite.InviteCreateDto;
 import com.ppol.group.dto.response.InviteResponseDto;
 import com.ppol.group.entity.group.Group;
 import com.ppol.group.entity.group.GroupInvite;
+import com.ppol.group.entity.group.GroupUserAlarm;
 import com.ppol.group.entity.user.User;
 import com.ppol.group.exception.exception.GroupMemberExceededException;
 import com.ppol.group.repository.GroupInviteRepository;
+import com.ppol.group.repository.jpa.GroupUserAlarmRepository;
 import com.ppol.group.repository.mongo.MessageChannelRepository;
+import com.ppol.group.service.alarm.AlarmSendService;
 import com.ppol.group.service.group.GroupReadService;
 import com.ppol.group.service.user.UserReadService;
 import com.ppol.group.util.constatnt.classes.ValidationConstants;
@@ -31,11 +34,13 @@ public class InviteService {
 
 	// repository
 	private final GroupInviteRepository inviteRepository;
+	private final GroupUserAlarmRepository alarmRepository;
 	private final MessageChannelRepository messageChannelRepository;
 
 	// service
 	private final GroupReadService groupReadService;
 	private final UserReadService userReadService;
+	private final AlarmSendService alarmSendService;
 
 	/**
 	 * 사용자를 초대해서 초대 엔티티를 생성하고, 초대받은 사용자에겐 알람을 날리는 메서드
@@ -46,15 +51,16 @@ public class InviteService {
 
 		Group group = groupReadService.getGroupWithOwner(groupId, userId);
 
-		if(!checkCapacity(group)) {
+		if (!checkCapacity(group)) {
 			throw new GroupMemberExceededException();
 		}
 
+		User user = userReadService.getUser(userId);
 		User targetUser = userReadService.getUser(inviteCreateDto.getTargetUserId());
 
 		GroupInvite invite = inviteRepository.save(GroupInvite.builder().group(group).user(targetUser).build());
 
-		// TODO 알람 보내는 부분 필요함
+		alarmSendService.createInviteAlarm(group, user, targetUser.getId());
 
 		return InviteResponseDto.of(invite);
 	}
@@ -74,18 +80,21 @@ public class InviteService {
 		if (inviteAnswerDto.getAccept()) {
 			Group group = groupReadService.getGroup(groupId);
 
-			if(!checkCapacity(group)) {
+			if (!checkCapacity(group)) {
 				throw new GroupMemberExceededException();
 			}
 
 			User user = userReadService.getUser(userId);
 
 			group.addUser(user);
+			alarmRepository.save(GroupUserAlarm.builder().group(group).user(user).build());
 
 			MessageChannel channel = messageChannelRepository.findByGroupId(groupId)
 				.orElseThrow(() -> new EntityNotFoundException("메시지/채팅 채널"));
 
 			channel.addUser(user);
+
+			alarmSendService.createUserEnterAlarm(group, user);
 
 			returnString = "참여함";
 		}

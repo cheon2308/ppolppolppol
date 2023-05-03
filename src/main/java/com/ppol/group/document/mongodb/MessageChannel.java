@@ -55,4 +55,9 @@ public class MessageChannel implements Serializable {
 	public void addUser(User user) {
 		userList.add(MessageUser.of(user));
 	}
+
+	public void deleteUser(Long userId) {
+		userList.remove(
+			userList.stream().filter(messageUser -> messageUser.getUserId().equals(userId)).findAny().orElseThrow());
+	}
 }

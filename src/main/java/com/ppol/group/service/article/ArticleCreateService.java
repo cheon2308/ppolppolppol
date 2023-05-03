@@ -13,6 +13,7 @@ import com.ppol.group.entity.group.GroupArticle;
 import com.ppol.group.entity.user.User;
 import com.ppol.group.exception.exception.ImageCountException;
 import com.ppol.group.repository.jpa.GroupArticleRepository;
+import com.ppol.group.service.alarm.AlarmSendService;
 import com.ppol.group.service.group.GroupReadService;
 import com.ppol.group.service.user.UserReadService;
 import com.ppol.group.util.constatnt.classes.ValidationConstants;
@@ -36,6 +37,7 @@ public class ArticleCreateService {
 	// service
 	private final GroupReadService groupReadService;
 	private final UserReadService userReadService;
+	private final AlarmSendService alarmSendService;
 
 	// other
 	private final S3Uploader s3Uploader;
@@ -62,8 +64,11 @@ public class ArticleCreateService {
 		User user = userReadService.getUser(userId);
 		Group group = groupReadService.getGroupWithParticipant(groupId, userId);
 
-		return articleRepository.save(
-			articleCreateMapping(articleCreateDto, user, group, getImageUrlList(articleCreateDto.getImageList())));
+		GroupArticle article = articleCreateMapping(articleCreateDto, user, group, getImageUrlList(articleCreateDto.getImageList()));
+
+		alarmSendService.createNewArticleAlarm(group, article);
+
+		return articleRepository.save(article);
 	}
 
 	/**
