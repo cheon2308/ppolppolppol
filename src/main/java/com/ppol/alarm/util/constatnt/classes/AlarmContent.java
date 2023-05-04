@@ -12,7 +12,7 @@ public class AlarmContent {
 	public static final String GROUP_INVITE = "{?}님이 당신을 {?}에 초대했습니다.";
 	public static final String GROUP_NEW_USER = "{?}의 새로운 사용자 {?}";
 	public static final String GROUP_NEW_ARTICLE = "{?}의 새로운 게시글 {?}";
-	public static final String NEW_MESSAGE = "{?}의 메시지 {?}";
+	public static final String NEW_MESSAGE = "{?}에서 {?}의 메시지 {?}";
 	public static final String FOLLOW = "{?}님이 당신을 팔로우합니다.";
 	public static final String FOLLOWING_NEW_ARTICLE = "{?}님의 새로운 게시글 {?}";
 }
