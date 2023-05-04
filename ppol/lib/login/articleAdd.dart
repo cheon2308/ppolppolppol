@@ -64,6 +64,7 @@ class _articleAddTestState extends State<articleAddTest> {
           Stream.castFrom(File(file.path).openRead())
           // DelegatingStream.typed(File(file.path).openRead())
       );
+      //ㅎㅇㅎㅇ
 
       var length = await File(file.path).length();
 
