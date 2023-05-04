@@ -33,7 +33,7 @@ import lombok.ToString;
 @Where(clause = "state = 0")
 // accountId와 provider를 unique한 값으로 설정
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"account_id", "provider"})})
-public class User {
+public class User extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
