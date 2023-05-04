@@ -44,9 +44,9 @@ public interface ArticleCommentRepository extends JpaRepository<ArticleComment, 
 		@Param("createdAt") LocalDateTime createdAt, Pageable pageable);
 
 	// 특정 댓글에 대한 대댓글 목록 최신 순 불러오기
-	@Query("SELECT ac FROM ArticleComment ac WHERE ac.createdAt > :createdAt AND ac.id != :id AND ac.parent = :parent "
+	@Query("SELECT ac FROM ArticleComment ac WHERE ac.createdAt < :createdAt AND ac.parent = :parent "
 		+ "AND ac.article.id = :articleId " + " ORDER BY ac.createdAt DESC")
 	Slice<ArticleComment> findByParentOrderByCreatedAtDESC(@Param("articleId") Long articleId,
-		@Param("createdAt") LocalDateTime createdAt, @Param("id") Long id, @Param("parent") Long parent,
+		@Param("createdAt") LocalDateTime createdAt, @Param("parent") Long parent,
 		Pageable pageable);
 }
