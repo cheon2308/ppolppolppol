@@ -13,13 +13,13 @@ public class RequestUtils {
 	 */
 	public static Long getUserId() {
 
-		String userId = (String)RequestContextHolder.currentRequestAttributes()
+		Long userId = (Long)RequestContextHolder.currentRequestAttributes()
 			.getAttribute("userId", RequestAttributes.SCOPE_REQUEST);
 
 		if(userId == null) {
 			throw new RuntimeException();
 		}
 
-		return Long.parseLong(userId);
+		return userId;
 	}
 }
