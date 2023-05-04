@@ -80,7 +80,7 @@ public class CommonExceptionHandler {
 
 	/**
 	 * {@link TokenExpiredException} 토큰 만료 에러
-	 * 400 코드를 반환한다.
+	 * 401 코드를 반환한다.
 	 */
 	@ExceptionHandler({TokenExpiredException.class})
 	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
@@ -88,7 +88,7 @@ public class CommonExceptionHandler {
 		log.error("토큰 만료 에러");
 		exception.printStackTrace();
 
-		return ResponseBuilder.badRequest("만료된 " + exception.getMessage());
+		return ResponseBuilder.unauthorized("만료된 " + exception.getMessage());
 	}
 
 	/**
