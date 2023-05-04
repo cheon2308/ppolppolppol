@@ -1,7 +1,6 @@
 spring:
   profiles:
-    active:
-      - secret
+    active: secret
 
   jpa:
     hibernate:

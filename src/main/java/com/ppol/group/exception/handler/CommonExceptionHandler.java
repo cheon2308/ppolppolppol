@@ -14,6 +14,7 @@ import com.ppol.group.exception.exception.GroupMemberExceededException;
 import com.ppol.group.exception.exception.ImageCountException;
 import com.ppol.group.exception.exception.InvalidParameterException;
 import com.ppol.group.exception.exception.S3Exception;
+import com.ppol.group.exception.exception.TokenExpiredException;
 import com.ppol.group.exception.exception.UserGroupLimitException;
 import com.ppol.group.util.constatnt.classes.ValidationConstants;
 import com.ppol.group.util.response.ResponseBuilder;
@@ -41,6 +42,19 @@ public class CommonExceptionHandler {
 
 		return ResponseBuilder.badRequest(
 			"그룹의 현재 인원이 최대인원(" + ValidationConstants.GROUP_USER_MAX + ")에 도달했습니다.");
+	}
+
+	/**
+	 * {@link TokenExpiredException} 토큰 만료 에러
+	 * 401 코드를 반환한다.
+	 */
+	@ExceptionHandler({TokenExpiredException.class})
+	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
+
+		log.error("토큰 만료 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.unauthorized("만료된 토큰");
 	}
 
 	/**
