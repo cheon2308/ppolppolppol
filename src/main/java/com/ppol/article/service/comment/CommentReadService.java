@@ -70,9 +70,11 @@ public class CommentReadService {
 	public Slice<CommentResponseDto> findReplyList(Long articleId, Long parent, int size, Long lastCommentId,
 		Long userId) {
 
-		ArticleComment lastComment = getArticleComment(lastCommentId);
+		ArticleComment lastComment = lastCommentId == null ? null : getArticleComment(lastCommentId);
 
-		LocalDateTime timestamp = lastComment.getCreatedAt();
+		LocalDateTime timestamp = lastComment == null ? LocalDateTime.now() : lastComment.getCreatedAt();
+		lastCommentId = lastCommentId == null ? -1 : lastCommentId;
+
 		Pageable pageable = PageRequest.of(0, size);
 
 		Slice<ArticleComment> slice = commentRepository.findByParentOrderByCreatedAtDESC(articleId, timestamp,
