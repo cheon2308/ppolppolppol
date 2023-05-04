@@ -61,6 +61,7 @@ public class AlarmSendService {
 
 		list.add(AlarmReferenceDto.of(articleComment.getArticle(), 0));
 		list.add(AlarmReferenceDto.of(articleComment.getWriter(), 1));
+		list.add(AlarmReferenceDto.of(articleComment, 2));
 
 		createAlarm(AlarmRequestDto.builder()
 			.userId(articleComment.getArticle().getWriter().getId())
@@ -117,13 +118,11 @@ public class AlarmSendService {
 		list.add(AlarmReferenceDto.of(articleComment, 0));
 		list.add(AlarmReferenceDto.of(articleComment.getWriter(), 1));
 
-		tagUserList.forEach((userId -> {
-			createAlarm(AlarmRequestDto.builder()
-				.userId(userId)
-				.alarmReferenceDtoList(list)
-				.alarmType(AlarmType.COMMENT_TAG)
-				.build());
-		}));
+		tagUserList.forEach((userId -> createAlarm(AlarmRequestDto.builder()
+			.userId(userId)
+			.alarmReferenceDtoList(list)
+			.alarmType(AlarmType.COMMENT_TAG)
+			.build())));
 	}
 
 	/**
@@ -138,13 +137,11 @@ public class AlarmSendService {
 		list.add(AlarmReferenceDto.of(article, 1));
 
 		followRepository.findByFollowing_IdAndAlarmOnAndIsFollow(article.getWriter().getId(), true, true)
-			.forEach(follow -> {
-				createAlarm(AlarmRequestDto.builder()
-					.userId(follow.getFollower().getId())
-					.alarmReferenceDtoList(list)
-					.alarmType(AlarmType.FOLLOWING_NEW_ARTICLE)
-					.build());
-			});
+			.forEach(follow -> createAlarm(AlarmRequestDto.builder()
+				.userId(follow.getFollower().getId())
+				.alarmReferenceDtoList(list)
+				.alarmType(AlarmType.FOLLOWING_NEW_ARTICLE)
+				.build()));
 	}
 
 	/**
