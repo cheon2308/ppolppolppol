@@ -61,6 +61,12 @@ public class User {
 	@Column(length = ValidationConstants.USERNAME_MAX_SIZE, unique = true)
 	private String username;
 
+	// 팔로워 수
+	private int followerCount;
+
+	// 팔로잉 수
+	private int followingCount;
+
 	// 사용자 상태 (1인 경우 삭제된 상태)
 	private int state;
 
