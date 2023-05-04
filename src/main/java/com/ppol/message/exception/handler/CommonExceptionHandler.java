@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ppol.message.exception.exception.ForbiddenException;
 import com.ppol.message.exception.exception.S3Exception;
+import com.ppol.message.exception.exception.TokenExpiredException;
 import com.ppol.message.util.response.ResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -47,6 +48,19 @@ public class CommonExceptionHandler {
 		exception.printStackTrace();
 
 		return ResponseBuilder.forbidden("해당 " + exception.getMsg() + "에 대한 접근 권한이 없습니다.");
+	}
+
+	/**
+	 * {@link TokenExpiredException} 토큰 만료 에러
+	 * 401 코드를 반환한다.
+	 */
+	@ExceptionHandler({TokenExpiredException.class})
+	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
+
+		log.error("토큰 만료 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.unauthorized("만료된 토큰");
 	}
 
 	/**
