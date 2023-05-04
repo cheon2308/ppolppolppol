@@ -12,6 +12,7 @@ import com.ppol.article.exception.exception.EnumConvertException;
 import com.ppol.article.exception.exception.ForbiddenException;
 import com.ppol.article.exception.exception.ImageCountException;
 import com.ppol.article.exception.exception.S3Exception;
+import com.ppol.article.exception.exception.TokenExpiredException;
 import com.ppol.article.util.response.ResponseBuilder;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -49,6 +50,19 @@ public class CommonExceptionHandler {
 		exception.printStackTrace();
 
 		return ResponseBuilder.internalServerError("파일 서버 에러입니다.\n관리자에게 문의해주세요.");
+	}
+
+	/**
+	 * {@link TokenExpiredException} 토큰 만료 에러
+	 * 401 코드를 반환한다.
+	 */
+	@ExceptionHandler({TokenExpiredException.class})
+	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
+
+		log.error("토큰 만료 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.unauthorized("만료된 토큰");
 	}
 
 	/**

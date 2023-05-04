@@ -3,7 +3,6 @@ package com.ppol.article.service.article;
 import org.springframework.stereotype.Service;
 
 import com.ppol.article.entity.article.Article;
-import com.ppol.article.service.other.ArticleElasticService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

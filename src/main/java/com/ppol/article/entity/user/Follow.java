@@ -1,7 +1,5 @@
 package com.ppol.article.entity.user;
 
-import org.hibernate.annotations.Where;
-
 import com.ppol.article.entity.global.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -20,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 	사용자 간의 팔로우 관계를 나타내기 위한 Entity
+ * 사용자 간의 팔로우 관계를 나타내기 위한 Entity
  */
 @Getter
 @NoArgsConstructor
@@ -49,9 +47,13 @@ public class Follow extends BaseEntity {
 	// 팔로우 여부
 	private Boolean isFollow;
 
-	// 최초 생성 시 isFollow를 true로 하기 위한 prePersist
+	// 해당 유저에 대한 알람 여부
+	private Boolean alarmOn;
+
+	// 최초 생성 시 isFollow, alarmOn을 true로 하기 위한 prePersist
 	@PrePersist
 	private void prePersist() {
 		this.isFollow = this.isFollow == null || this.isFollow;
+		this.alarmOn = this.alarmOn == null || this.alarmOn;
 	}
 }

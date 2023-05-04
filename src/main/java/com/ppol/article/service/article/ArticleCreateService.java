@@ -12,7 +12,7 @@ import com.ppol.article.entity.article.Article;
 import com.ppol.article.entity.user.User;
 import com.ppol.article.exception.exception.ImageCountException;
 import com.ppol.article.repository.jpa.ArticleRepository;
-import com.ppol.article.service.other.ArticleElasticService;
+import com.ppol.article.service.alarm.AlarmSendService;
 import com.ppol.article.service.user.UserReadService;
 import com.ppol.article.util.constatnt.classes.ValidationConstants;
 import com.ppol.article.util.s3.S3Uploader;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ArticleSaveService {
+public class ArticleCreateService {
 
 	// repositories
 	private final ArticleRepository articleRepository;
@@ -36,6 +36,7 @@ public class ArticleSaveService {
 	private final ArticleReadService articleReadService;
 	private final ArticleElasticService articleElasticService;
 	private final UserReadService userReadService;
+	private final AlarmSendService alarmSendService;
 
 	// others
 	private final S3Uploader s3Uploader;
@@ -54,7 +55,11 @@ public class ArticleSaveService {
 
 		Article article = articleSave(userId, articleCreateDto);
 
+		// 검색을 위해 게시글 내용 정보와, 해쉬태그 정보들을 엘라스틱 서치에 저장
 		articleElasticService.createArticleElasticsearch(articleCreateDto, article.getId());
+
+		// 해당 유저를 팔로우하고 알람을 켜놓은 사람들에게 알람 생성 (비동기 처리)
+		alarmSendService.makeFollowingNewArticleAlarm(article);
 
 		return articleReadService.articleDetailMapping(article, userId);
 	}

@@ -6,13 +6,17 @@ spring:
     name: article
 
   profiles:
-    active:
-      - local
-      - secret
+    active: secret
 
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
         jdbc.time_zone: Asia/Seoul
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://k8e106.p.ssafy.io:3306/ppol?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&serverTimezone=Asia/Seoul
 
   mvc:
     path match:

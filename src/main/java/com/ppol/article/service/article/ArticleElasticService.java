@@ -1,4 +1,4 @@
-package com.ppol.article.service.other;
+package com.ppol.article.service.article;
 
 import org.springframework.stereotype.Service;
 

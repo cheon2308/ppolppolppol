@@ -21,11 +21,11 @@ import com.ppol.article.dto.response.ArticleListDto;
 import com.ppol.article.dto.response.CommentResponseDto;
 import com.ppol.article.service.article.ArticleDeleteService;
 import com.ppol.article.service.article.ArticleReadService;
-import com.ppol.article.service.article.ArticleSaveService;
+import com.ppol.article.service.article.ArticleCreateService;
 import com.ppol.article.service.article.ArticleUpdateService;
 import com.ppol.article.service.comment.CommentDeleteService;
 import com.ppol.article.service.comment.CommentReadService;
-import com.ppol.article.service.comment.CommentSaveService;
+import com.ppol.article.service.comment.CommentCreateService;
 import com.ppol.article.service.comment.CommentUpdateService;
 import com.ppol.article.service.user.UserArticleReadService;
 import com.ppol.article.service.user.UserInteractionUpdateService;
@@ -42,14 +42,14 @@ public class ArticleController {
 
 	// article services
 	private final ArticleReadService articleReadService;
-	private final ArticleSaveService articleSaveService;
+	private final ArticleCreateService articleCreateService;
 	private final ArticleUpdateService articleUpdateService;
 	private final ArticleDeleteService articleDeleteService;
 	private final UserArticleReadService userArticleReadService;
 
 	// comment services
 	private final CommentReadService commentReadService;
-	private final CommentSaveService commentSaveService;
+	private final CommentCreateService commentCreateService;
 	private final CommentUpdateService commentUpdateService;
 	private final CommentDeleteService commentDeleteService;
 
@@ -82,7 +82,7 @@ public class ArticleController {
 	public ResponseEntity<?> createArticle(ArticleCreateDto articleCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		ArticleDetailDto returnObject = articleSaveService.articleCreate(userId, articleCreateDto);
+		ArticleDetailDto returnObject = articleCreateService.articleCreate(userId, articleCreateDto);
 
 		return ResponseBuilder.created(returnObject);
 	}
@@ -140,7 +140,7 @@ public class ArticleController {
 		@RequestBody CommentCreateDto commentCreateDto) {
 
 		Long userId = RequestUtils.getUserId();
-		CommentResponseDto returnObject = commentSaveService.createComment(articleId, commentCreateDto, userId);
+		CommentResponseDto returnObject = commentCreateService.createComment(articleId, commentCreateDto, userId);
 
 		return ResponseBuilder.created(returnObject);
 	}

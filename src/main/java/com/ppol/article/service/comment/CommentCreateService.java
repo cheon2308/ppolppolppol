@@ -14,6 +14,7 @@ import com.ppol.article.entity.article.Article;
 import com.ppol.article.entity.article.ArticleComment;
 import com.ppol.article.entity.user.User;
 import com.ppol.article.repository.jpa.ArticleCommentRepository;
+import com.ppol.article.service.alarm.AlarmSendService;
 import com.ppol.article.service.user.UserReadService;
 import com.ppol.article.service.article.ArticleReadService;
 
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentSaveService {
+public class CommentCreateService {
 
 	// repositories
 	private final ArticleCommentRepository commentRepository;
@@ -36,6 +37,7 @@ public class CommentSaveService {
 	private final ArticleReadService articleReadService;
 	private final UserReadService userReadService;
 	private final CommentReadService commentReadService;
+	private final AlarmSendService alarmSendService;
 
 	/**
 	 * 댓글을 저장하는 메서드
@@ -49,6 +51,19 @@ public class CommentSaveService {
 
 		ArticleComment comment = commentRepository.save(
 				commentCreateMapping(commentCreateDto, article, user, tagUserList));
+
+		// 태그당한 사용자들에게 알람 생성 (비동기 처리)
+		alarmSendService.makeCommentTagAlarm(comment, tagUserList);
+
+		// 글 작성자에게 댓글 알람 생성 (비동기 처리)
+		alarmSendService.makeArticleCommentAlarm(comment);
+
+		// 대댓글인 경우 댓글 작성자에게 대댓글 알람 생성 (비동기 처리)
+		if (commentCreateDto.getParent() != null) {
+			ArticleComment parent = commentReadService.getArticleComment(commentCreateDto.getParent());
+
+			alarmSendService.makeCommentReplyAlarm(parent, comment);
+		}
 
 		return commentReadService.commentMapping(comment, userId);
 	}

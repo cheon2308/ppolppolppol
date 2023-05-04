@@ -10,6 +10,7 @@ import com.ppol.article.entity.article.ArticleLike;
 import com.ppol.article.repository.jpa.ArticleBookmarkRepository;
 import com.ppol.article.repository.jpa.ArticleCommentLikeRepository;
 import com.ppol.article.repository.jpa.ArticleLikeRepository;
+import com.ppol.article.service.alarm.AlarmSendService;
 import com.ppol.article.service.article.ArticleReadService;
 import com.ppol.article.service.comment.CommentReadService;
 
@@ -34,6 +35,7 @@ public class UserInteractionUpdateService {
 	private final ArticleReadService articleReadService;
 	private final CommentReadService commentReadService;
 	private final UserReadService userReadService;
+	private final AlarmSendService alarmSendService;
 
 	/**
 	 * 특정 사용자의 특정 게시글에 대한 좋아요 여부를 업데이트 하는 메서드
@@ -52,6 +54,11 @@ public class UserInteractionUpdateService {
 		}
 
 		article.updateLikeCount(articleLike.getIsLike());
+
+		// 좋아요가 true인 경우 게시글 작성자에게 알람 생성 (비동기)
+		if (articleLike.getIsLike()) {
+			alarmSendService.makeArticleLikeAlarm(articleLike);
+		}
 	}
 
 	/**
@@ -91,5 +98,10 @@ public class UserInteractionUpdateService {
 		}
 
 		comment.updateLikeCount(commentLike.getIsLike());
+
+		// 좋아요가 true인 경우 댓글 작성자에게 알람 생성 (비동기)
+		if (commentLike.getIsLike()) {
+			alarmSendService.makeCommentLikeAlarm(commentLike);
+		}
 	}
 }
