@@ -29,6 +29,8 @@ public enum AlarmType implements BasicEnum {
 	ALBUM_COMMENT("210", AlarmContent.ALBUM_COMMENT),
 	// 누군가 그룹에 나를 초대함
 	GROUP_INVITE("300", AlarmContent.GROUP_INVITE),
+	// 그룹에 새로운 사용자 참여
+	GROUP_NEW_USER("301", AlarmContent.GROUP_NEW_USER),
 	// 그룹에 새로운 게시글/피드
 	GROUP_NEW_ARTICLE("310", AlarmContent.GROUP_NEW_ARTICLE),
 	// 누군가 나에게 새로운 채팅 메시지를 보냄

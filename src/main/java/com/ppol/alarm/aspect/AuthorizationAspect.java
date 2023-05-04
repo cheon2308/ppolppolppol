@@ -7,12 +7,19 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.ppol.alarm.util.feign.AuthFeign;
+
+import lombok.RequiredArgsConstructor;
+
 /**
  * 	사용자 권한 인증 및 사용자 ID를 저장하기 위한 AOP Class
  */
 @Aspect
+@RequiredArgsConstructor
 @Component
 public class AuthorizationAspect {
+
+	private final AuthFeign authFeign;
 
 	/**
 	 * 	모든 컨트롤러의 메서드들 실행이전에 실행한다.
@@ -20,16 +27,15 @@ public class AuthorizationAspect {
 	 */
 	@Before("execution(* com.ppol.*.controller.*.*(..))")
 	public void getUserIdFromHeader() {
-		String accessToken = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes())
-			.getRequest().getHeader("Authorization");
+		String accessToken = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest()
+			.getHeader("Authorization");
 
-		String userId = getUserIdFromAuthorization(accessToken);
+		Long userId = getUserIdFromAuthorization(accessToken);
 
 		RequestContextHolder.currentRequestAttributes().setAttribute("userId", userId, RequestAttributes.SCOPE_REQUEST);
 	}
 
-	// TODO 토큰을 가지고 userId를 가져오는 로직 필요, 다른 클래스로 분리 필요
-	private String getUserIdFromAuthorization(String accessToken) {
-		return "1";
+	private Long getUserIdFromAuthorization(String accessToken) {
+		return authFeign.accessToken(accessToken);
 	}
 }

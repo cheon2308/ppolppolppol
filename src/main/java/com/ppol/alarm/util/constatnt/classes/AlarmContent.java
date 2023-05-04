@@ -10,6 +10,7 @@ public class AlarmContent {
 	public static final String PERSONAL_ROOM_IN = "{?}님이 당신의 개인룸에 접속했습니다.";
 	public static final String ALBUM_COMMENT = "앨범 {?}에 {?}님의 댓글 {?}";
 	public static final String GROUP_INVITE = "{?}님이 당신을 {?}에 초대했습니다.";
+	public static final String GROUP_NEW_USER = "{?}의 새로운 사용자 {?}";
 	public static final String GROUP_NEW_ARTICLE = "{?}의 새로운 게시글 {?}";
 	public static final String NEW_MESSAGE = "{?}의 메시지 {?}";
 	public static final String FOLLOW = "{?}님이 당신을 팔로우합니다.";

@@ -42,6 +42,7 @@ public class AlarmController {
 	@PostMapping
 	public ResponseEntity<?> alarmCreate(@RequestBody AlarmRequestDto alarmRequestDto) {
 
+		System.out.println(alarmRequestDto);
 		alarmCreateService.createAlarm(alarmRequestDto);
 
 		return ResponseBuilder.ok("ok");
