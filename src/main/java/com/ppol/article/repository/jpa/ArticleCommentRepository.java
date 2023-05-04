@@ -33,19 +33,19 @@ public interface ArticleCommentRepository extends JpaRepository<ArticleComment, 
 
 	// 특정 게시글에 대한 댓글 목록 최신 순 불러오기
 	@Query("SELECT ac FROM ArticleComment ac WHERE ac.createdAt < :createdAt AND ac.parent = null "
-		+ "AND ac.article.id = :articleId ORDER BY ac.createdAt DESC, ac.id DESC")
+		+ "AND ac.article.id = :articleId AND ac.state = 0 ORDER BY ac.createdAt DESC, ac.id DESC")
 	Slice<ArticleComment> findByArticleOrderByCreatedAtDESC(@Param("articleId") Long articleId,
 		@Param("createdAt") LocalDateTime createdAt, Pageable pageable);
 
 	// 특정 게시글에 대한 댓글 목록 오래된 순 불러오기
 	@Query("SELECT ac FROM ArticleComment ac WHERE ac.createdAt > :createdAt AND ac.parent = null "
-		+ "AND ac.article.id = :articleId ORDER BY ac.createdAt ASC, ac.id DESC")
+		+ "AND ac.article.id = :articleId AND ac.state = 0 ORDER BY ac.createdAt ASC, ac.id DESC")
 	Slice<ArticleComment> findByArticleOrderByCreatedAtASC(@Param("articleId") Long articleId,
 		@Param("createdAt") LocalDateTime createdAt, Pageable pageable);
 
 	// 특정 댓글에 대한 대댓글 목록 최신 순 불러오기
 	@Query("SELECT ac FROM ArticleComment ac WHERE ac.createdAt < :createdAt AND ac.parent = :parent "
-		+ "AND ac.article.id = :articleId " + " ORDER BY ac.createdAt DESC")
+		+ "AND ac.article.id = :articleId AND ac.state = 0 ORDER BY ac.createdAt DESC")
 	Slice<ArticleComment> findByParentOrderByCreatedAtDESC(@Param("articleId") Long articleId,
 		@Param("createdAt") LocalDateTime createdAt, @Param("parent") Long parent,
 		Pageable pageable);
