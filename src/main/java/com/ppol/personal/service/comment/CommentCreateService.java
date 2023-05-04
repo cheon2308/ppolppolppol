@@ -8,6 +8,7 @@ import com.ppol.personal.entity.personal.Album;
 import com.ppol.personal.entity.personal.AlbumComment;
 import com.ppol.personal.entity.user.User;
 import com.ppol.personal.repository.AlbumCommentRepository;
+import com.ppol.personal.service.alarm.AlarmSendService;
 import com.ppol.personal.service.album.AlbumReadService;
 import com.ppol.personal.service.user.UserReadService;
 
@@ -29,6 +30,7 @@ public class CommentCreateService {
 	// service
 	private final AlbumReadService albumReadService;
 	private final UserReadService userReadService;
+	private final AlarmSendService alarmSendService;
 
 	/**
 	 * 새로운 앨범에 대한 댓글을 추가하는 메서드
@@ -43,6 +45,8 @@ public class CommentCreateService {
 
 		AlbumComment comment = commentRepository.save(
 			AlbumComment.builder().album(album).content(content).writer(writer).build());
+
+		alarmSendService.createAlbumCommentAlarm(album, comment);
 
 		return CommentResponseDto.of(comment);
 	}

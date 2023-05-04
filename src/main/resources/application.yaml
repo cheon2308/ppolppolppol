@@ -1,7 +1,6 @@
 spring:
   profiles:
-    active:
-      - secret
+    active: secret
 
   jpa:
     hibernate:
@@ -28,10 +27,10 @@ spring:
 
 feign:
   url:
-    base: http://localhost:8081/
+    base: http://k8e106.p.ssafy.io:8000/
     alarm:
-      service: alarms
+      service: alarm-service/
+      controller: alarms
     auth:
-      service: auth
-    message:
-      service: messages
+      service: auth-service/
+      controller: auth

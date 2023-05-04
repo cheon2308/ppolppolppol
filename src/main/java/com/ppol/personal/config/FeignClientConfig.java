@@ -7,4 +7,5 @@ import org.springframework.context.annotation.Configuration;
 @EnableFeignClients("com.ppol.*.util.feign")
 public class FeignClientConfig {
 
+
 }

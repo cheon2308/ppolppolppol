@@ -8,7 +8,7 @@ import com.ppol.personal.util.constatnt.enums.global.BasicEnum;
 public enum DataType implements BasicEnum {
 
 	ARTICLE("article"), ARTICLE_COMMENT("article_comment"), USER("user"), ALBUM("album"), GROUP("group"), MESSAGE(
-		"message"), MESSAGE_CHANNEL("message_channel"), GROUP_ARTICLE("group_article");
+		"message"), MESSAGE_CHANNEL("message_channel"), GROUP_ARTICLE("group_article"), ALBUM_COMMENT("album_comment");
 
 	private final String code;
 

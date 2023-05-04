@@ -13,6 +13,7 @@ import com.ppol.personal.exception.exception.EnumConvertException;
 import com.ppol.personal.exception.exception.ForbiddenException;
 import com.ppol.personal.exception.exception.InvalidParameterException;
 import com.ppol.personal.exception.exception.S3Exception;
+import com.ppol.personal.exception.exception.TokenExpiredException;
 import com.ppol.personal.util.constatnt.classes.ValidationConstants;
 import com.ppol.personal.util.response.ResponseBuilder;
 
@@ -52,6 +53,19 @@ public class CommonExceptionHandler {
 
 		return ResponseBuilder.badRequest(
 			"앨범은 최대 " + ValidationConstants.ROOM_MAX_ALBUM + " 개 까지 생성할 수 있습니다. 기존의 앨범을 삭제 후 진행해 주세요.");
+	}
+
+	/**
+	 * {@link TokenExpiredException} 토큰 만료 에러
+	 * 401 코드를 반환한다.
+	 */
+	@ExceptionHandler({TokenExpiredException.class})
+	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
+
+		log.error("토큰 만료 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.unauthorized("만료된 토큰");
 	}
 
 	/**
