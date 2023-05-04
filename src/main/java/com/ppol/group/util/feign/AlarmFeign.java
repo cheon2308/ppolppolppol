@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.ppol.group.config.FeignClientConfig;
 import com.ppol.group.dto.request.alarm.AlarmRequestDto;
 
-@FeignClient(name = "AlarmFeign", url = "${feign.url.base}" + "${feign.url.alarm.service}", configuration = FeignClientConfig.class)
+@FeignClient(name = "AlarmFeign", url = "${feign.url.base}"
+	+ "${feign.url.alarm.service}" + "${feign.url.alarm.controller}", configuration = FeignClientConfig.class)
 public interface AlarmFeign {
 
 	@PostMapping
