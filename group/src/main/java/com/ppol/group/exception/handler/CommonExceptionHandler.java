@@ -1,0 +1,184 @@
+package com.ppol.group.exception.handler;
+
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.ppol.group.exception.exception.EnumConvertException;
+import com.ppol.group.exception.exception.ForbiddenException;
+import com.ppol.group.exception.exception.GroupMemberExceededException;
+import com.ppol.group.exception.exception.ImageCountException;
+import com.ppol.group.exception.exception.InvalidParameterException;
+import com.ppol.group.exception.exception.S3Exception;
+import com.ppol.group.exception.exception.TokenExpiredException;
+import com.ppol.group.exception.exception.UserGroupLimitException;
+import com.ppol.group.util.constatnt.classes.ValidationConstants;
+import com.ppol.group.util.response.ResponseBuilder;
+
+import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 서버에서 발생하는 에러들을 처리하기 위한 핸들러
+ * RestControllerAdvice를 통해 에러에 대한 Response를 클라이언트로 전달한다.
+ */
+@RestControllerAdvice
+@Slf4j
+public class CommonExceptionHandler {
+
+	/**
+	 * {@link GroupMemberExceededException} 그룹에 다른사용자 초대 혹은 다른 사용자 참여 시 인원초과된 경우 발생하는 예외
+	 * 사용자 요청 파라미터 에러이므로 400코드를 반환한다.
+	 */
+	@ExceptionHandler({GroupMemberExceededException.class})
+	public ResponseEntity<?> handleGroupMemberExceededException(GroupMemberExceededException exception) {
+
+		log.error("그룹 인원 초과 예외");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest(
+			"그룹의 현재 인원이 최대인원(" + ValidationConstants.GROUP_USER_MAX + ")에 도달했습니다.");
+	}
+
+	/**
+	 * {@link TokenExpiredException} 토큰 만료 에러
+	 * 401 코드를 반환한다.
+	 */
+	@ExceptionHandler({TokenExpiredException.class})
+	public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException exception) {
+
+		log.error("토큰 만료 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.unauthorized("만료된 토큰");
+	}
+
+	/**
+	 * {@link UserGroupLimitException} 사용자 그룹 생성 시 생성할 수 있는 최대 수를 초과한 경우 발생하는 예외
+	 * 사용자 요청 파라미터 에러이므로 400코드를 반환한다.
+	 */
+	@ExceptionHandler({UserGroupLimitException.class})
+	public ResponseEntity<?> handleUserGroupLimitException(UserGroupLimitException exception) {
+
+		log.error("사용자가 생성할 수 있는 그룹 개수 넘음 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest(
+			"그룹은 최대 " + ValidationConstants.USER_CREATE_GROUP_MAX + "개를 생성 할 수있습니다.\n다른 그룹을 삭제 후 진행해주세요.");
+	}
+
+	/**
+	 * {@link ImageCountException} 하나의 게시글에 10개를 초과하는 사진 파일을 저장하려고 할 때 발생하는 에러
+	 * 클라이언트로 부터 받은 parameter가 잘못되어 발생했기 때문에 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({ImageCountException.class})
+	public ResponseEntity<?> handleImageCountException(ImageCountException exception) {
+
+		log.error("게시글 이미지 개수 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("게시글에는 최대 10개의 사진을 등록할 수 있습니다.");
+	}
+
+	/**
+	 * {@link EnumConvertException} Enum 변환 시 발생하는 에러들을 처리한다.
+	 * 서버 내부 에러이므로 500 코드를 반환한다.
+	 */
+	@ExceptionHandler({EnumConvertException.class})
+	public ResponseEntity<?> handleEnumConvertException(EnumConvertException exception) {
+
+		log.error("ENUM 변환 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.internalServerError("서버 내부 에러입니다.\n관리자에게 문의해주세요.");
+	}
+
+	/**
+	 * {@link S3Exception} S3 파일 서버 관련 에러들을 처리한다.
+	 * 서버 내부 에러이므로 500 코드를 반환한다.
+	 */
+	@ExceptionHandler({S3Exception.class})
+	public ResponseEntity<?> handleS3Exception(S3Exception exception) {
+
+		log.error("S3 server 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.internalServerError("파일 서버 에러입니다.\n관리자에게 문의해주세요.");
+	}
+
+	/**
+	 * {@link EntityNotFoundException} repository에서 Id값 혹은 다른 값을 통해 Entity를 찾을 때 없다면 발생하는 에러
+	 * 클라이언트로 부터 받은 parameter가 잘못되어 발생했기 때문에 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({EntityNotFoundException.class})
+	public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException exception) {
+
+		log.error("Entity not found 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("존재하지 않는 " + exception.getMessage() + "입니다.");
+	}
+
+	/**
+	 * {@link InvalidParameterException} Enum 변환 시 발생하는 에러들을 처리한다.
+	 * 사용자가 잘못된 요청을 보냈으므로 잘못된 요청으로 400 코드를 반환한다.
+	 */
+	@ExceptionHandler({InvalidParameterException.class})
+	public ResponseEntity<?> handleInvalidParameterException(InvalidParameterException exception) {
+
+		log.error("잘못된 요청");
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("잘못된 요청입니다.\n(" + exception.getMsg() + ")");
+	}
+
+	/**
+	 * {@link ForbiddenException} 사용자가 접근 권한이 없는 서비스에 접근할 때 발생하는 에러
+	 * 권한 관련 에러이므로 403 코드를 반환한다.
+	 */
+	@ExceptionHandler({ForbiddenException.class})
+	public ResponseEntity<?> handleForbiddenException(ForbiddenException exception) {
+
+		log.error("권한 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.forbidden("해당 " + exception.getMsg() + "에 대한 접근 권한이 없습니다.");
+	}
+
+	/**
+	 * {@link MethodArgumentNotValidException} spring validation 처리 중 발생하는 에러들을 처리하기 위함
+	 * 클라이언트로 부터 받은 데이터에서 유효성 검사에 실패하여 발생했기 때문에 400 코드를 반환한다.
+	 */
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException exception) {
+		// 유효성 검사 오류를 가져온다.
+		List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
+
+		// 오류 메시지를 구성한다.
+		StringBuilder errorMsg = new StringBuilder();
+		for (FieldError error : fieldErrors) {
+			errorMsg.append(error.getDefaultMessage());
+		}
+
+		exception.printStackTrace();
+
+		return ResponseBuilder.badRequest("잘못된 형식입니다. (" + errorMsg + ")");
+	}
+
+	/**
+	 * 이 외에 따로 잡아내지 못한 서버 내부에러들을 처리하기 위함
+	 * 내부 에러이므로 500 코드를 반환한다.
+	 */
+	@ExceptionHandler({Exception.class})
+	public ResponseEntity<?> handleOtherException(Exception exception) {
+
+		log.error("서버 내부 에러");
+		exception.printStackTrace();
+
+		return ResponseBuilder.internalServerError("서버 내부 에러입니다.\n관리자에게 문의해주세요.");
+	}
+}
