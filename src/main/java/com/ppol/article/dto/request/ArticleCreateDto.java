@@ -6,7 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ppol.article.util.constatnt.classes.ValidationConstants;
 import com.ppol.article.util.constatnt.classes.ValidationMessages;
-import com.ppol.article.util.constatnt.enums.OpenStatus;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -27,8 +26,7 @@ public class ArticleCreateDto {
 
 	private List<MultipartFile> imageList;
 
-	@NotNull(message = "게시글 공개 여부를 선택해주세요.")
-	private OpenStatus openStatus;
+	private String openStatus;
 
 	private List<String> hashTags;
 }

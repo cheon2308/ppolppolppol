@@ -15,6 +15,7 @@ import com.ppol.article.repository.jpa.ArticleRepository;
 import com.ppol.article.service.alarm.AlarmSendService;
 import com.ppol.article.service.user.UserReadService;
 import com.ppol.article.util.constatnt.classes.ValidationConstants;
+import com.ppol.article.util.constatnt.enums.OpenStatus;
 import com.ppol.article.util.s3.S3Uploader;
 
 import jakarta.transaction.Transactional;
@@ -83,7 +84,7 @@ public class ArticleCreateService {
 			.content(articleCreateDto.getContent())
 			.imageList(imageList)
 			.writer(user)
-			.openStatus(articleCreateDto.getOpenStatus())
+			.openStatus(OpenStatus.from(articleCreateDto.getOpenStatus()))
 			.build();
 	}
 
