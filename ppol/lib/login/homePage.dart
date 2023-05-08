@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ppol/login/articleAdd.dart';
+import 'package:ppol/login/profilePage.dart';
 import 'package:ppol/main.dart';
 
 class homePage extends StatelessWidget {
