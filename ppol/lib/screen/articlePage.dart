@@ -1,13 +1,53 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:ppol/models/ArticleModel.dart';
 
-class ArticleScreen extends StatelessWidget {
+class ArticleScreen extends StatefulWidget {
+  @override
+  _ArticleScreenState createState() => _ArticleScreenState();
+}
+
+class _ArticleScreenState extends State<ArticleScreen> {
+  List<ArticleModel> _articles = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchArticles();
+  }
+
+  void _fetchArticles() async {
+    final url =
+        Uri.parse('http://k8e106.p.ssafy.io:8000/article-service/articles');
+
+    try {
+      final response = await http.get(url, headers: {'Authorization': '1'});
+
+      if (response.statusCode == 200) {
+        final articlesJson = json.decode(response.body)['data'];
+        List<ArticleModel> articles = [];
+        articlesJson.forEach((articleJson) {
+          articles.add(ArticleModel.fromJson(articleJson));
+        });
+        setState(() {
+          _articles = articles;
+        });
+      } else {
+        print('Request failed with status: ${response.statusCode}.');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: ListView.builder(
-        itemCount: 20,
+        itemCount: _articles.length,
         itemBuilder: (context, index) {
+          final article = _articles[index];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -31,7 +71,7 @@ class ArticleScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          'username',
+                          article.data.author.username,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -44,10 +84,7 @@ class ArticleScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 height: 430,
                 decoration: BoxDecoration(
                   image: DecorationImage(
@@ -89,94 +126,22 @@ class ArticleScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Liked by username and 1,234 others',
+                  'Liked by ${article.data.likeCount} and ${article.data.commentCount} others',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'username ',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(text: 'Caption text'),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 8),
+              SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'View all 123 comments',
-                  style: TextStyle(color: Colors.grey),
+                  article.data.content,
+                  style: TextStyle(color: Colors.black87),
                 ),
               ),
-              SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage('assets/main_logo/test2.png'),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Add a comment...',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    Icon(Icons.add_box),
-                  ],
-                ),
-              ),
-              SizedBox(height: 8),
-              Divider(),
+              SizedBox(height: 10),
             ],
           );
         },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.add_box),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.favorite_border),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.account_box),
-              onPressed: () {},
-            ),
-          ],
-        ),
       ),
     );
   }
