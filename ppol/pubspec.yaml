@@ -97,6 +97,7 @@ flutter:
   assets:
     - assets/plus_picture.png
     - assets/main_logo/
+    - assets/icon.png
 
 
   # The following line ensures that the Material Icons font is

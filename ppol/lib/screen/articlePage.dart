@@ -1,146 +1,160 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:ppol/models/articleModel.dart';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:ppol/models/ArticleModel.dart';
+import 'package:ppol/screen/articleDetailPage.dart';
+
+Future<List<ArticleModel>> fetchArticles() async {
+  final response = await http.get(
+    Uri.parse('http://k8e106.p.ssafy.io:8000/article-service/articles'),
+    headers: {
+      'Authorization': '1',
+      'Accept-Charset': 'utf-8',
+    },
+  );
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonList = jsonDecode(response.body)['data'];
+    final List<ArticleModel> articles =
+    jsonList.map((json) => ArticleModel.fromJson(json)).toList();
+    return articles;
+  } else {
+    throw Exception('Failed to load articles');
+  }
+}
+
+class ArticleCard extends StatefulWidget {
+  final ArticleModel article;
+
+  const ArticleCard({Key? key, required this.article}) : super(key: key);
+
+  @override
+  _ArticleCardState createState() => _ArticleCardState();
+}
+
+class _ArticleCardState extends State<ArticleCard> {
+  int _likeCount = 0;
+
+  void _toggleLike() {
+    setState(() {
+      _likeCount += _likeCount > 0 ? -1 : 1;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ListTile(
+            leading: widget.article.imageList.isNotEmpty
+                ? Image.network(widget.article.imageList.first)
+                : Image.asset('assets/icon.png'),
+            title: Text(
+              widget.article.content,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(widget.article.writer.username),
+          ),
+          if (widget.article.imageList.isNotEmpty)
+            Image.network(
+              widget.article.imageList.first,
+              fit: BoxFit.cover,
+              height: 300,
+            ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.favorite_border),
+                  onPressed: _toggleLike,
+                ),
+                IconButton(
+                  icon: Icon(Icons.bookmark_border),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              '$_likeCount likes',
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              widget.article.content,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class ArticleScreen extends StatefulWidget {
+  const ArticleScreen({Key? key}) : super(key: key);
+
   @override
   _ArticleScreenState createState() => _ArticleScreenState();
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
-  List<ArticleModel> _articles = [];
+  late Future<List<ArticleModel>> _futureArticles;
 
   @override
   void initState() {
     super.initState();
-    _fetchArticles();
-  }
-
-  void _fetchArticles() async {
-    final url =
-        Uri.parse('http://k8e106.p.ssafy.io:8000/article-service/articles');
-
-    try {
-      final response = await http.get(url, headers: {'Authorization': '1'});
-
-      if (response.statusCode == 200) {
-        final articlesJson = json.decode(response.body)['data'];
-        List<ArticleModel> articles = [];
-        articlesJson.forEach((articleJson) {
-          articles.add(ArticleModel.fromJson(articleJson));
-        });
-        setState(() {
-          _articles = articles;
-        });
-      } else {
-        print('Request failed with status: ${response.statusCode}.');
-      }
-    } catch (error) {
-      print('Error: $error');
-    }
+    _futureArticles = fetchArticles();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: _articles.length,
-        itemBuilder: (context, index) {
-          final article = _articles[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage('assets/main_logo/test1.png'),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
+      appBar: AppBar(
+        title: Text('게시물 목록'),
+      ),
+      body: FutureBuilder<List<ArticleModel>>(
+        future: _futureArticles,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final articles = snapshot.data!;
+            if (articles.isEmpty) {
+              return Center(
+                child: Text('게시물이 없습니다.'),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: articles.length,
+                itemBuilder: (context, index) {
+                  final article = articles[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ArticleDetailScreen(article: article),
                         ),
-                        SizedBox(width: 10),
-                        Text(
-                          article.data.author.username,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.more_horiz),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 430,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/main_logo/test2.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.favorite_border),
-                          onPressed: () {},
-                        ),
-                        SizedBox(width: 10),
-                        IconButton(
-                          icon: Icon(Icons.chat_bubble_outline),
-                          onPressed: () {},
-                        ),
-                        SizedBox(width: 10),
-                        IconButton(
-                          icon: Icon(Icons.send),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.bookmark_border),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Liked by ${article.data.likeCount} and ${article.data.commentCount} others',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  article.data.content,
-                  style: TextStyle(color: Colors.black87),
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          );
+                      );
+                    },
+                    child: ArticleCard(article: article),
+                  );
+                },
+              );
+            }
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('${snapshot.error}'),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         },
       ),
     );
