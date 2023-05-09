@@ -27,13 +27,13 @@ public class RoomCreateService {
 	private final UserReadService userReadService;
 
 	/**
-	 * 사용자 회원가입 시 자동으로 방 객체를 생성하기 위한 메서드
+	 * 자동으로 방 객체를 생성하기 위한 메서드
 	 */
 	@Transactional
-	public void createRoom(Long userId) {
+	public PersonalRoom createRoom(Long userId) {
 
 		User user = userReadService.getUser(userId);
 
-		personalRoomRepository.save(PersonalRoom.builder().owner(user).openStatus(OpenStatus.PUBLIC).build());
+		return personalRoomRepository.save(PersonalRoom.builder().owner(user).openStatus(OpenStatus.PUBLIC).build());
 	}
 }
