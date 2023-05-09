@@ -1,7 +1,5 @@
 package com.ppol.personal.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,10 +17,8 @@ import com.ppol.personal.dto.request.AlbumUpdateDto;
 import com.ppol.personal.dto.request.CommentCreateDto;
 import com.ppol.personal.dto.request.ContentCreateDto;
 import com.ppol.personal.dto.request.ContentUpdateDto;
-import com.ppol.personal.dto.request.RoomCreateDto;
 import com.ppol.personal.dto.request.RoomUpdateDto;
 import com.ppol.personal.dto.response.AlbumDetailDto;
-import com.ppol.personal.dto.response.AlbumListDto;
 import com.ppol.personal.dto.response.CommentResponseDto;
 import com.ppol.personal.dto.response.ContentResponseDto;
 import com.ppol.personal.dto.response.RoomResponseDto;
@@ -34,7 +30,6 @@ import com.ppol.personal.service.album.AlbumUpdateService;
 import com.ppol.personal.service.comment.CommentCreateService;
 import com.ppol.personal.service.comment.CommentDeleteService;
 import com.ppol.personal.service.comment.CommentReadService;
-import com.ppol.personal.service.room.RoomCreateService;
 import com.ppol.personal.service.room.RoomDeleteService;
 import com.ppol.personal.service.room.RoomReadService;
 import com.ppol.personal.service.room.RoomUpdateService;
@@ -50,7 +45,6 @@ public class PersonalController {
 
 	// room
 	private final RoomReadService roomReadService;
-	private final RoomCreateService roomCreateService;
 	private final RoomUpdateService roomUpdateService;
 	private final RoomDeleteService roomDeleteService;
 
@@ -67,15 +61,6 @@ public class PersonalController {
 	private final CommentReadService commentReadService;
 	private final CommentCreateService commentCreateService;
 	private final CommentDeleteService commentDeleteService;
-
-	// 개인 룸 생성 (회원 가입 시)
-	@PostMapping
-	public ResponseEntity<?> createPersonalRoom(@RequestBody RoomCreateDto roomCreateDto) {
-
-		roomCreateService.createRoom(roomCreateDto.getUserId());
-
-		return ResponseBuilder.ok("");
-	}
 
 	// 개인 룸 정보 변경 (제목, 공개 여부, 퀴즈, 정답)
 	@PutMapping

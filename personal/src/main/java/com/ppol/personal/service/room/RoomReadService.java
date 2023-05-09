@@ -31,6 +31,7 @@ public class RoomReadService {
 	// service
 	private final UserReadService userReadService;
 	private final AlbumReadService albumReadService;
+	private final RoomCreateService roomCreateService;
 
 	/**
 	 * 방 정보를 DTO로 불러오는 메서드
@@ -77,6 +78,6 @@ public class RoomReadService {
 	 * 특정 사용자의 개인 방 엔티티를 불러오는 메서드
 	 */
 	public PersonalRoom getRoomByUser(Long userId) {
-		return personalRoomRepository.findByOwner_Id(userId).orElseThrow(() -> new EntityNotFoundException("개인 방"));
+		return personalRoomRepository.findByOwner_Id(userId).orElseGet(() -> roomCreateService.createRoom(userId));
 	}
 }

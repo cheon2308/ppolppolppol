@@ -6,9 +6,11 @@ import com.ppol.personal.entity.user.User;
 import com.ppol.personal.entity.user.UserCharacter;
 import com.ppol.personal.repository.UserCharacterRepository;
 import com.ppol.personal.repository.UserRepository;
+import com.ppol.personal.util.constatnt.enums.CharacterColor;
+import com.ppol.personal.util.constatnt.enums.FaceType;
+import com.ppol.personal.util.constatnt.enums.MeshType;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +37,16 @@ public class UserReadService {
 	 * 사용자 캐릭터 Entity를 불러오는 메서드, 예외처리 포함
 	 */
 	public UserCharacter getUserCharacter(Long userId) {
-		return characterRepository.findByUser_Id(userId).orElseThrow(() -> new EntityNotFoundException("캐릭터"));
+		return characterRepository.findByUser_Id(userId).orElseGet(() -> createUserCharacter(userId));
+	}
+
+	private UserCharacter createUserCharacter(Long userId) {
+
+		return characterRepository.save(UserCharacter.builder()
+			.user(getUser(userId))
+			.color(CharacterColor.RED)
+			.faceType(FaceType.ONE)
+			.meshType(MeshType.BASIC)
+			.build());
 	}
 }
