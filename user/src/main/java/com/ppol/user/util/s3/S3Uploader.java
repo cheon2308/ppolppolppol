@@ -40,7 +40,7 @@ public class S3Uploader {
 
 		// 업로드 파일 형식 체크 및 예외처리
 		// TODO image 파일 뿐 아니라 3D 에셋의 경우는?
-		if (uploadFile.getContentType() == null || !uploadFile.getContentType().contains("image")) {
+		if (uploadFile.getContentType() == null) {
 			throw new S3Exception("유효하지 않은 파일입니다.");
 		}
 
