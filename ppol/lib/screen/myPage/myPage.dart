@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:ppol/constant/auth_dio.dart';
-import 'package:ppol/login/constancts.dart';
+import 'package:ppol/constant/constants.dart';
 import 'package:ppol/login/homePage.dart';
 import 'package:http/http.dart' as http;
 
-class myInfo extends StatefulWidget {
-  const myInfo({Key? key}) : super(key: key);
+class myPage extends StatefulWidget {
+  const myPage({Key? key}) : super(key: key);
 
   @override
-  State<myInfo> createState() => _myInfoState();
+  State<myPage> createState() => _myPageState();
 }
 
-class _myInfoState extends State<myInfo> {
+class _myPageState extends State<myPage> {
 
 
   var username="";

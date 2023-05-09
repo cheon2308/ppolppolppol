@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ppol/login/customInputField.dart';
+import 'package:ppol/widgets/customInputField.dart';
 import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
 import 'package:http/http.dart' as http;

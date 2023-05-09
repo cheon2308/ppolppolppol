@@ -1,5 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -8,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:ppol/constant/auth_dio.dart';
-import 'package:ppol/login/constancts.dart';
-import 'package:ppol/screen/myInfo.dart';
+import 'package:ppol/constant/constants.dart';
+import 'package:ppol/screen/myPage/myPage.dart';
 import 'package:ppol/widgets/profile_list_item.dart';
 import 'package:http/http.dart' as http;
 
@@ -59,34 +61,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> myProfileImageChange() async {
-
-    // 요청 URL 설정
-    // final url = Uri.parse('http://k8e106.p.ssafy.io:8000/user-service/users/profile-image');
-
-
-    // MultipartRequest 생성
-    // final request = http.MultipartRequest('PUT', url);
-
       try {
         final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery,);
         if (pickedFile != null) {
-          // dynamic sendData = pickedFile.path;
-          print("넌 뭐냐 : ${pickedFile.path}");
-
-          FormData formData = FormData.fromMap({'image': await MultipartFile.fromFile(pickedFile.path,filename: pickedFile.path.split('/').last)});
-
+          FormData formData = FormData.fromMap({"image": await MultipartFile.fromFile(pickedFile.path, filename: "image",contentType: MediaType('image','*')),
+          });
           Dio dio= await authDio(context);
-          Response response=await dio.put("/user-service/users/profile-image",data:formData,options: Options(
-            headers: {
-              "Content-Type":"multipart/form-data",
-            }
-          ));
-          //API 응답처리
+          var response = await dio.put(
+              '/user-service/users/profile-image',
+              data: formData,
+          );
           if(response.statusCode==200){
-            print("업로드 성공 ${response.data}");
+            print("수정 성공 : ${response.data}");
+            setState(() {
+              userimage=response.data['data']['image'];
+            });
           }
           else{
-            print("이미지 업로드 실패: ${response.data}");
+            print("수정실패 ${response.statusCode}");
           }
         }
       } catch (e) {
@@ -224,10 +216,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: <Widget>[
                       ProfileListItem(
                         icon: LineAwesomeIcons.user_shield,
-                        text: '내정보',
+                        text: '마이페이지',
                         fun: (){
                           print("내정보");
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => myInfo(),));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => myPage(),));
                         },
                       ),
                       ProfileListItem(

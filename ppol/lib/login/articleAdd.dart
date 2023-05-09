@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:ppol/login/customInputField.dart';
+import 'package:ppol/widgets/customInputField.dart';
 import 'package:ppol/widgets/switch.dart';
 // import 'package:video_player/video_player.dart';
 
