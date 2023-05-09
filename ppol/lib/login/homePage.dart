@@ -29,7 +29,7 @@ class homePage extends StatelessWidget {
             SpeedDialChild(
               child: Icon(Icons.add),
               label: 'Upload',
-              onTap: () => {print("하이1")},
+              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => articleAdd(),))},
             ),
             SpeedDialChild(
               child: Icon(Icons.message_outlined),

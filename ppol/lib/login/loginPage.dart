@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:ppol/login/customInputField.dart';
 import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
@@ -44,9 +45,18 @@ class _loginPageState extends State<loginPage> {
         headers: {"Content-Type": "application/json"},
         body: body,
       );
+      final storage = FlutterSecureStorage();
       if (response.statusCode == 200) {
         // The API call was successful, and you can parse the response body here.
         print('Response data: ${response.body}');
+        var responseData = json.decode(response.body);
+        var accessToken = responseData['data']['accessToken'];
+        var refreshToken = responseData['data']['refreshToken'];
+        // AccessToken과 refreshToken을 저장
+        // await storage.write(key: 'accessToken', value: accessToken);
+        await storage.write(key: 'accessToken', value: "1");
+        // await storage.write(key: 'refreshToken', value: refreshToken);
+
         Navigator.push(context,MaterialPageRoute(
                 builder: (c) => homePage()));
       } else {

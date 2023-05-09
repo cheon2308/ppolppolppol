@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:ppol/constant/auth_dio.dart';
 import 'package:ppol/login/constancts.dart';
 import 'package:ppol/screen/myInfo.dart';
 import 'package:ppol/widgets/profile_list_item.dart';
@@ -28,26 +30,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
   final ImagePicker _picker = ImagePicker();
   dynamic _pickImageError;
+
   Future<void> getMyInfo() async {
+
     // 요청 URL 설정
-    final url = Uri.parse('http://k8e106.p.ssafy.io:8000/user-service/users');
-    // GET 요청 보낼 때 Authorization 헤더에 값을 추가
-    final response = await http.get(
-      url,
-      headers: {'Authorization': '1'}, //내 토큰 넣기
-    );
-    // 응답 처리
+    Dio dio= await authDio(context);
+    final response = await dio.get("/user-service/users");
+
     if (response.statusCode == 200) {
       print('GET 요청 성공');
-      print('응답 본문: ${response.body}');
-      final responseData = json.decode(response.body);
+      print('응답 본문: ${response.data}');
+      final responseData = (response.data);
+      print('Response data: $responseData');
       setState(() {
         username = responseData['data']['username'];
         userimage = responseData['data']['image'];
       });
 
       print("username 뭘까용 ? :  ${username}");
-      print("username 뭘까용 ? :  ${userimage}");
+      print("userimage 뭘까용 ? :  ${userimage}");
 
 
     } else {
@@ -58,11 +59,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> myProfileImageChange() async {
+
     // 요청 URL 설정
-    final url = Uri.parse('http://k8e106.p.ssafy.io:8000/user-service/users/profile-image');
+    // final url = Uri.parse('http://k8e106.p.ssafy.io:8000/user-service/users/profile-image');
+
 
     // MultipartRequest 생성
-    final request = http.MultipartRequest('PUT', url);
+    // final request = http.MultipartRequest('PUT', url);
 
       try {
         final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery,);
@@ -70,23 +73,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // dynamic sendData = pickedFile.path;
           print("넌 뭐냐 : ${pickedFile.path}");
 
-          // var formData = FormData.fromMap({'image': await MultipartFile.fromFile(sendData)});
-          // 파일 추가
-          request.files.add(await http.MultipartFile.fromPath('image', pickedFile.path));
+          FormData formData = FormData.fromMap({'image': await MultipartFile.fromFile(pickedFile.path,filename: pickedFile.path.split('/').last)});
 
-          // // 요청 보내기
-          // final response = await request.send();
-          //
-          // // 응답 처리
-          // if (response.statusCode == 200) {
-          //   print('이미지 업로드 성공');
-          // } else {
-          //   // 실패한 응답 처리
-          //   print('이미지 업로드 실패');
-          //   print('응답 상태 코드: ${response.statusCode}');
-          // }
+          Dio dio= await authDio(context);
+          Response response=await dio.put("/user-service/users/profile-image",data:formData,options: Options(
+            headers: {
+              "Content-Type":"multipart/form-data",
+            }
+          ));
+          //API 응답처리
+          if(response.statusCode==200){
+            print("업로드 성공 ${response.data}");
+          }
+          else{
+            print("이미지 업로드 실패: ${response.data}");
+          }
         }
       } catch (e) {
+        print("이미지 업로드 오류: $e");
         setState(() {
           _pickImageError = e;
         });

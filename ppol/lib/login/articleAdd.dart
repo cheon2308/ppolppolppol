@@ -11,14 +11,14 @@ import 'package:ppol/login/customInputField.dart';
 import 'package:ppol/widgets/switch.dart';
 // import 'package:video_player/video_player.dart';
 
-class articleAddTest extends StatefulWidget {const articleAddTest({super.key, this.title});
+class articleAdd extends StatefulWidget {const articleAdd({super.key, this.title});
 
   final String? title;
 
   @override
-  State<articleAddTest> createState() => _articleAddTestState();
+  State<articleAdd> createState() => _articleAddState();
 }
-class _articleAddTestState extends State<articleAddTest> {
+class _articleAddState extends State<articleAdd> {
   List<XFile>? _imageFileList;
 
   void _setImageFileListFromFile(XFile? value) {
@@ -380,63 +380,6 @@ class _articleAddTestState extends State<articleAddTest> {
               : _handlePreview(),
         ),
       ),
-      // floatingActionButton: Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   children: <Widget>[
-      //     Semantics(
-      //       label: 'image_picker_example_from_gallery',
-      //       child: FloatingActionButton(
-      //         onPressed: () {
-      //           isVideo = false;
-      //           _onImageButtonPressed(ImageSource.gallery, context: context);
-      //         },
-      //         heroTag: 'image0',
-      //         tooltip: 'Pick Image from gallery',
-      //         child: const Icon(Icons.photo),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.only(top: 16.0),
-      //       child: FloatingActionButton(
-      //         onPressed: () {
-      //           isVideo = false;
-      //           _onImageButtonPressed(
-      //             ImageSource.gallery,
-      //             context: context,
-      //             isMultiImage: true,
-      //           );
-      //         },
-      //         heroTag: 'image1',
-      //         tooltip: 'Pick Multiple Image from gallery',
-      //         child: const Icon(Icons.photo_library),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.only(top: 16.0),
-      //       child: FloatingActionButton(
-      //         onPressed: () {
-      //           _imageFileList?.removeLast();
-      //           uploadFiles(_imageFileList!);
-      //         },
-      //         heroTag: 'image1',
-      //         tooltip: '전송한다',
-      //         child: const Icon(Icons.send),
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.only(top: 16.0),
-      //       child: FloatingActionButton(
-      //         onPressed: () {
-      //           isVideo = false;
-      //           _onImageButtonPressed(ImageSource.camera, context: context);
-      //         },
-      //         heroTag: 'image2',
-      //         tooltip: 'Take a Photo',
-      //         child: const Icon(Icons.camera_alt),
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 
