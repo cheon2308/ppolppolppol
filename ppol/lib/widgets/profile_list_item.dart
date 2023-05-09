@@ -4,7 +4,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:ppol/login/constancts.dart';
 
 
-class ProfileListItem extends StatelessWidget {
+class ProfileListItem extends StatefulWidget {
   final IconData icon;
   final String text;
   final bool hasNavigation;
@@ -12,6 +12,11 @@ class ProfileListItem extends StatelessWidget {
 
   const ProfileListItem({Key? key,required this.icon, required this.text, this.hasNavigation = true, required this.fun}) : super(key: key);
 
+  @override
+  State<ProfileListItem> createState() => _ProfileListItemState();
+}
+
+class _ProfileListItemState extends State<ProfileListItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,7 +28,7 @@ class ProfileListItem extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          fun();
+          widget.fun();
         },
         borderRadius: BorderRadius.circular(kSpacingUnit.w * 3),
         child: Container(
@@ -43,18 +48,18 @@ class ProfileListItem extends StatelessWidget {
           child: Row(
             children: <Widget>[
               Icon(
-                this.icon,
+                this.widget.icon,
                 size: kSpacingUnit.w * 2.5,
               ),
               SizedBox(width: kSpacingUnit.w * 1.5),
               Text(
-                this.text,
+                this.widget.text,
                 style: kTitleTextStyle.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Spacer(),
-              if (this.hasNavigation)
+              if (this.widget.hasNavigation)
                 Icon(
                   LineAwesomeIcons.angle_right,
                   size: kSpacingUnit.w * 2.5,

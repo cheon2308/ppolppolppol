@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:ppol/login/articleAdd.dart';
+import 'package:ppol/login/profilePage.dart';
 import 'package:ppol/main.dart';
 
 import '../screen/articlePage.dart';
@@ -27,7 +29,7 @@ class homePage extends StatelessWidget {
             SpeedDialChild(
               child: Icon(Icons.add),
               label: 'Upload',
-              onTap: () => {print("하이1")},
+              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => articleAdd(),))},
             ),
             SpeedDialChild(
               child: Icon(Icons.message_outlined),
@@ -37,8 +39,10 @@ class homePage extends StatelessWidget {
             SpeedDialChild(
               child: Icon(Icons.article_sharp),
               label: 'article',
-              onTap: () => {Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => ArticleScreen()))},
+              onTap: () => {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (c) => ArticleScreen()))
+              },
             ),
             SpeedDialChild(
               child: Icon(Icons.account_circle),
