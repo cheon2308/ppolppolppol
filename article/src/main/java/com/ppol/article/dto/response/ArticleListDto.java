@@ -30,6 +30,8 @@ public class ArticleListDto {
 
 	private UserResponseDto writer;
 
+	private int likeCount;
+
 	private OpenStatus openStatus;
 
 	private LocalDateTime createdAt;

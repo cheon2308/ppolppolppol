@@ -1,12 +1,10 @@
 package com.ppol.article.service.article;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 
 import com.ppol.article.dto.response.ArticleDetailDto;
@@ -45,7 +43,7 @@ public class ArticleReadService {
 	@Transactional
 	public Slice<ArticleListDto> findArticleList(Long userId, Long lastArticleId, int size) {
 
-		Article article =getArticlePermitNull(lastArticleId);
+		Article article = getArticlePermitNull(lastArticleId);
 
 		LocalDateTime timestamp = article == null ? LocalDateTime.now() : article.getCreatedAt();
 		lastArticleId = lastArticleId == null ? -1 : lastArticleId;
@@ -110,6 +108,7 @@ public class ArticleReadService {
 			.imageList(article.getImageList())
 			.writer(UserResponseDto.of(article.getWriter()))
 			.openStatus(article.getOpenStatus())
+			.likeCount(article.getLikeCount())
 			.build();
 	}
 
@@ -127,6 +126,7 @@ public class ArticleReadService {
 			.imageList(article.getImageList())
 			.writer(UserResponseDto.of(article.getWriter()))
 			.openStatus(article.getOpenStatus())
+			.likeCount(article.getLikeCount())
 			.comment(commentReadService.getArticlePresentComment(article.getId(), article.getWriter().getId(), userId))
 			.build();
 	}
