@@ -1,11 +1,17 @@
 package com.ppol.personal.service.room;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.ppol.personal.dto.response.AlbumListDto;
 import com.ppol.personal.dto.response.RoomResponseDto;
+import com.ppol.personal.dto.response.UserCharacterDto;
 import com.ppol.personal.entity.personal.PersonalRoom;
 import com.ppol.personal.exception.exception.ForbiddenException;
 import com.ppol.personal.repository.PersonalRoomRepository;
+import com.ppol.personal.service.album.AlbumReadService;
+import com.ppol.personal.service.user.UserReadService;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +28,28 @@ public class RoomReadService {
 	// repository
 	private final PersonalRoomRepository personalRoomRepository;
 
+	// service
+	private final UserReadService userReadService;
+	private final AlbumReadService albumReadService;
+
 	/**
 	 * 방 정보를 DTO로 불러오는 메서드
 	 */
 	public RoomResponseDto readRoom(Long userId, Long targetUserId) {
-		return RoomResponseDto.of(targetUserId == null ? getRoomByUser(userId) : getRoomByUser(targetUserId));
+
+		PersonalRoom room = targetUserId == null ? getRoomByUser(userId) : getRoomByUser(targetUserId);
+
+		List<AlbumListDto> albums = albumReadService.getAblumList(room.getId());
+
+		return RoomResponseDto.builder()
+			.roomId(room.getId())
+			.roomType(room.getRoomMap())
+			.title(room.getOwner().getUsername() + "님의 개인 방")
+			.isMyRoom(room.getOwner().getId().equals(userId) ? 1 : 0)
+			.roomOwner(UserCharacterDto.of(userReadService.getUserCharacter(room.getOwner().getId())))
+			.player(UserCharacterDto.of(userReadService.getUserCharacter(userId)))
+			.albums(albums)
+			.build();
 	}
 
 	/**

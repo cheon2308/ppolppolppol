@@ -1,10 +1,12 @@
 package com.ppol.personal.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.ppol.personal.entity.personal.PersonalRoom;
 import com.ppol.personal.util.DateTimeUtils;
 import com.ppol.personal.util.constatnt.enums.OpenStatus;
+import com.ppol.personal.util.constatnt.enums.RoomMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,25 +30,15 @@ public class RoomResponseDto {
 
 	private String title;
 
-	private UserDto owner;
+	private RoomMap roomType;
 
-	private OpenStatus openStatus;
+	private int isMyRoom;
 
-	private String quiz;
+	private UserCharacterDto roomOwner;
 
-	private LocalDateTime createdAt;
+	private UserCharacterDto player;
 
-	private String createString;
+	private List<UserCharacterDto> npc;
 
-	public static RoomResponseDto of(PersonalRoom personalRoom) {
-		return RoomResponseDto.builder()
-			.roomId(personalRoom.getId())
-			.title(personalRoom.getOwner().getUsername() + "님의 공간")
-			.owner(UserDto.of(personalRoom.getOwner()))
-			.openStatus(personalRoom.getOpenStatus())
-			.quiz(personalRoom.getQuiz())
-			.createdAt(personalRoom.getCreatedAt())
-			.createString(DateTimeUtils.getString(personalRoom.getCreatedAt()))
-			.build();
-	}
+	private List<AlbumListDto> albums;
 }

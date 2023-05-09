@@ -5,7 +5,12 @@ import org.hibernate.annotations.Where;
 import com.ppol.personal.entity.global.BaseEntity;
 import com.ppol.personal.entity.user.User;
 import com.ppol.personal.util.constatnt.classes.ValidationConstants;
+import com.ppol.personal.util.constatnt.enums.AlbumColor;
+import com.ppol.personal.util.constatnt.enums.CharacterColor;
+import com.ppol.personal.util.constatnt.enums.FaceType;
+import com.ppol.personal.util.constatnt.enums.MeshType;
 import com.ppol.personal.util.constatnt.enums.OpenStatus;
+import com.ppol.personal.util.converter.AlbumColorConverter;
 import com.ppol.personal.util.converter.OpenStatusConverter;
 
 import jakarta.persistence.Column;
@@ -17,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -75,6 +81,11 @@ public class Album extends BaseEntity {
 	// 비 공개 시 설정할 수 있는 퀴즈에 대한 정답
 	private String answer;
 
+	// 앨범의 색상 정보
+	@NotNull
+	@Convert(converter = AlbumColorConverter.class)
+	private AlbumColor color;
+
 	// 상태 정보
 	private int state;
 
@@ -101,5 +112,9 @@ public class Album extends BaseEntity {
 	// 정답 업데이트 메서드
 	public void updateAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	public void updateColor(AlbumColor color) {
+		this.color = color;
 	}
 }

@@ -1,6 +1,7 @@
 package com.ppol.personal.dto.request;
 
 import com.ppol.personal.util.constatnt.classes.ValidationConstants;
+import com.ppol.personal.util.constatnt.enums.AlbumColor;
 import com.ppol.personal.util.constatnt.enums.OpenStatus;
 
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,10 @@ public class AlbumCreateDto {
 	// 공개 여부
 	@NotNull
 	private OpenStatus openStatus;
+
+	// 앨범 색상
+	@NotNull
+	private AlbumColor color;
 
 	// 퀴즈와 정답 (비공개인 경우에만 사용됨)
 	@Size(max = ValidationConstants.QUIZ_MAX_SIZE)
