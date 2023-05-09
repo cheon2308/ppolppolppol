@@ -31,14 +31,6 @@ public class AlbumReadService {
 	private final AlbumRepository albumRepository;
 
 	/**
-	 * 특정 개인 방에 대한 앨범 정보들을 리스트로 불러오는 메서드
-	 */
-	@Transactional
-	public List<AlbumListDto> readAblumList(Long roomId) {
-		return albumRepository.findByPersonalRoom_Id(roomId).stream().map(AlbumListDto::of).toList();
-	}
-
-	/**
 	 * 특정 개인 방에 대한 상세 정보를 가져오는 메서드, 비공개의 경우 answer을 확인하는 로직을 포함한다.
 	 * 올바른 접근
 	 * 1. 앨범이 공개 상태
@@ -57,6 +49,13 @@ public class AlbumReadService {
 		} else {
 			throw new ForbiddenException("앨범");
 		}
+	}
+
+	/**
+	 * 특정 개인 방에 대한 앨범 정보들을 리스트로 불러오는 메서드
+	 */
+	public List<AlbumListDto> getAblumList(Long roomId) {
+		return albumRepository.findByPersonalRoom_Id(roomId).stream().map(AlbumListDto::of).toList();
 	}
 
 	/**

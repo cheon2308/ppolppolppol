@@ -125,15 +125,6 @@ public class PersonalController {
 		return ResponseBuilder.ok(returnObject);
 	}
 
-	// 개인룸의 모든 앨범 리스트 불러오기
-	@GetMapping("/{personalRoomId}/albums")
-	public ResponseEntity<?> readAlbumList(@PathVariable Long personalRoomId) {
-
-		List<AlbumListDto> returnObject = albumReadService.readAblumList(personalRoomId);
-
-		return ResponseBuilder.ok(returnObject);
-	}
-
 	// 특정 앨범 상세정보 불러오기
 	@GetMapping("/{personalRoomId}/albums/{albumId}")
 	public ResponseEntity<?> readAlbum(@PathVariable Long personalRoomId, @PathVariable Long albumId,

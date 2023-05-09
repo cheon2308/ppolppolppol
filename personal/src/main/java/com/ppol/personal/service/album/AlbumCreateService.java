@@ -85,6 +85,7 @@ public class AlbumCreateService {
 			.personalRoom(room)
 			.title(albumCreateDto.getTitle())
 			.openStatus(albumCreateDto.getOpenStatus())
+			.color(albumCreateDto.getColor())
 			.quiz(albumCreateDto.getQuiz())
 			.answer(albumCreateDto.getAnswer())
 			.build();

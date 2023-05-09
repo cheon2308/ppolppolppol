@@ -6,7 +6,9 @@ import com.ppol.personal.entity.global.BaseEntity;
 import com.ppol.personal.entity.user.User;
 import com.ppol.personal.util.constatnt.classes.ValidationConstants;
 import com.ppol.personal.util.constatnt.enums.OpenStatus;
+import com.ppol.personal.util.constatnt.enums.RoomMap;
 import com.ppol.personal.util.converter.OpenStatusConverter;
+import com.ppol.personal.util.converter.RoomMapConverter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -17,6 +19,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -60,6 +63,11 @@ public class PersonalRoom extends BaseEntity {
 	// 비 공개 시 설정할 수 있는 퀴즈에 대한 정답
 	private String answer;
 
+	// 개인 방의 맵 정보
+	@NotNull
+	@Convert(converter = RoomMapConverter.class)
+	private RoomMap roomMap;
+
 	// 상태 정보
 	private int state;
 
@@ -81,5 +89,9 @@ public class PersonalRoom extends BaseEntity {
 	// 정답 업데이트 메서드
 	public void updateAnswer(String answer) {
 		this.answer = answer;
+	}
+
+	public void updateRoomMap(RoomMap roomMap) {
+		this.roomMap = roomMap;
 	}
 }
