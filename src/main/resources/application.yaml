@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: online-server
   profiles:
     active: secret
 
