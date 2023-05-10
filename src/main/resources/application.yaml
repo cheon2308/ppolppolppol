@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: personal
+
   profiles:
     active: secret
 
@@ -25,6 +28,17 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+<<<<<<< HEAD
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance.id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://k8e106.p.ssafy.io:8761/eureka
+
+=======
 feign:
   url:
     base: http://k8e106.p.ssafy.io:8000/
@@ -34,3 +48,4 @@ feign:
     auth:
       service: auth-service/
       controller: auth
+>>>>>>> 31f4840b4d9fc761544fa51c91680f9616918e4a
