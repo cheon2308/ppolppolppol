@@ -34,3 +34,12 @@ feign:
     auth:
       service: auth-service/
       controller: auth
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance.id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://k8e106.p.ssafy.io:8761/eureka
