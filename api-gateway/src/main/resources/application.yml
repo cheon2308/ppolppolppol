@@ -57,7 +57,7 @@ spring:
           filters:
             - RewritePath=/personal-service/(?<segment>.*), /$\{segment}
         - id: group
-          uri: lb://GROUP
+          uri: lb://GROUUUP
           predicates:
             - Path=/group-service/**
           filters:
