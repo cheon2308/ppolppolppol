@@ -9,25 +9,31 @@ import com.ppol.personal.util.constatnt.enums.global.BasicEnum;
 
 public enum MeshType implements BasicEnum {
 
-	BASIC("1"), RABBIT("2"), PIG("3");
+	BASIC("basic", 1), RABBIT("rabbit", 2), PIG("pig", 3);
 
 	private final String code;
+	private final int numCode;
 
-	MeshType(String code) {
+	MeshType(String code, int numCode) {
 		this.code = code;
+		this.numCode = numCode;
 	}
 
 	@Override
-	@JsonValue
 	public String getCode() {
 		return code;
 	}
 
+	@JsonValue
+	public int getNumCode() {
+		return numCode;
+	}
+
 	@JsonCreator
-	public static MeshType of(String code) {
+	public static MeshType of(int numCode) {
 		return Arrays.stream(MeshType.values())
-			.filter(meshType -> meshType.getCode().equals(code))
+			.filter(meshType -> meshType.getNumCode() == numCode)
 			.findAny()
-			.orElseThrow(() -> new EnumConvertException("MeshType", code));
+			.orElseThrow(() -> new EnumConvertException("AlbumColor", String.valueOf(numCode)));
 	}
 }

@@ -9,25 +9,36 @@ import com.ppol.personal.util.constatnt.enums.global.BasicEnum;
 
 public enum FaceType implements BasicEnum {
 
-	ONE("1"), TWO("2"), THREE("3"), FOUR("4"), FIVE("5"), SIX("6");
+	ONE("one", 1),
+	TWO("two", 2),
+	THREE("three", 3),
+	FOUR("four", 4),
+	FIVE("five", 5),
+	SIX("six", 6);
 
 	private final String code;
+	private final int numCode;
 
-	FaceType(String code) {
+	FaceType(String code, int numCode) {
 		this.code = code;
+		this.numCode = numCode;
 	}
 
 	@Override
-	@JsonValue
 	public String getCode() {
 		return code;
 	}
 
+	@JsonValue
+	public int getNumCode() {
+		return numCode;
+	}
+
 	@JsonCreator
-	public static FaceType of(String code) {
+	public static FaceType of(int numCode) {
 		return Arrays.stream(FaceType.values())
-			.filter(faceType -> faceType.getCode().equals(code))
+			.filter(faceType -> faceType.getNumCode() == numCode)
 			.findAny()
-			.orElseThrow(() -> new EnumConvertException("FaceType", code));
+			.orElseThrow(() -> new EnumConvertException("AlbumColor", String.valueOf(numCode)));
 	}
 }

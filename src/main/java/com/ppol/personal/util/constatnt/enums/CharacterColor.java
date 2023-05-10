@@ -9,32 +9,38 @@ import com.ppol.personal.util.constatnt.enums.global.BasicEnum;
 
 public enum CharacterColor implements BasicEnum {
 
-	RED("1"),
-	ORANGE("2"),
-	YELLOW("3"),
-	GREEN("4"),
-	BLUE("5"),
-	INDIGO("6"),
-	VIOLET("7"),
-	PINK("8");
+	RED("red", 1),
+	ORANGE("orange", 2),
+	YELLOW("yellow", 3),
+	GREEN("green", 4),
+	BLUE("blue", 5),
+	INDIGO("indigo", 6),
+	VIOLET("violet", 7),
+	PINK("pink", 8);
 
 	private final String code;
+	private final int numCode;
 
-	CharacterColor(String code) {
+	CharacterColor(String code, int numCode) {
 		this.code = code;
+		this.numCode = numCode;
 	}
 
 	@Override
-	@JsonValue
 	public String getCode() {
 		return code;
 	}
 
+	@JsonValue
+	public int getNumCode() {
+		return numCode;
+	}
+
 	@JsonCreator
-	public static CharacterColor of(String code) {
+	public static CharacterColor of(int numCode) {
 		return Arrays.stream(CharacterColor.values())
-			.filter(characterColor -> characterColor.getCode().equals(code))
+			.filter(characterColor -> characterColor.getNumCode() == numCode)
 			.findAny()
-			.orElseThrow(() -> new EnumConvertException("CharacterColor", code));
+			.orElseThrow(() -> new EnumConvertException("AlbumColor", String.valueOf(numCode)));
 	}
 }
