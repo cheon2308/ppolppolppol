@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ppol'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -28,6 +28,8 @@ dependencies {
 
     // aws
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.0.1'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
