@@ -67,4 +67,4 @@ spring:
           predicates:
             - Path=/online-service/**
           filters:
-            - RewritePath=/group-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/online-service/(?<segment>.*), /$\{segment}
