@@ -4,12 +4,10 @@ import java.util.TimeZone;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-<<<<<<< HEAD
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-=======
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
->>>>>>> 31f4840b4d9fc761544fa51c91680f9616918e4a
+
 
 import jakarta.annotation.PostConstruct;
 

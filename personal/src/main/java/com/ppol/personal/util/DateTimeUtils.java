@@ -6,10 +6,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-<<<<<<< HEAD
-=======
+
 import com.ppol.personal.util.constatnt.classes.DateTimeFormatString;
->>>>>>> 31f4840b4d9fc761544fa51c91680f9616918e4a
 
 /**
  * 서비스에서 일관적인 시간 형식을 클라이언트로 보내주기 위한 Util Class
