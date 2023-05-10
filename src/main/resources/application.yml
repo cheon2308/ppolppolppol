@@ -51,13 +51,13 @@ spring:
           filters:
             - RewritePath=/alarm-service/(?<segment>.*), /$\{segment}
         - id: personal
-          uri: lb://PERSONAL
+          uri: lb://PERSONALLL
           predicates:
             - Path=/personal-service/**
           filters:
             - RewritePath=/personal-service/(?<segment>.*), /$\{segment}
         - id: group
-          uri: lb://GROUUUP
+          uri: lb://GROUP
           predicates:
             - Path=/group-service/**
           filters:
