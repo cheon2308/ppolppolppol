@@ -62,3 +62,9 @@ spring:
             - Path=/group-service/**
           filters:
             - RewritePath=/group-service/(?<segment>.*), /$\{segment}
+        - id: online-server
+          uri: lb://ONLINE-SERVER
+          predicates:
+            - Path=/online-service/**
+          filters:
+            - RewritePath=/group-service/(?<segment>.*), /$\{segment}
