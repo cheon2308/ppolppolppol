@@ -7,6 +7,7 @@ import com.ppol.personal.entity.user.User;
 import com.ppol.personal.repository.PersonalRoomRepository;
 import com.ppol.personal.service.user.UserReadService;
 import com.ppol.personal.util.constatnt.enums.OpenStatus;
+import com.ppol.personal.util.constatnt.enums.RoomMap;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class RoomCreateService {
 
 		User user = userReadService.getUser(userId);
 
-		return personalRoomRepository.save(PersonalRoom.builder().owner(user).openStatus(OpenStatus.PUBLIC).build());
+		return personalRoomRepository.save(
+			PersonalRoom.builder().owner(user).openStatus(OpenStatus.PUBLIC).roomMap(RoomMap.MIDDLE_AGE).build());
 	}
 }

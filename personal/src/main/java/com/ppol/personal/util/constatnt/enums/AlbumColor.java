@@ -5,30 +5,35 @@ import java.util.Arrays;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.ppol.personal.exception.exception.EnumConvertException;
-import com.ppol.personal.exception.exception.InvalidAlarmCodeException;
 import com.ppol.personal.util.constatnt.enums.global.BasicEnum;
 
 public enum AlbumColor implements BasicEnum {
 
-	RED("1"), BLUE("2"), GREEN("3");
+	RED("red", 1), BLUE("blue", 2), GREEN("green", 3);
 
 	private final String code;
+	private final int numCode;
 
-	AlbumColor(String code) {
+	AlbumColor(String code, int numCode) {
 		this.code = code;
+		this.numCode = numCode;
 	}
 
 	@Override
-	@JsonValue
 	public String getCode() {
 		return code;
 	}
 
+	@JsonValue
+	public int getNumCode() {
+		return numCode;
+	}
+
 	@JsonCreator
-	public static AlbumColor of(String code) {
+	public static AlbumColor of(int numCode) {
 		return Arrays.stream(AlbumColor.values())
-			.filter(albumColor -> albumColor.getCode().equals(code))
+			.filter(albumColor -> albumColor.getNumCode() == numCode)
 			.findAny()
-			.orElseThrow(() -> new EnumConvertException("AlbumColor", code));
+			.orElseThrow(() -> new EnumConvertException("AlbumColor", String.valueOf(numCode)));
 	}
 }
