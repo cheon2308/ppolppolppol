@@ -2,9 +2,14 @@ package com.ppol.personal.entity.global;
 
 import java.util.List;
 
+<<<<<<< HEAD
+=======
 import com.ppol.personal.entity.user.User;
 import com.ppol.personal.util.constatnt.classes.ValidationConstants;
+>>>>>>> 31f4840b4d9fc761544fa51c91680f9616918e4a
 
+import com.ppol.personal.entity.user.User;
+import com.ppol.personal.util.constatnt.classes.ValidationConstants;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.FetchType;
