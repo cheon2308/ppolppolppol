@@ -40,18 +40,66 @@ class ArticleCard extends StatefulWidget {
 
 class _ArticleCardState extends State<ArticleCard> {
   late int _likeCount;
-  int _imageIndex = 0;
+  late bool _isLiked;
+  late bool _isBookmarked;
+  late bool _isCommenting;
+  late int _imageIndex;
 
   @override
   void initState() {
     super.initState();
     _likeCount = widget.article.likeCount;
+    _isLiked = false;
+    _isBookmarked = false;
+    _isCommenting = false;
+    _imageIndex = 0;
   }
 
   void _toggleLike() {
     setState(() {
-      _likeCount += _likeCount > 0 ? -1 : 1;
+      _isLiked = !_isLiked;
+      _likeCount += _isLiked ? 1 : -1;
+      _updateArticle({
+        'likeCount': _likeCount,
+        'liked': _isLiked,
+      });
     });
+  }
+
+  void _toggleBookmark() {
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+      _updateArticle({'bookmarked': _isBookmarked});
+    });
+  }
+
+  // void _toggleCommenting() {
+  //   setState(() {
+  //     _isCommenting = !_isCommenting;
+  //   });
+  // }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _imageIndex = index;
+    });
+  }
+
+  Future<void> _updateArticle(Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse(
+        'http://k8e106.p.ssafy.io:8000/article-service/articles/${widget.article.articleId}/like',
+      ),
+      headers: {
+        'Authorization': '1',
+        'Accept-Charset': 'utf-8',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update article');
+    }
   }
 
   @override
@@ -63,61 +111,90 @@ class _ArticleCardState extends State<ArticleCard> {
       );
     }
 
+    final isMultipleImages = widget.article.imageList.length > 1;
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ListTile(
-            leading: widget.article.imageList.isNotEmpty
-                ? CircleAvatar(
-                    child: CachedNetworkImage(
-                        imageUrl: widget.article.imageList.first),
-            )
-                : CircleAvatar(child: Image.asset('assets/icon.png')),
-            title: Text(
-              widget.article.content,
-              style: TextStyle(fontWeight: FontWeight.bold),
+          if (isMultipleImages)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                widget.article.imageList.length,
+                (index) => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: CircleAvatar(
+                    backgroundColor:
+                        _imageIndex == index ? Colors.black : Colors.grey,
+                    radius: 4,
+                  ),
+                ),
+              ),
             ),
-            subtitle: Text(widget.article.writer.username),
-          ),
           if (widget.article.imageList.isNotEmpty)
-            CachedNetworkImage(
-              imageUrl: widget.article.imageList.first,
-              fit: BoxFit.cover,
-              height: 350,
-            )
-          else
-            Image.asset(
-              'assets/icon.png',
-              fit: BoxFit.cover,
-              height: 350,
+            Container(
+              height: 300,
+              child: PageView(
+                onPageChanged: _onPageChanged,
+                children: widget.article.imageList.map((imageUrl) {
+                  return Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  );
+                }).toList(),
+              ),
             ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  onPressed: _toggleLike,
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: _toggleLike,
+                      icon: Icon(
+                        Icons.thumb_up,
+                        color: _isLiked ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                    Text('${widget.article.likeCount}'),
+                    SizedBox(width: 16),
+                    IconButton(
+                      onPressed: _toggleBookmark,
+                      icon: Icon(
+                        Icons.bookmark,
+                        color: _isBookmarked ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
                 IconButton(
-                  icon: Icon(Icons.bookmark_border),
                   onPressed: () {},
+                  icon: Icon(Icons.share),
                 ),
               ],
             ),
           ),
+          Divider(height: 0),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              '$_likeCount likes',
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              widget.article.content,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  widget.article.content,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  widget.article.content,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ),
         ],
@@ -146,7 +223,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('뽈뽈뽈'),
+        backgroundColor: Color(0xffADD8E6),
+        title: Text(
+          '뽈뽈뽈',
+          style: TextStyle(
+            fontFamily: 'text',
+            fontSize: 30,
+          ),
+        ),
       ),
       body: FutureBuilder<List<ArticleModel>>(
         future: _futureArticles,
