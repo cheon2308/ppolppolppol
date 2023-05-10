@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ppol.personal.dto.request.AlbumCreateDto;
 import com.ppol.personal.dto.request.AlbumUpdateDto;
+import com.ppol.personal.dto.request.CharacterDto;
 import com.ppol.personal.dto.request.CommentCreateDto;
 import com.ppol.personal.dto.request.ContentCreateDto;
 import com.ppol.personal.dto.request.ContentUpdateDto;
@@ -33,6 +34,7 @@ import com.ppol.personal.service.comment.CommentReadService;
 import com.ppol.personal.service.room.RoomDeleteService;
 import com.ppol.personal.service.room.RoomReadService;
 import com.ppol.personal.service.room.RoomUpdateService;
+import com.ppol.personal.service.user.CharacterUpdateService;
 import com.ppol.personal.util.request.RequestUtils;
 import com.ppol.personal.util.response.ResponseBuilder;
 
@@ -61,6 +63,9 @@ public class PersonalController {
 	private final CommentReadService commentReadService;
 	private final CommentCreateService commentCreateService;
 	private final CommentDeleteService commentDeleteService;
+
+	// user character
+	private final CharacterUpdateService characterUpdateService;
 
 	// 개인 룸 정보 변경 (제목, 공개 여부, 퀴즈, 정답)
 	@PutMapping
@@ -223,5 +228,15 @@ public class PersonalController {
 		commentDeleteService.deleteComment(userId, personalRoomId, albumId, commentId);
 
 		return ResponseBuilder.ok("deleted");
+	}
+
+	// 캐릭터의 내용 수정
+	@PutMapping("/characters/face-type")
+	public ResponseEntity<?> updateCharacterFaceType(@RequestBody CharacterDto characterDto) {
+
+		Long userId = RequestUtils.getUserId();
+		characterUpdateService.updateCharacter(userId, characterDto);
+
+		return ResponseBuilder.ok("updated");
 	}
 }

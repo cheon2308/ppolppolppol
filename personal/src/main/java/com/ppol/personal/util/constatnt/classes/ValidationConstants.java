@@ -22,7 +22,7 @@ public class ValidationConstants {
 
 
 	// 개인 방의 최대 앨범 수
-	public static final int ROOM_MAX_ALBUM = 10;
+	public static final int ROOM_MAX_ALBUM = 5;
 	// 앨범 제목 최대 글자 수
 	public static final int ALBUM_TITLE_MAX_SIZE = 30;
 
