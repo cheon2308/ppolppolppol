@@ -9,9 +9,11 @@ import com.ppol.personal.dto.response.ContentResponseDto;
 import com.ppol.personal.entity.personal.Album;
 import com.ppol.personal.entity.personal.AlbumContent;
 import com.ppol.personal.entity.personal.PersonalRoom;
+import com.ppol.personal.exception.exception.AlbumExceededException;
 import com.ppol.personal.repository.AlbumContentRepository;
 import com.ppol.personal.repository.AlbumRepository;
 import com.ppol.personal.service.room.RoomReadService;
+import com.ppol.personal.util.constatnt.classes.ValidationConstants;
 import com.ppol.personal.util.s3.S3Uploader;
 
 import jakarta.transaction.Transactional;
@@ -44,6 +46,10 @@ public class AlbumCreateService {
 	public AlbumDetailDto createAlbum(Long roomId, Long userId, AlbumCreateDto albumCreateDto) {
 
 		PersonalRoom room = roomReadService.getRoomOnlyOwner(roomId, userId);
+
+		if(albumRepository.countByPersonalRoom_Id(room.getId()) >= ValidationConstants.ROOM_MAX_ALBUM) {
+			throw new AlbumExceededException();
+		}
 
 		Album album = albumRepository.save(albumCreateMapping(albumCreateDto, room));
 
