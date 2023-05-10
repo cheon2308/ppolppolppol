@@ -47,3 +47,13 @@ management:
     web:
       exposure:
         include: refresh, health, beans, busrefresh, info, metrics, prometheus
+
+feign:
+  url:
+    base: http://k8e106.p.ssafy.io:8000/
+    alarm:
+      service: alarm-service/
+      controller: alarms
+    auth:
+      service: auth-service/
+      controller: auth
