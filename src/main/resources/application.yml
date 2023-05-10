@@ -51,7 +51,7 @@ spring:
           filters:
             - RewritePath=/alarm-service/(?<segment>.*), /$\{segment}
         - id: personal
-          uri: lb://PERSONALLL
+          uri: lb://PERSONAL
           predicates:
             - Path=/personal-service/**
           filters:
