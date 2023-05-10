@@ -70,6 +70,8 @@ class _myPageState extends State<myPage> {
 
   }
 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -95,8 +97,78 @@ class _myPageState extends State<myPage> {
           SizedBox(height: kSpacingUnit.w * 5),
           header,
           Text(username),
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: ProfileHeader()),
+              SliverGrid(
+                  delegate: SliverChildBuilderDelegate(
+                        (c,i) => Container(color : Colors.grey),
+                    childCount: 3,
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount( crossAxisCount: 2 ))
+            ],
+          )
         ],
       ),
+    );
+  }
+
+
+}
+
+class Profile extends StatelessWidget {
+  const Profile({Key? key, this.changeFollow,this.username}) : super(key: key);
+  final changeFollow;
+  final username;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(username),),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: ProfileHeader(),
+          ),
+          SliverGrid(delegate: SliverChildBuilderDelegate(
+                (c, i) =>Image.network(context.watch<Store1>().profileImage[i]),
+            childCount: context.watch<Store1>().profileImage.length,
+          ),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          )
+        ],
+      ),
+
+    );
+  }
+}
+
+class ProfileHeader extends StatelessWidget {
+  const ProfileHeader({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        CircleAvatar(radius: 20,backgroundColor: Colors.grey,),
+        Text('팔로워 '
+            // '${context.watch<Store1>().follower.toString()}'
+        '1'
+
+            '명',style: TextStyle(fontSize: 20),),
+        ElevatedButton(onPressed: (){
+          // context.read<Store1>().plusFoloower();
+        }, child: Text(
+            // context.watch<Store1>().follow
+          "follow"
+        )
+        ),
+        ElevatedButton(onPressed: (){
+          // context.read<Store1>().getData();
+        }, child: Text('사진가져오기')),
+      ],
     );
   }
 }

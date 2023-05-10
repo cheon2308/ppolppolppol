@@ -32,9 +32,11 @@ class _MyAppState extends State<MyApp> {
       child: Builder(
         builder: (context) {
           return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: kLightTheme,
+            // debugShowCheckedModeBanner: false,
+            // theme: kLightTheme,
             // home: homePage(),
+            theme: ThemeData(fontFamily: 'Maplestory'),
+            themeMode: ThemeMode.system,
             home: loginPage(),
           );
         },
