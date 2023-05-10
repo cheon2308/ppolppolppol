@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: group
   profiles:
     active: secret
 
