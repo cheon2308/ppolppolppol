@@ -3,13 +3,17 @@ spring:
     name: personal
 
   profiles:
-    active:
-      - local
-      - secret
+    active: secret
 
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
-        jdbc.time_zone: Asia/Seoul
+      jdbc.time_zone: Asia/Seoul
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://k8e106.p.ssafy.io:3306/ppol?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&serverTimezone=Asia/Seoul
 
   mvc:
     path match:
@@ -24,6 +28,7 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
 
+<<<<<<< HEAD
 eureka:
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance.id:${random.value}}
@@ -33,3 +38,14 @@ eureka:
     service-url:
       defaultZone: http://k8e106.p.ssafy.io:8761/eureka
 
+=======
+feign:
+  url:
+    base: http://k8e106.p.ssafy.io:8000/
+    alarm:
+      service: alarm-service/
+      controller: alarms
+    auth:
+      service: auth-service/
+      controller: auth
+>>>>>>> 31f4840b4d9fc761544fa51c91680f9616918e4a

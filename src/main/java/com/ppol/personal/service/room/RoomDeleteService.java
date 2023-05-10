@@ -2,6 +2,9 @@ package com.ppol.personal.service.room;
 
 import org.springframework.stereotype.Service;
 
+import com.ppol.personal.entity.personal.PersonalRoom;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,4 +18,15 @@ public class RoomDeleteService {
 
 	// service
 	private final RoomReadService roomReadService;
+
+	/**
+	 * 방 삭제하는 메서드
+	 */
+	@Transactional
+	public void deleteRoom(Long userId) {
+
+		PersonalRoom room = roomReadService.getRoomByUser(userId);
+
+		room.delete();
+	}
 }

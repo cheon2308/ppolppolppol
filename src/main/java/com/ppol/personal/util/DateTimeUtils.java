@@ -6,22 +6,26 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+<<<<<<< HEAD
+=======
+import com.ppol.personal.util.constatnt.classes.DateTimeFormatString;
+>>>>>>> 31f4840b4d9fc761544fa51c91680f9616918e4a
 
 /**
- * 	서비스에서 일관적인 시간 형식을 클라이언트로 보내주기 위한 Util Class
+ * 서비스에서 일관적인 시간 형식을 클라이언트로 보내주기 위한 Util Class
  */
 public class DateTimeUtils {
 
 	/**
-	 *	기본적으로 format을 지정하지 않고 Default로 BASIC 형식을 사용할 수 있는 메서드
+	 * 기본적으로 format을 지정하지 않고 Default로 BASIC 형식을 사용할 수 있는 메서드
 	 */
 	public static String getString(LocalDateTime timestamp) {
 		return getString(timestamp, DateTimeFormatString.BASIC);
 	}
 
 	/**
-	 *	timestamp를 통해 원하는 format형태로 나타냄
-	 *	단, 이때 서비스에서 일정하게 어떤 시간 이내에는 절대 시간이 아닌 상대적 시간을 string 형태로 반환하도록 한다.
+	 * timestamp를 통해 원하는 format형태로 나타냄
+	 * 단, 이때 서비스에서 일정하게 어떤 시간 이내에는 절대 시간이 아닌 상대적 시간을 string 형태로 반환하도록 한다.
 	 */
 	public static String getString(LocalDateTime timestamp, String format) {
 
