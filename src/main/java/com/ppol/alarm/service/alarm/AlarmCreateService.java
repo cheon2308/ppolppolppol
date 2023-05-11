@@ -52,6 +52,7 @@ public class AlarmCreateService {
 		return Alarm.builder()
 			.alarmType(alarmRequestDto.getAlarmType())
 			.user(userReadService.getUser(alarmRequestDto.getUserId()))
+			.image(alarmRequestDto.getAlarmImage())
 			.build();
 	}
 
