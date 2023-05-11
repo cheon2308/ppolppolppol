@@ -1,5 +1,6 @@
 package com.ppol.onlineserver.controller;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ppol.onlineserver.dto.response.CharacterDto;
-import com.ppol.onlineserver.service.CharacterUpdateService;
+import com.ppol.onlineserver.service.CharacterReadService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,12 +20,12 @@ import lombok.RequiredArgsConstructor;
 public class OnlineController {
 
 	// service
-	private final CharacterUpdateService characterUpdateService;
+	private final CharacterReadService characterReadService;
 
 	@GetMapping("/{groupId}")
 	public ResponseEntity<?> readGroupCharacters(@PathVariable Long groupId) {
 
-		Set<CharacterDto> returnObject = characterUpdateService.getCharacterSet(groupId);
+		Map<String, Set<CharacterDto>> returnObject = characterReadService.readGroupCharacterList(groupId);
 
 		return ResponseEntity.ok(returnObject);
 	}
