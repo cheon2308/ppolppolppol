@@ -2,6 +2,8 @@ package com.ppol.article.service.article;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,6 +58,9 @@ public class ArticleCreateService {
 
 		Article article = articleSave(userId, articleCreateDto);
 
+		// 내용을 파싱해서 해쉬태그를 뽑아내기
+		articleCreateDto.setHashTags(getHashTags(articleCreateDto.getContent()));
+
 		// 검색을 위해 게시글 내용 정보와, 해쉬태그 정보들을 엘라스틱 서치에 저장
 		articleElasticService.createArticleElasticsearch(articleCreateDto, article.getId());
 
@@ -63,6 +68,24 @@ public class ArticleCreateService {
 		alarmSendService.makeFollowingNewArticleAlarm(article);
 
 		return articleReadService.articleDetailMapping(article, userId);
+	}
+
+	/**
+	 * 게시글의 내용중에서 @으로 시작하는 부분을 찾아서 해쉬태그로 뽑아내는 메서드
+	 */
+	public List<String> getHashTags(String content) {
+
+		List<String> hashTagList = new ArrayList<>();
+
+		// #로 시작하는 단어들을 찾아서 리스트로 리턴
+		Pattern pattern = Pattern.compile("#\\w+");
+		Matcher matcher = pattern.matcher(content);
+
+		while (matcher.find()) {
+			hashTagList.add(matcher.group().substring(1));
+		}
+
+		return hashTagList;
 	}
 
 	/**

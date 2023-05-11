@@ -21,6 +21,7 @@ public class ArticleUpdateService {
 	// services
 	private final ArticleReadService articleReadService;
 	private final ArticleElasticService articleElasticService;
+	private final ArticleCreateService articleCreateService;
 
 	/**
 	 * 게시글/피드 아이디값과 {@link ArticleUpdateDto} 정보를 통해 MariaDB와 Elasticsearch에 저장된 정보를 수정한다.
@@ -32,6 +33,8 @@ public class ArticleUpdateService {
 
 		article.updateContent(articleUpdateDto.getContent());
 		article.updateOpenStatus(articleUpdateDto.getOpenStatus());
+
+		articleUpdateDto.setHashTags(articleCreateService.getHashTags(articleUpdateDto.getContent()));
 
 		articleElasticService.updateArticleElasticsearch(articleUpdateDto, articleId);
 
