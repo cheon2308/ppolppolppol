@@ -34,7 +34,7 @@ public class UserReadService {
 	}
 
 	/**
-	 * 사용자 캐릭터 Entity를 불러오는 메서드, 예외처리 포함
+	 * 사용자 캐릭터 Entity를 불러오는 메서드
 	 */
 	public UserCharacter getUserCharacter(Long userId) {
 		return characterRepository.findByUser_Id(userId).orElseGet(() -> createUserCharacter(userId));
