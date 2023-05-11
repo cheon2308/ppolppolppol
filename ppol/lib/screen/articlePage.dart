@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:ppol/screen/articleDetailPage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 Future<List<ArticleModel>> fetchArticles() async {
   final response = await http.get(
@@ -42,16 +43,14 @@ class _ArticleCardState extends State<ArticleCard> {
   late int _likeCount;
   late bool _isLiked;
   late bool _isBookmarked;
-  late bool _isCommenting;
   late int _imageIndex;
 
   @override
   void initState() {
     super.initState();
     _likeCount = widget.article.likeCount;
-    _isLiked = false;
-    _isBookmarked = false;
-    _isCommenting = false;
+    _isLiked = widget.article.userInteraction.like;
+    _isBookmarked = widget.article.userInteraction.bookmark;
     _imageIndex = 0;
   }
 
@@ -59,8 +58,7 @@ class _ArticleCardState extends State<ArticleCard> {
     setState(() {
       _isLiked = !_isLiked;
       _likeCount += _isLiked ? 1 : -1;
-      _updateArticle({
-        'likeCount': _likeCount,
+      _updateLike({
         'liked': _isLiked,
       });
     });
@@ -69,7 +67,7 @@ class _ArticleCardState extends State<ArticleCard> {
   void _toggleBookmark() {
     setState(() {
       _isBookmarked = !_isBookmarked;
-      _updateArticle({'bookmarked': _isBookmarked});
+      _updateBookmark({'bookmarked': _isBookmarked});
     });
   }
 
@@ -85,10 +83,27 @@ class _ArticleCardState extends State<ArticleCard> {
     });
   }
 
-  Future<void> _updateArticle(Map<String, dynamic> data) async {
+  Future<void> _updateLike(Map<String, dynamic> data) async {
     final response = await http.put(
       Uri.parse(
         'http://k8e106.p.ssafy.io:8000/article-service/articles/${widget.article.articleId}/like',
+      ),
+      headers: {
+        'Authorization': '1',
+        'Accept-Charset': 'utf-8',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update article');
+    }
+  }
+
+  Future<void> _updateBookmark(Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse(
+        'http://k8e106.p.ssafy.io:8000/article-service/articles/${widget.article.articleId}/bookmark',
       ),
       headers: {
         'Authorization': '1',
@@ -110,89 +125,156 @@ class _ArticleCardState extends State<ArticleCard> {
         child: SizedBox(),
       );
     }
-
     final isMultipleImages = widget.article.imageList.length > 1;
+    final dateTimeFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    bool _isExpanded = false;
+    String getDateTimeString(DateTime dateTime) {
+      return dateTimeFormat.format(dateTime);
+    }
+
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (isMultipleImages)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                widget.article.imageList.length,
-                (index) => Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: CircleAvatar(
-                    backgroundColor:
-                        _imageIndex == index ? Colors.black : Colors.grey,
-                    radius: 4,
-                  ),
-                ),
-              ),
-            ),
-          if (widget.article.imageList.isNotEmpty)
-            Container(
-              height: 300,
-              child: PageView(
-                onPageChanged: _onPageChanged,
-                children: widget.article.imageList.map((imageUrl) {
-                  return Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                  );
-                }).toList(),
-              ),
-            ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
+                    CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(widget.article.writer.profileImage),
+                      radius: 20,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      widget.article.writer.username,
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+                // IconButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) =>
+                //             ArticleDetailScreen(article: widget.article),
+                //       ),
+                //     );
+                //   },
+                //   icon: Icon(Icons.more_horiz),
+                // ),
+              ],
+            ),
+          ),
+          if (widget.article.imageList.isNotEmpty)
+            Container(
+              height: 380,
+              child: PageView(
+                onPageChanged: _onPageChanged,
+                children: widget.article.imageList.map((imageUrl) {
+                  return CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    fit: BoxFit.fitWidth,
+                  );
+                }).toList(),
+              ),
+            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
                     IconButton(
-                      onPressed: _toggleLike,
+                      onPressed: () {
+                        _toggleLike();
+                      },
                       icon: Icon(
-                        Icons.thumb_up,
-                        color: _isLiked ? Colors.blue : Colors.grey,
+                        _isLiked ? Icons.favorite : Icons.favorite_border,
                       ),
                     ),
-                    Text('${widget.article.likeCount}'),
-                    SizedBox(width: 16),
                     IconButton(
-                      onPressed: _toggleBookmark,
+                      onPressed: () {
+                        _toggleLike();
+                      },
                       icon: Icon(
-                        Icons.bookmark,
-                        color: _isBookmarked ? Colors.blue : Colors.grey,
+                        Icons.chat,
                       ),
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.share),
+              ),
+              if (isMultipleImages)
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      widget.article.imageList.length,
+                          (index) => Padding(
+                        padding:
+                        EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                        child: CircleAvatar(
+                          backgroundColor:
+                          _imageIndex == index ? Colors.black : Colors.grey,
+                          radius: 4,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ],
+              Expanded(
+                child: IconButton(
+                  onPressed: () {
+                    _toggleBookmark();
+                  },
+                  icon: Icon(
+                    _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              '좋아요 $_likeCount개',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-          Divider(height: 0),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  widget.article.content,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.article.writer.username,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      widget.article.content,
+                      style: TextStyle(fontSize: 16),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
                 SizedBox(height: 8),
                 Text(
-                  widget.article.content,
-                  style: TextStyle(fontSize: 16),
+                  getDateTimeString(widget.article.createdAt),
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ],
             ),
@@ -247,15 +329,15 @@ class _ArticleScreenState extends State<ArticleScreen> {
                 itemBuilder: (context, index) {
                   final article = articles[index];
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ArticleDetailScreen(article: article),
-                        ),
-                      );
-                    },
+                    // onTap: () {
+                    //   Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //       builder: (context) =>
+                    //           ArticleDetailScreen(article: article),
+                    //     ),
+                    //   );
+                    // },
                     child: ArticleCard(
                       article: article,
                     ),
