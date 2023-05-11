@@ -47,6 +47,7 @@ public class AlarmSendService {
 		createAlarm(AlarmRequestDto.builder()
 			.userId(articleLike.getArticle().getWriter().getId())
 			.alarmReferenceDtoList(list)
+			.alarmImage(articleLike.getUser().getImage())
 			.alarmType(AlarmType.ARTICLE_LIKE)
 			.build());
 	}
@@ -67,6 +68,7 @@ public class AlarmSendService {
 			.userId(articleComment.getArticle().getWriter().getId())
 			.alarmReferenceDtoList(list)
 			.alarmType(AlarmType.ARTICLE_COMMENT)
+			.alarmImage(articleComment.getWriter().getImage())
 			.build());
 	}
 
@@ -86,6 +88,7 @@ public class AlarmSendService {
 			.userId(parent.getWriter().getId())
 			.alarmReferenceDtoList(list)
 			.alarmType(AlarmType.COMMENT_REPLY)
+			.alarmImage(articleComment.getWriter().getImage())
 			.build());
 	}
 
@@ -104,6 +107,7 @@ public class AlarmSendService {
 			.userId(articleCommentLike.getArticleComment().getWriter().getId())
 			.alarmReferenceDtoList(list)
 			.alarmType(AlarmType.COMMENT_LIKE)
+			.alarmImage(articleCommentLike.getUser().getImage())
 			.build());
 	}
 
@@ -122,6 +126,7 @@ public class AlarmSendService {
 			.userId(userId)
 			.alarmReferenceDtoList(list)
 			.alarmType(AlarmType.COMMENT_TAG)
+			.alarmImage(articleComment.getWriter().getImage())
 			.build())));
 	}
 
@@ -141,6 +146,7 @@ public class AlarmSendService {
 				.userId(follow.getFollower().getId())
 				.alarmReferenceDtoList(list)
 				.alarmType(AlarmType.FOLLOWING_NEW_ARTICLE)
+				.alarmImage(article.getWriter().getImage())
 				.build()));
 	}
 
