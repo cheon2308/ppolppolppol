@@ -76,7 +76,7 @@ public class CommentCreateService {
 		List<String> usernames = new ArrayList<>();
 
 		// Regular expression to match words starting with '@'
-		Pattern pattern = Pattern.compile("@\\w+");
+		Pattern pattern = Pattern.compile("@\\S+");
 		Matcher matcher = pattern.matcher(content);
 
 		// Iterate through all matches and add them to the list

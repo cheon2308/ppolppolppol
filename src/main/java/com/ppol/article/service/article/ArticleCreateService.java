@@ -78,16 +78,12 @@ public class ArticleCreateService {
 		List<String> hashTagList = new ArrayList<>();
 
 		// #로 시작하는 단어들을 찾아서 리스트로 리턴
-		Pattern pattern = Pattern.compile("#\\w+");
+		Pattern pattern = Pattern.compile("#\\S+");
 		Matcher matcher = pattern.matcher(content);
 
 		while (matcher.find()) {
 			hashTagList.add(matcher.group().substring(1));
 		}
-
-		log.info(content);
-
-		hashTagList.forEach(log::info);
 
 		return hashTagList;
 	}
