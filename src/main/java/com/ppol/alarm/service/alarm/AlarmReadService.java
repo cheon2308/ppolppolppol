@@ -65,6 +65,7 @@ public class AlarmReadService {
 			.alarmId(alarm.getId())
 			.content(alarm.getAlarmType().getMessage())
 			.state(alarm.getState())
+			.alarmType(alarm.getAlarmType().name())
 			.userId(alarm.getUser().getId())
 			.alarmReferenceDtoList(getAlarmReferenceList(alarm.getId()))
 			.build();

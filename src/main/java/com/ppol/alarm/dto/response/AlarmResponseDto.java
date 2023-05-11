@@ -23,5 +23,6 @@ public class AlarmResponseDto {
 	private String content;
 	private long userId;
 	private int state;
+	private String alarmType;
 	private List<AlarmReferenceDto> alarmReferenceDtoList;
 }
