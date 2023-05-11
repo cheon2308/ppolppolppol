@@ -9,14 +9,17 @@ import com.ppol.onlineserver.util.constant.enums.global.BasicEnum;
 
 public enum CharacterColor implements BasicEnum {
 
-	RED("red", 1),
-	ORANGE("orange", 2),
-	YELLOW("yellow", 3),
-	GREEN("green", 4),
-	BLUE("blue", 5),
-	INDIGO("indigo", 6),
-	VIOLET("violet", 7),
-	PINK("pink", 8);
+	WHITE("white", 1),
+	RED("red", 2),
+	ORANGE("orange", 3),
+	YELLOW("yellow", 4),
+	GREEN("green", 5),
+	BLUE("blue", 6),
+	INDIGO("indigo", 7),
+	VIOLET("violet", 8),
+	PINK("pink", 9),
+	TURQUOISE("turquoise", 10),
+	GRAY("gray", 11);
 
 	private final String code;
 	private final int numCode;
