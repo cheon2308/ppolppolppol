@@ -85,6 +85,10 @@ public class ArticleCreateService {
 			hashTagList.add(matcher.group().substring(1));
 		}
 
+		log.info(content);
+
+		hashTagList.forEach(log::info);
+
 		return hashTagList;
 	}
 
