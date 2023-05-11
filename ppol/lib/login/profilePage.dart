@@ -76,7 +76,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           FormData formData = FormData.fromMap({'image': await MultipartFile.fromFile(pickedFile.path,filename: pickedFile.path.split('/').last)});
 
           Dio dio= await authDio(context);
-          Response response=await dio.put("/user-service/users/profile-image",data:formData,options: Options(
+          Response response=await dio.put("/user-service/users/profile-image",
+              data:formData,
+              options: Options(
             headers: {
               "Content-Type":"multipart/form-data",
             }
