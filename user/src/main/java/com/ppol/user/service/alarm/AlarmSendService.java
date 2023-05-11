@@ -40,6 +40,7 @@ public class AlarmSendService {
 			.userId(follow.getFollowing().getId())
 			.alarmType(AlarmType.FOLLOW)
 			.alarmReferenceDtoList(list)
+			.alarmImage(follow.getFollower().getImage())
 			.build());
 	}
 
