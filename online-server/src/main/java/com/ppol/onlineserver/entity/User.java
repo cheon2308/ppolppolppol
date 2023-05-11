@@ -1,0 +1,49 @@
+package com.ppol.onlineserver.entity;
+
+import org.hibernate.annotations.Where;
+
+import com.ppol.onlineserver.entity.global.BaseEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+/**
+ * 	사용자 정보 엔티티
+ */
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@Entity
+@Where(clause = "state = 0")
+public class User extends BaseEntity {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	// 사용자 이름/닉네임 정보 (중복허용 x), (최대 16자)
+	private String username;
+
+	// 사용자 프로필 이미지 경로
+	private String image;
+
+	// 팔로워 수
+	private int followerCount;
+
+	// 팔로잉 수
+	private int followingCount;
+
+	// 사용자 상태 (1인 경우 삭제된 상태)
+	private int state;
+}
