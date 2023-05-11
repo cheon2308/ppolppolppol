@@ -48,6 +48,7 @@ public class AlarmSendService {
 			.userId(userId)
 			.alarmType(AlarmType.GROUP_INVITE)
 			.alarmReferenceDtoList(list)
+			.alarmImage(user.getImage())
 			.build();
 
 		createAlarm(alarmRequestDto);
@@ -70,6 +71,7 @@ public class AlarmSendService {
 				.userId(user.getId())
 				.alarmType(AlarmType.GROUP_NEW_USER)
 				.alarmReferenceDtoList(list)
+				.alarmImage(targetUser.getImage())
 				.build();
 
 			createAlarm(alarmRequestDto);

@@ -26,5 +26,7 @@ public class AlarmRequestDto {
 	@NotNull
 	private AlarmType alarmType;
 
+	private String alarmImage;
+
 	private List<AlarmReferenceDto> alarmReferenceDtoList;
 }
