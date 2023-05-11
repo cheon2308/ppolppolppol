@@ -13,7 +13,6 @@ import com.ppol.personal.entity.personal.AlbumComment;
 import com.ppol.personal.util.constatnt.enums.AlarmType;
 import com.ppol.personal.util.feign.AlarmFeign;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +43,7 @@ public class AlarmSendService {
 			.userId(album.getOwner().getId())
 			.alarmType(AlarmType.GROUP_INVITE)
 			.alarmReferenceDtoList(list)
+			.alarmImage(comment.getWriter().getImage())
 			.build();
 
 		createAlarm(alarmRequestDto);
