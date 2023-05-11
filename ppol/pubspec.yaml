@@ -53,6 +53,7 @@ dependencies:
   dio: ^5.1.1
 
   flutter_secure_storage: ^8.0.0
+  cached_network_image: ^3.2.3
   flutter_client_sse: ^1.0.0
 
 dev_dependencies:
@@ -98,6 +99,14 @@ flutter_native_splash:
     icon_background_color_dark: "#272727"
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: text
+      fonts:
+        - asset: assets/fonts/Maplestory_Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Maplestory_Light.ttf
+          weight: 300
+
   assets:
     - assets/plus_picture.png
     - assets/main_logo/

@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ppol/models/articleModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:ppol/screen/articleDetailPage.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 Future<List<ArticleModel>> fetchArticles() async {
   final response = await http.get(
@@ -13,9 +16,10 @@ Future<List<ArticleModel>> fetchArticles() async {
     },
   );
   if (response.statusCode == 200) {
-    final List<dynamic> jsonList = jsonDecode(response.body)['data'];
+    final List<dynamic> jsonList =
+        jsonDecode(utf8.decode(response.bodyBytes))['data'];
     final List<ArticleModel> articles =
-    jsonList.map((json) => ArticleModel.fromJson(json)).toList();
+        jsonList.map((json) => ArticleModel.fromJson(json)).toList();
     return articles;
   } else {
     throw Exception('Failed to load articles');
@@ -25,69 +29,172 @@ Future<List<ArticleModel>> fetchArticles() async {
 class ArticleCard extends StatefulWidget {
   final ArticleModel article;
 
-  const ArticleCard({Key? key, required this.article}) : super(key: key);
+  const ArticleCard({
+    Key? key,
+    required this.article,
+  }) : super(key: key);
 
   @override
   _ArticleCardState createState() => _ArticleCardState();
 }
 
 class _ArticleCardState extends State<ArticleCard> {
-  int _likeCount = 0;
+  late int _likeCount;
+  late bool _isLiked;
+  late bool _isBookmarked;
+  late bool _isCommenting;
+  late int _imageIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _likeCount = widget.article.likeCount;
+    _isLiked = false;
+    _isBookmarked = false;
+    _isCommenting = false;
+    _imageIndex = 0;
+  }
 
   void _toggleLike() {
     setState(() {
-      _likeCount += _likeCount > 0 ? -1 : 1;
+      _isLiked = !_isLiked;
+      _likeCount += _isLiked ? 1 : -1;
+      _updateArticle({
+        'likeCount': _likeCount,
+        'liked': _isLiked,
+      });
     });
+  }
+
+  void _toggleBookmark() {
+    setState(() {
+      _isBookmarked = !_isBookmarked;
+      _updateArticle({'bookmarked': _isBookmarked});
+    });
+  }
+
+  // void _toggleCommenting() {
+  //   setState(() {
+  //     _isCommenting = !_isCommenting;
+  //   });
+  // }
+
+  void _onPageChanged(int index) {
+    setState(() {
+      _imageIndex = index;
+    });
+  }
+
+  Future<void> _updateArticle(Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse(
+        'http://k8e106.p.ssafy.io:8000/article-service/articles/${widget.article.articleId}/like',
+      ),
+      headers: {
+        'Authorization': '1',
+        'Accept-Charset': 'utf-8',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update article');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.article.openStatus == 'private') {
+      return Visibility(
+        visible: false,
+        child: SizedBox(),
+      );
+    }
+
+    final isMultipleImages = widget.article.imageList.length > 1;
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ListTile(
-            leading: widget.article.imageList.isNotEmpty
-                ? Image.network(widget.article.imageList.first)
-                : Image.asset('assets/icon.png'),
-            title: Text(
-              widget.article.content,
-              style: TextStyle(fontWeight: FontWeight.bold),
+          if (isMultipleImages)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                widget.article.imageList.length,
+                (index) => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4),
+                  child: CircleAvatar(
+                    backgroundColor:
+                        _imageIndex == index ? Colors.black : Colors.grey,
+                    radius: 4,
+                  ),
+                ),
+              ),
             ),
-            subtitle: Text(widget.article.writer.username),
-          ),
           if (widget.article.imageList.isNotEmpty)
-            Image.network(
-              widget.article.imageList.first,
-              fit: BoxFit.cover,
+            Container(
               height: 300,
+              child: PageView(
+                onPageChanged: _onPageChanged,
+                children: widget.article.imageList.map((imageUrl) {
+                  return Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  );
+                }).toList(),
+              ),
             ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  onPressed: _toggleLike,
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: _toggleLike,
+                      icon: Icon(
+                        Icons.thumb_up,
+                        color: _isLiked ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                    Text('${widget.article.likeCount}'),
+                    SizedBox(width: 16),
+                    IconButton(
+                      onPressed: _toggleBookmark,
+                      icon: Icon(
+                        Icons.bookmark,
+                        color: _isBookmarked ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
                 IconButton(
-                  icon: Icon(Icons.bookmark_border),
                   onPressed: () {},
+                  icon: Icon(Icons.share),
                 ),
               ],
             ),
           ),
+          Divider(height: 0),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              '$_likeCount likes',
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              widget.article.content,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  widget.article.content,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  widget.article.content,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ),
         ],
@@ -116,7 +223,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('게시물 목록'),
+        backgroundColor: Color(0xffADD8E6),
+        title: Text(
+          '뽈뽈뽈',
+          style: TextStyle(
+            fontFamily: 'text',
+            fontSize: 30,
+          ),
+        ),
       ),
       body: FutureBuilder<List<ArticleModel>>(
         future: _futureArticles,
@@ -137,11 +251,14 @@ class _ArticleScreenState extends State<ArticleScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ArticleDetailScreen(article: article),
+                          builder: (context) =>
+                              ArticleDetailScreen(article: article),
                         ),
                       );
                     },
-                    child: ArticleCard(article: article),
+                    child: ArticleCard(
+                      article: article,
+                    ),
                   );
                 },
               );
