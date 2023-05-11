@@ -8,7 +8,6 @@ import com.ppol.alarm.util.constatnt.enums.AlarmType;
 import com.ppol.alarm.util.converter.AlarmTypeConverter;
 
 import jakarta.persistence.Convert;
-import jakarta.persistence.Converter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 	서비스의 알람들을 나타내는 엔티티
- * 	알람의 종류는 다양할 수 있음
+ * 서비스의 알람들을 나타내는 엔티티
+ * 알람의 종류는 다양할 수 있음
  */
 @Getter
 @NoArgsConstructor
@@ -43,6 +42,8 @@ public class Alarm extends BaseEntity {
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
+
+	private String image;
 
 	// 알람의 종류
 	@NotNull

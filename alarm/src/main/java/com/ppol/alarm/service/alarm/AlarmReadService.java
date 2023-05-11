@@ -67,6 +67,7 @@ public class AlarmReadService {
 			.state(alarm.getState())
 			.alarmType(alarm.getAlarmType().name())
 			.userId(alarm.getUser().getId())
+			.alarmImage(alarm.getImage())
 			.alarmReferenceDtoList(getAlarmReferenceList(alarm.getId()))
 			.build();
 	}
