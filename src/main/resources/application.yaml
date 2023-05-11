@@ -33,6 +33,7 @@ spring:
 
 eureka:
   instance:
+    prefer-ip-address: true
     instance-id: ${spring.application.name}:${spring.application.instance.id:${random.value}}
   client:
     register-with-eureka: true
@@ -49,3 +50,4 @@ feign:
     auth:
       service: auth-service/
       controller: auth
+
