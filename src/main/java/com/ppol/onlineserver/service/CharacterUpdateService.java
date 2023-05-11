@@ -160,7 +160,7 @@ public class CharacterUpdateService {
 	/**
 	 * GroupId에 해당하는 characterSet을 redis에서 불러오는 메서드
 	 */
-	private Set<CharacterDto> getCharacterSet(Long groupId) {
+	public Set<CharacterDto> getCharacterSet(Long groupId) {
 
 		Set<CharacterDto> characterSet = redisTemplate.opsForValue().get(getGroupKey(groupId));
 
