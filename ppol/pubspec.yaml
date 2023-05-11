@@ -54,12 +54,9 @@ dependencies:
 
   flutter_secure_storage: ^8.0.0
   cached_network_image: ^3.2.3
-<<<<<<< HEAD
   intl: ^0.17.0
 
-=======
   flutter_client_sse: ^1.0.0
->>>>>>> 18c85673572ff33d58d6ced44aeec102cf691cbb
 
 dev_dependencies:
   flutter_test:
