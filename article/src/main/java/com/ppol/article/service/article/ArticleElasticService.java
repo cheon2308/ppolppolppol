@@ -27,7 +27,7 @@ public class ArticleElasticService {
 	 */
 	public void createArticleElasticsearch(ArticleCreateDto articleCreateDto, Long id) {
 
-		if (articleCreateDto.getOpenStatus().equals(OpenStatus.PUBLIC)) {
+		if (OpenStatus.from(articleCreateDto.getOpenStatus()).equals(OpenStatus.PUBLIC)) {
 			Article article = Article.builder()
 				.id(id)
 				.content(articleCreateDto.getContent())
@@ -41,6 +41,8 @@ public class ArticleElasticService {
 	public void updateArticleElasticsearch(ArticleUpdateDto articleUpdateDto, Long id) {
 
 		Article article = articleElasticRepository.findById(id).orElse(null);
+
+		log.info(articleUpdateDto.toString());
 
 		if (articleUpdateDto.getOpenStatus().equals(OpenStatus.PUBLIC)) {
 			article = article == null ? Article.builder().id(id).build() : article;
