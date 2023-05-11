@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
@@ -219,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         text: '마이페이지',
                         fun: (){
                           print("내정보");
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => myPage(),));
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => myPage(),));
                         },
                       ),
                       ProfileListItem(

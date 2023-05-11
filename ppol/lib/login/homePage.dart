@@ -5,6 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ppol/login/articleAdd.dart';
 import 'package:ppol/login/profilePage.dart';
 import 'package:ppol/main.dart';
+import 'package:ppol/screen/gameScreen.dart';
 
 import '../screen/articlePage.dart';
 
@@ -14,6 +15,7 @@ class homePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: gameScreen(),
       backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
