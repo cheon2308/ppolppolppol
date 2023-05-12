@@ -54,7 +54,7 @@ class _loginPageState extends State<loginPage> {
         var refreshToken = responseData['data']['refreshToken'];
         // AccessToken과 refreshToken을 저장
         // await storage.write(key: 'accessToken', value: accessToken);
-        await storage.write(key: 'accessToken', value: "1");
+        await storage.write(key: 'accessToken', value: accessToken);
         // await storage.write(key: 'refreshToken', value: refreshToken);
 
         Navigator.push(context,MaterialPageRoute(

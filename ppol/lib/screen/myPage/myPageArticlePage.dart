@@ -14,7 +14,8 @@ Future<List<ArticleModel>> fetchArticles() async {
   );
   if (response.statusCode == 200) {
     final List<dynamic> jsonList = jsonDecode(response.body)['data'];
-    final List<ArticleModel> articles = jsonList.map((json) => ArticleModel.fromJson(json)).toList();
+    final List<ArticleModel> articles =
+        jsonList.map((json) => ArticleModel.fromJson(json)).toList();
     print("${jsonDecode(response.body).runtimeType}");
     return articles;
   } else {
@@ -22,16 +23,16 @@ Future<List<ArticleModel>> fetchArticles() async {
   }
 }
 
-class ArticleCard extends StatefulWidget {
+class MyPageArticleCard extends StatefulWidget {
   final ArticleModel article;
 
-  const ArticleCard({Key? key, required this.article}) : super(key: key);
+  const MyPageArticleCard({Key? key, required this.article}) : super(key: key);
 
   @override
-  _ArticleCardState createState() => _ArticleCardState();
+  _MyPageArticleCardState createState() => _MyPageArticleCardState();
 }
 
-class _ArticleCardState extends State<ArticleCard> {
+class _MyPageArticleCardState extends State<MyPageArticleCard> {
   int _likeCount = 0;
 
   void _toggleLike() {
@@ -42,68 +43,69 @@ class _ArticleCardState extends State<ArticleCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      padding: EdgeInsets.all(5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ListTile(
-            leading: widget.article.imageList.isNotEmpty
-                ? Image.network(widget.article.imageList.first)
-                : Image.asset('assets/icon.png'),
-            title: Text(
-              widget.article.content,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(widget.article.writer.username),
-          ),
+          // ListTile(
+          //   leading: widget.article.imageList.isNotEmpty
+          //       ? Image.network(widget.article.imageList.first)
+          //       : Image.asset('assets/icon.png'),
+          //   title: Text(
+          //     widget.article.content,
+          //     style: TextStyle(fontWeight: FontWeight.bold),
+          //   ),
+          //   subtitle: Text(widget.article.writer.username),
+          // ),
           if (widget.article.imageList.isNotEmpty)
             Image.network(
               widget.article.imageList.first,
               fit: BoxFit.cover,
-              height: 300,
+              height: 180,
             ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  onPressed: _toggleLike,
-                ),
-                IconButton(
-                  icon: Icon(Icons.bookmark_border),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              '$_likeCount likes',
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              widget.article.content,
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       IconButton(
+          //         icon: Icon(Icons.favorite_border),
+          //         onPressed: _toggleLike,
+          //       ),
+          //       IconButton(
+          //         icon: Icon(Icons.bookmark_border),
+          //         onPressed: () {},
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //   child: Text(
+          //     '$_likeCount likes',
+          //   ),
+          // ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          //   child: Text(
+          //     widget.article.content,
+          //   ),
+          // ),
         ],
       ),
     );
   }
 }
 
-class ArticleScreen extends StatefulWidget {
-  const ArticleScreen({Key? key}) : super(key: key);
+class MyPageArticleScreen extends StatefulWidget {
+  const MyPageArticleScreen({Key? key}) : super(key: key);
 
   @override
-  _ArticleScreenState createState() => _ArticleScreenState();
+  _MyPageArticleScreenState createState() => _MyPageArticleScreenState();
 }
 
-class _ArticleScreenState extends State<ArticleScreen> {
+class _MyPageArticleScreenState extends State<MyPageArticleScreen> {
   late Future<List<ArticleModel>> _futureArticles;
 
   @override
@@ -137,11 +139,15 @@ class _ArticleScreenState extends State<ArticleScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ArticleDetailScreen(article: article),
+                          builder: (context) =>
+                              ArticleDetailScreen(article: article),
                         ),
                       );
                     },
-                    child: ArticleCard(article: article),
+                    child: Container(
+                        height: 600,
+                        width: 600,
+                        child: MyPageArticleCard(article: article)),
                   );
                 },
               );

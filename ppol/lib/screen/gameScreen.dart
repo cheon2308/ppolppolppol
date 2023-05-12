@@ -107,8 +107,8 @@ void onUnityMessage(message) {
   print('Received message from unity: ${message.toString()}');
   
   if(message.toString()=="BOOKS01"){
-    print("가자");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => myPage(),));
+    print("앨범");
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => myPage(),));
   }
 }
 

@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:ppol/constant/auth_dio.dart';
 import 'package:ppol/widgets/customInputField.dart';
 import 'package:ppol/widgets/switch.dart';
 // import 'package:video_player/video_player.dart';
@@ -78,13 +79,40 @@ class _articleAddState extends State<articleAdd> {
   //   }
   // }
 
+
+
   Future<void> uploadFiles(List<XFile> files) async {
+    final storage = new FlutterSecureStorage();
     // 업로드할 파일들의 경로를 HTTP 요청의 바디(body)에 추가하기 위한 멀티파트 요청 객체 생성
+    // Dio dio = await authDio(context);
+    // final request = await dio.post("/article-service/articles");
+    // FormData formData = FormData();
+    // for (var file in files) {
+    //   formData.files.add(MapEntry(
+    //     'imageList',
+    //     await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
+    //   ));
+    // }
+    // formData.fields.add(
+    //   MapEntry('content', content.text),
+    // );
+    // formData.fields.add(
+    //   MapEntry('openStatus', isPrivate ? "private" : "public"),
+    // );
+    //
+    // Response response = await dio.post('/article-service/articles', data: formData);
     var request = http.MultipartRequest('POST', Uri.parse('http://k8e106.p.ssafy.io:8000/article-service/articles'));
 
+    Future<String?> accessTokenFuture  = storage.read(key: 'accessToken'); // 예시로 Future<String?> 변수를 선언
+    String? accessToken = await accessTokenFuture; // Future가 완료될 때까지 기다리고 결과를 추출
+
+
+    // print("${storage.read(key: 'accessToken').toString()}");
     // Authorization 헤더에 인증 정보를 추가
+
+
     request.headers.addAll({
-      'Authorization': '1', //내 token 넣기 원래라면
+      'Authorization': accessToken.toString(), //내 token 넣기 원래라면
     });
     // 파일 목록을 반복하면서 요청 객체에 파일을 추가
     for (var file in files) {
@@ -107,6 +135,8 @@ class _articleAddState extends State<articleAdd> {
     var response = await request.send();
 
     // 응답 코드 확인
+    print("accessToken : ${accessToken}");
+    print("뭐양 ${response.statusCode}");
     if (response.statusCode == 201) {
       print('Files uploaded successfully!');
       Navigator.pop(context);
