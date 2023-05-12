@@ -156,18 +156,18 @@ class _ArticleCardState extends State<ArticleCard> {
                     ),
                   ],
                 ),
-                // IconButton(
-                //   onPressed: () {
-                //     Navigator.push(
-                //       context,
-                //       MaterialPageRoute(
-                //         builder: (context) =>
-                //             ArticleDetailScreen(article: widget.article),
-                //       ),
-                //     );
-                //   },
-                //   icon: Icon(Icons.more_horiz),
-                // ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ArticleDetailScreen(article: widget.article),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.more_horiz),
+                ),
               ],
             ),
           ),
@@ -204,7 +204,7 @@ class _ArticleCardState extends State<ArticleCard> {
                         _toggleLike();
                       },
                       icon: Icon(
-                        Icons.chat,
+                        Icons.chat_outlined,
                       ),
                     ),
                   ],
@@ -216,12 +216,12 @@ class _ArticleCardState extends State<ArticleCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       widget.article.imageList.length,
-                          (index) => Padding(
+                      (index) => Padding(
                         padding:
-                        EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                            EdgeInsets.symmetric(horizontal: 4, vertical: 10),
                         child: CircleAvatar(
                           backgroundColor:
-                          _imageIndex == index ? Colors.black : Colors.grey,
+                              _imageIndex == index ? Colors.black : Colors.grey,
                           radius: 4,
                         ),
                       ),
@@ -229,19 +229,24 @@ class _ArticleCardState extends State<ArticleCard> {
                   ),
                 ),
               Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    _toggleBookmark();
-                  },
-                  icon: Icon(
-                    _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        _toggleBookmark();
+                      },
+                      icon: Icon(
+                        _isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 15),
             child: Text(
               '좋아요 $_likeCount개',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -249,34 +254,82 @@ class _ArticleCardState extends State<ArticleCard> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.article.writer.username,
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      widget.article.content,
-                      style: TextStyle(fontSize: 16),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8),
                 Text(
-                  getDateTimeString(widget.article.createdAt),
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  widget.article.writer.username,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    height: 1,
+                  ),
+                ),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    widget.article.content,
+                    style: TextStyle(fontSize: 16, height: 1),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
+            ),
+          ),
+          if (widget.article.comment != null)
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: Text(
+                  '댓글 모두 보기',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                child: Text.rich(
+                  TextSpan(
+                    children: <TextSpan>[
+                      TextSpan(
+                          text: '${widget.article.comment!.writer!.username!}   ',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w700)),
+                      TextSpan(
+                          text: widget.article.comment!.content!,
+                          style: TextStyle(
+                            fontSize: 15,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+            ])
+          else
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 16,
+              ),
+              child: Text('댓글이 없습니다',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  )),
+            ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: Text(
+              widget.article.createString,
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
           ),
         ],

@@ -7,6 +7,7 @@ class ArticleModel {
   final int likeCount;
   final String openStatus;
   final DateTime createdAt;
+  final String createString;
   final UserInteractionModel userInteraction;
 
   ArticleModel({
@@ -18,6 +19,7 @@ class ArticleModel {
     required this.likeCount,
     required this.openStatus,
     required this.createdAt,
+    required this.createString,
     required this.userInteraction,
   });
 
@@ -32,6 +34,7 @@ class ArticleModel {
       likeCount: json['likeCount'],
       openStatus: json['openStatus'],
       createdAt: DateTime.parse(json['createdAt']),
+      createString: json['createString'],
       userInteraction: UserInteractionModel.fromJson(json['userInteraction']),
     );
   }
