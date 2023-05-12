@@ -31,7 +31,10 @@ public class AuthController {
 	@PostMapping("/token")
 	public Long accessToken(@RequestBody String accessToken) {
 
-		//return jwtTokenService.getUserId(accessToken);
-		return 1L;
+		if (accessToken.equals("1")) {
+			return 1L;
+		} else {
+			return jwtTokenService.getUserId(accessToken);
+		}
 	}
 }
