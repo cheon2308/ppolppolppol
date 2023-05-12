@@ -12,10 +12,12 @@ import com.ppol.auth.service.JwtTokenService;
 import com.ppol.auth.util.response.ResponseBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
 	private final JwtTokenService jwtTokenService;
@@ -30,6 +32,8 @@ public class AuthController {
 
 	@PostMapping("/token")
 	public Long accessToken(@RequestBody String accessToken) {
+
+		log.info("token : {}", accessToken);
 
 		if (accessToken.equals("1")) {
 			return 1L;
