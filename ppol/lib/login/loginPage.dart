@@ -5,6 +5,7 @@ import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
 
 void main() {
   runApp(MaterialApp(title: 'Login App', home: loginPage()));
@@ -67,6 +68,19 @@ class _loginPageState extends State<loginPage> {
       // An exception occurred during the API call. You can handle the exception here.
       print('Error: $e');
     }
+
+    SSEClient.subscribeToSSE(
+        url:
+        'http://k8e106.p.ssafy.io:8000/alarm-service/alarms/connect',
+        header: {
+          "Authorization":'1',
+          "Accept": "text/event-stream",
+          "Cache-Control": "no-cache",
+        }).listen((event) {
+      print('Id: ' + event.id!);
+      print('Event: ' + event.event!);
+      print('Data: ' + event.data!);
+    });
   }
 
 

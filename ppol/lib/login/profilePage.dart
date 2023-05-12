@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print('GET 요청 성공');
         print('응답 본문;;;: ${response}');
         setState(() {
-          userId=response.data['data']['userId'];
+          userId = response.data['data']['userId'];
         });
 
         InfoModel info = InfoModel.fromJson(response.data);

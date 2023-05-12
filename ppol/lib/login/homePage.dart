@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ppol/login/articleAdd.dart';
@@ -8,12 +7,14 @@ import 'package:ppol/main.dart';
 import 'package:ppol/screen/gameScreen.dart';
 
 import '../screen/articlePage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class homePage extends StatelessWidget {
   const homePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: gameScreen(),
       backgroundColor: Colors.white,
@@ -36,6 +37,11 @@ class homePage extends StatelessWidget {
             SpeedDialChild(
               child: Icon(Icons.message_outlined),
               label: 'Message',
+              onTap: () => {print("하이2")},
+            ),
+            SpeedDialChild(
+              child: Icon(Icons.add_alert_sharp),
+              label: 'alrams',
               onTap: () => {print("하이2")},
             ),
             SpeedDialChild(
