@@ -15,8 +15,8 @@ public class UserMap {
 		userMap.put(sessionId, new UserInfo(userId, groupId));
 	}
 
-	public static void delete(String sessionId) {
-		userMap.remove(sessionId);
+	public static boolean delete(String sessionId) {
+		return userMap.remove(sessionId) != null;
 	}
 
 	public static long getUserId(String sessionId) {

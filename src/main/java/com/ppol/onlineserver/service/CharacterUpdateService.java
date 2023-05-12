@@ -4,13 +4,14 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.ppol.onlineserver.dto.request.EnterDto;
+import com.ppol.onlineserver.dto.request.UserIdDto;
 import com.ppol.onlineserver.dto.request.MoveDto;
 import com.ppol.onlineserver.dto.request.TypeUpdateDto;
 import com.ppol.onlineserver.dto.response.CharacterDto;
 import com.ppol.onlineserver.dto.response.CharacterLocation;
 import com.ppol.onlineserver.dto.response.CharacterRotation;
 import com.ppol.onlineserver.dto.response.CharacterType;
+import com.ppol.onlineserver.dto.response.WebSocketResponse;
 import com.ppol.onlineserver.entity.UserCharacter;
 import com.ppol.onlineserver.util.constant.enums.EventType;
 
@@ -33,12 +34,12 @@ public class CharacterUpdateService {
 	 * 그룹 방에 입장 시
 	 */
 	@Transactional
-	public CharacterDto enterGroup(Long groupId, EnterDto enterDto) {
+	public WebSocketResponse enterGroup(Long groupId, UserIdDto userIdDto) {
 
-		UserCharacter userCharacter = characterReadService.getUserCharacter(enterDto.getUserId());
+		UserCharacter userCharacter = characterReadService.getUserCharacter(userIdDto.getUserId());
 
 		CharacterDto character = CharacterDto.builder()
-			.userId(enterDto.getUserId())
+			.userId(userIdDto.getUserId())
 			.username(userCharacter.getUser().getUsername())
 			.type(getType(userCharacter))
 			.location(getDefaultLocation())
@@ -50,16 +51,14 @@ public class CharacterUpdateService {
 
 		characterReadService.setCharacterSet(groupId, characterSet);
 
-		character.setEventType(EventType.ENTER);
-
-		return character;
+		return getWebSocketResponse(character, EventType.ENTER);
 	}
 
 	/**
 	 * 그룹 방에서 퇴장 시
 	 */
 	@Transactional
-	public CharacterDto leaveGroup(Long groupId, Long userId) {
+	public WebSocketResponse leaveGroup(Long groupId, Long userId) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -72,16 +71,14 @@ public class CharacterUpdateService {
 
 		characterReadService.setCharacterSet(groupId, characterSet);
 
-		character.setEventType(EventType.LEAVE);
-
-		return character;
+		return getWebSocketResponse(character, EventType.LEAVE);
 	}
 
 	/**
 	 * 캐릭터 이동 시
 	 */
 	@Transactional
-	public CharacterDto moveCharacter(Long groupId, MoveDto moveDto) {
+	public WebSocketResponse moveCharacter(Long groupId, MoveDto moveDto) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -94,16 +91,14 @@ public class CharacterUpdateService {
 
 		characterReadService.setCharacterSet(groupId, characterSet);
 
-		character.setEventType(EventType.MOVE);
-
-		return character;
+		return getWebSocketResponse(character, EventType.MOVE);
 	}
 
 	/**
 	 * 캐릭터 타입 변경 시
 	 */
 	@Transactional
-	public CharacterDto updateCharacter(Long groupId, TypeUpdateDto typeUpdateDto) {
+	public WebSocketResponse updateCharacter(Long groupId, TypeUpdateDto typeUpdateDto) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -116,9 +111,19 @@ public class CharacterUpdateService {
 
 		characterReadService.setCharacterSet(groupId, characterSet);
 
-		character.setEventType(EventType.TYPE_UPDATE);
+		return getWebSocketResponse(character, EventType.TYPE_UPDATE);
+	}
 
-		return character;
+	/**
+	 * 캐릭터 정보를 담은 websocket response를 생성하는 메서드
+	 */
+	private WebSocketResponse getWebSocketResponse(CharacterDto characterDto, EventType eventType) {
+		return WebSocketResponse.builder()
+			.character(characterDto)
+			.userId(characterDto.getUserId())
+			.username(characterDto.getUsername())
+			.eventType(eventType)
+			.build();
 	}
 
 	/**

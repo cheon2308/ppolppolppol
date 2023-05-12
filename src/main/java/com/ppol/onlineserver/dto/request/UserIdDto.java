@@ -13,7 +13,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class EnterDto {
+public class UserIdDto {
 
 	@NotNull
 	private Long userId;
