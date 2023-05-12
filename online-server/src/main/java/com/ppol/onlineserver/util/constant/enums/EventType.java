@@ -8,7 +8,7 @@ import com.ppol.onlineserver.exception.exception.EnumConvertException;
 
 public enum EventType {
 
-	ENTER, MOVE, TYPE_UPDATE, LEAVE, ENTER_LOBBY, LEAVE_LOBBY, MAKE_LOBBY, DESTROY_LOBBY, START_OX;
+	ENTER, MOVE, TYPE_UPDATE, LEAVE, ENTER_LOBBY, LEAVE_LOBBY, MAKE_LOBBY, DESTROY_LOBBY, START_OX, NEXT_OX, END_OX;
 
 	@JsonValue
 	public String to() {

@@ -36,7 +36,7 @@ public class CharacterReadService {
 	// others
 	private final RedisTemplate<String, Set<CharacterDto>> redisTemplate;
 
-	public Map<String, Set<CharacterDto>> readGroupCharacterList(Long groupId) {
+	public Map<String, Set<CharacterDto>> readGroupCharacterList(String groupId) {
 
 		Map<String, Set<CharacterDto>> map = new HashMap<>();
 
@@ -72,14 +72,14 @@ public class CharacterReadService {
 	/**
 	 * GroupId에 해당하는 redis에 characterSet을 저장하는 메서드
 	 */
-	public void setCharacterSet(Long groupId, Set<CharacterDto> characterSet) {
+	public void setCharacterSet(String groupId, Set<CharacterDto> characterSet) {
 		redisTemplate.opsForValue().set(getGroupKey(groupId), characterSet);
 	}
 
 	/**
 	 * GroupId에 해당하는 characterSet을 redis에서 불러오는 메서드
 	 */
-	public Set<CharacterDto> getCharacterSet(Long groupId) {
+	public Set<CharacterDto> getCharacterSet(String groupId) {
 
 		Set<CharacterDto> characterSet = redisTemplate.opsForValue().get(getGroupKey(groupId));
 
@@ -89,7 +89,7 @@ public class CharacterReadService {
 	/**
 	 * 그룹 ID에 해당하는 redis key 값을 생성하는 메서드
 	 */
-	private String getGroupKey(Long groupId) {
+	private String getGroupKey(String groupId) {
 		return "Group" + groupId;
 	}
 }

@@ -8,7 +8,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import com.ppol.onlineserver.util.response.WebSocketResponse;
 import com.ppol.onlineserver.service.CharacterUpdateService;
-import com.ppol.onlineserver.util.UserMap;
+import com.ppol.onlineserver.util.UserUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,15 +29,15 @@ public class WebSocketEventListener {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String sessionId = headerAccessor.getSessionId();
 
-		Long groupId = UserMap.getGroupId(sessionId);
-		Long userId = UserMap.getUserId(sessionId);
+		Long groupId = UserUtil.getGroupId(sessionId);
+		Long userId = UserUtil.getUserId(sessionId);
 
-		WebSocketResponse<?> response = characterUpdateService.leaveGroup(groupId, userId);
+		WebSocketResponse<?> response = characterUpdateService.leaveGroup(groupId.toString(), userId);
 
 		log.info("{} is leave from {}", userId, groupId);
 		log.info("{}", response);
 
-		if (UserMap.delete(sessionId)) {
+		if (UserUtil.delete(sessionId)) {
 			log.info("Delete {} is success", sessionId);
 		}
 

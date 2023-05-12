@@ -1,6 +1,7 @@
-package com.ppol.onlineserver.dto.response;
+package com.ppol.onlineserver.dto;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -10,19 +11,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-/**
- * ox 게임 정보를 담는 DTO
- */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
-public class OxLobbyDto implements Serializable {
+public class OxGameDto implements Serializable {
 
-	private Long userId;
 	private int problemNum;
 	private int problemSec;
-	private Set<String> oxPlayers;
+	private Set<OxGameUserDto> oxPlayers;
+	private List<Long> previousQuestions;
 }

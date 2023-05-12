@@ -3,7 +3,7 @@ package com.ppol.onlineserver.util;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserMap {
+public class UserUtil {
 
 	public record UserInfo(Long userId, Long groupId) {
 
