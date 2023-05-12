@@ -20,6 +20,7 @@ import lombok.ToString;
 @ToString
 public class OxLobbyDto {
 
+	private Long userId;
 	private int problemNum;
 	private int problemSec;
 	private Set<String> oxPlayers;

@@ -6,12 +6,13 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ppol.onlineserver.dto.request.UserIdDto;
 import com.ppol.onlineserver.dto.request.MoveDto;
 import com.ppol.onlineserver.dto.request.TypeUpdateDto;
-import com.ppol.onlineserver.dto.response.WebSocketResponse;
+import com.ppol.onlineserver.dto.request.UserIdDto;
+import com.ppol.onlineserver.dto.response.OxLobbyDto;
 import com.ppol.onlineserver.service.CharacterUpdateService;
 import com.ppol.onlineserver.service.LobbyService;
+import com.ppol.onlineserver.util.response.WebSocketResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +39,7 @@ public class WebSocketController {
 
 		log.info("group entering : {}, {}", groupId, userIdDto);
 
-		WebSocketResponse returnObject = characterUpdateService.enterGroup(groupId, userIdDto);
+		WebSocketResponse<?> returnObject = characterUpdateService.enterGroup(groupId, userIdDto);
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -49,7 +50,7 @@ public class WebSocketController {
 
 		log.info("group moving : {}, {}", groupId, moveDto);
 
-		WebSocketResponse returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
+		WebSocketResponse<?> returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -60,7 +61,7 @@ public class WebSocketController {
 
 		log.info("group type : {}, {}", groupId, typeUpdateDto);
 
-		WebSocketResponse returnObject = characterUpdateService.updateCharacter(groupId, typeUpdateDto);
+		WebSocketResponse<?> returnObject = characterUpdateService.updateCharacter(groupId, typeUpdateDto);
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -71,7 +72,7 @@ public class WebSocketController {
 
 		log.info("group leave : {}, {}", groupId, userIdDto);
 
-		WebSocketResponse returnObject = characterUpdateService.leaveGroup(groupId, userIdDto.getUserId());
+		WebSocketResponse<?> returnObject = characterUpdateService.leaveGroup(groupId, userIdDto.getUserId());
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -89,12 +90,25 @@ public class WebSocketController {
 
 	// ox 게임 방 생성
 	@MessageMapping("/ox/making/{groupId}")
-	public void makeOx(@DestinationVariable Long groupId, @Payload MoveDto moveDto) {
+	public void makeOx(@DestinationVariable Long groupId, @Payload OxLobbyDto oxLobbyDto) {
 
-		log.info("ox lobby making : {}, {}", groupId, moveDto);
+		log.info("ox lobby making : {}, {}", groupId, oxLobbyDto);
 
-		// ox 퀴즈 방에 대한 참여 여부를 물어보는 메시지를 보내기
-		messagingTemplate.convertAndSend(getDestinationTopic(groupId), "");
+		WebSocketResponse<?> returnObject = lobbyService.makeOxLobby(oxLobbyDto.getUserId(), groupId, oxLobbyDto);
+
+		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
+	}
+
+	// ox 게임 방 파토내기
+	@MessageMapping("/ox/destroying/{groupId}")
+	public void destroyOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+
+		log.info("ox lobby making : {}, {}", groupId, userIdDto);
+
+		WebSocketResponse<?> returnObject = lobbyService.destroyOxLobby(userIdDto.getUserId(), groupId);
+
+		// ox 퀴즈 방 파토
+		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
 
 	// ox 게임 로비에서 참여
@@ -103,9 +117,8 @@ public class WebSocketController {
 
 		log.info("ox lobby ready : {}, {}", groupId, userIdDto);
 
-		WebSocketResponse returnObject = lobbyService.getEnterLobby(userIdDto.getUserId(), groupId);
+		WebSocketResponse<?> returnObject = lobbyService.getEnterLobby(userIdDto.getUserId(), groupId);
 
-		// ox 퀴즈 방에 대한 참여 여부를 물어보는 메시지를 보내기
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
 
@@ -115,9 +128,8 @@ public class WebSocketController {
 
 		log.info("ox lobby cancel : {}, {}", groupId, userIdDto);
 
-		WebSocketResponse returnObject = lobbyService.getLeaveLobby(userIdDto.getUserId(), groupId);
+		WebSocketResponse<?> returnObject = lobbyService.getLeaveLobby(userIdDto.getUserId(), groupId);
 
-		// ox 퀴즈 방에 대한 참여 여부를 물어보는 메시지를 보내기
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
 

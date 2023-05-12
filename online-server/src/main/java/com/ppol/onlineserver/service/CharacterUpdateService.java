@@ -11,7 +11,7 @@ import com.ppol.onlineserver.dto.response.CharacterDto;
 import com.ppol.onlineserver.dto.response.CharacterLocation;
 import com.ppol.onlineserver.dto.response.CharacterRotation;
 import com.ppol.onlineserver.dto.response.CharacterType;
-import com.ppol.onlineserver.dto.response.WebSocketResponse;
+import com.ppol.onlineserver.util.response.WebSocketResponse;
 import com.ppol.onlineserver.entity.UserCharacter;
 import com.ppol.onlineserver.util.constant.enums.EventType;
 
@@ -34,7 +34,7 @@ public class CharacterUpdateService {
 	 * 그룹 방에 입장 시
 	 */
 	@Transactional
-	public WebSocketResponse enterGroup(Long groupId, UserIdDto userIdDto) {
+	public WebSocketResponse<?> enterGroup(Long groupId, UserIdDto userIdDto) {
 
 		UserCharacter userCharacter = characterReadService.getUserCharacter(userIdDto.getUserId());
 
@@ -58,7 +58,7 @@ public class CharacterUpdateService {
 	 * 그룹 방에서 퇴장 시
 	 */
 	@Transactional
-	public WebSocketResponse leaveGroup(Long groupId, Long userId) {
+	public WebSocketResponse<?> leaveGroup(Long groupId, Long userId) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -78,7 +78,7 @@ public class CharacterUpdateService {
 	 * 캐릭터 이동 시
 	 */
 	@Transactional
-	public WebSocketResponse moveCharacter(Long groupId, MoveDto moveDto) {
+	public WebSocketResponse<?> moveCharacter(Long groupId, MoveDto moveDto) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -98,7 +98,7 @@ public class CharacterUpdateService {
 	 * 캐릭터 타입 변경 시
 	 */
 	@Transactional
-	public WebSocketResponse updateCharacter(Long groupId, TypeUpdateDto typeUpdateDto) {
+	public WebSocketResponse<?> updateCharacter(Long groupId, TypeUpdateDto typeUpdateDto) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -117,13 +117,8 @@ public class CharacterUpdateService {
 	/**
 	 * 캐릭터 정보를 담은 websocket response를 생성하는 메서드
 	 */
-	private WebSocketResponse getWebSocketResponse(CharacterDto characterDto, EventType eventType) {
-		return WebSocketResponse.builder()
-			.character(characterDto)
-			.userId(characterDto.getUserId())
-			.username(characterDto.getUsername())
-			.eventType(eventType)
-			.build();
+	private WebSocketResponse<?> getWebSocketResponse(CharacterDto characterDto, EventType eventType) {
+		return WebSocketResponse.of(characterDto.getUserId(), characterDto.getUsername(), characterDto, eventType);
 	}
 
 	/**
