@@ -1,6 +1,6 @@
 package com.ppol.onlineserver.dto.response;
 
-import java.io.Serializable;
+import com.ppol.onlineserver.util.constant.enums.EventType;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CharacterDto implements Serializable {
+public class WebSocketResponse {
 
 	// 사용자 ID
 	@NotNull
@@ -27,12 +27,10 @@ public class CharacterDto implements Serializable {
 
 	private String username;
 
-	// 캐릭터 구성 타입
-	private CharacterType type;
+	private CharacterDto character;
 
-	// 위치 정보
-	private CharacterLocation location;
+	private OxLobbyDto oxGame;
 
-	// 방향 정보
-	private CharacterRotation rotation;
+	// 이벤트 정보
+	private EventType eventType;
 }

@@ -6,11 +6,12 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ppol.onlineserver.dto.request.EnterDto;
+import com.ppol.onlineserver.dto.request.UserIdDto;
 import com.ppol.onlineserver.dto.request.MoveDto;
 import com.ppol.onlineserver.dto.request.TypeUpdateDto;
-import com.ppol.onlineserver.dto.response.CharacterDto;
+import com.ppol.onlineserver.dto.response.WebSocketResponse;
 import com.ppol.onlineserver.service.CharacterUpdateService;
+import com.ppol.onlineserver.service.LobbyService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,18 +26,19 @@ public class WebSocketController {
 
 	// service
 	private final CharacterUpdateService characterUpdateService;
+	private final LobbyService lobbyService;
 
 	/**
-	 *	그룹 방
+	 * 그룹 방
 	 */
 
 	// 그룹 방 참여
 	@MessageMapping("/entering/{groupId}")
-	public void enter(@DestinationVariable Long groupId, @Payload EnterDto enterDto) {
+	public void enter(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
 
-		log.info("group entering : {}, {}", groupId, enterDto);
+		log.info("group entering : {}, {}", groupId, userIdDto);
 
-		CharacterDto returnObject = characterUpdateService.enterGroup(groupId, enterDto);
+		WebSocketResponse returnObject = characterUpdateService.enterGroup(groupId, userIdDto);
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -47,7 +49,7 @@ public class WebSocketController {
 
 		log.info("group moving : {}, {}", groupId, moveDto);
 
-		CharacterDto returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
+		WebSocketResponse returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -58,7 +60,18 @@ public class WebSocketController {
 
 		log.info("group type : {}, {}", groupId, typeUpdateDto);
 
-		CharacterDto returnObject = characterUpdateService.updateCharacter(groupId, typeUpdateDto);
+		WebSocketResponse returnObject = characterUpdateService.updateCharacter(groupId, typeUpdateDto);
+
+		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
+	}
+
+	// 그룹 방 떠나기
+	@MessageMapping("/leaving/{groupId}")
+	public void leave(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+
+		log.info("group leave : {}, {}", groupId, userIdDto);
+
+		WebSocketResponse returnObject = characterUpdateService.leaveGroup(groupId, userIdDto.getUserId());
 
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
@@ -71,37 +84,65 @@ public class WebSocketController {
 	}
 
 	/**
-	 * OX 퀴즈
+	 * OX 퀴즈 방 시작 전 과정
 	 */
 
 	// ox 게임 방 생성
 	@MessageMapping("/ox/making/{groupId}")
 	public void makeOx(@DestinationVariable Long groupId, @Payload MoveDto moveDto) {
 
-		log.info("ox making : {}, {}", groupId, moveDto);
+		log.info("ox lobby making : {}, {}", groupId, moveDto);
 
 		// ox 퀴즈 방에 대한 참여 여부를 물어보는 메시지를 보내기
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), "");
 	}
 
-	// ox 게임 방 참여
-	@MessageMapping("/ox/entering/{groupId}")
-	public void enterOx(@DestinationVariable Long groupId, @Payload EnterDto enterDto) {
+	// ox 게임 로비에서 참여
+	@MessageMapping("/ox/ready/{groupId}")
+	public void readyOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
 
-		log.info("ox entering : {}, {}", groupId, enterDto);
+		log.info("ox lobby ready : {}, {}", groupId, userIdDto);
 
-		messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), "");
+		WebSocketResponse returnObject = lobbyService.getEnterLobby(userIdDto.getUserId(), groupId);
+
+		// ox 퀴즈 방에 대한 참여 여부를 물어보는 메시지를 보내기
+		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
 
-	// ox 방 이동
+	// ox 게임 로비에서 나가기
+	@MessageMapping("/ox/cancellation-ready/{groupId}")
+	public void leaveOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+
+		log.info("ox lobby cancel : {}, {}", groupId, userIdDto);
+
+		WebSocketResponse returnObject = lobbyService.getLeaveLobby(userIdDto.getUserId(), groupId);
+
+		// ox 퀴즈 방에 대한 참여 여부를 물어보는 메시지를 보내기
+		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
+	}
+
+	/**
+	 * OX 퀴즈 방 시작 후 과정
+	 */
+
+	// ox 게임 방 서버로 참여
+	@MessageMapping("/ox/entering/{groupId}")
+	public void enterOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+
+		log.info("ox entering : {}, {}", groupId, userIdDto);
+
+		// messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), "");
+	}
+
+	// ox 방에서 이동
 	@MessageMapping("/ox/moving/{groupId}")
 	public void moveOx(@DestinationVariable Long groupId, @Payload MoveDto moveDto) {
 
 		log.info("ox moving : {}, {}", groupId, moveDto);
 
-		CharacterDto returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
-
-		messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), returnObject);
+		// WebSocketResponse returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
+		//
+		// messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), returnObject);
 	}
 
 	// ox 정답 불러오기
@@ -110,9 +151,9 @@ public class WebSocketController {
 
 		log.info("ox answer : {}, {}", groupId, moveDto);
 
-		CharacterDto returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
-
-		messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), returnObject);
+		// WebSocketResponse returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
+		//
+		// messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), returnObject);
 	}
 
 	/**
