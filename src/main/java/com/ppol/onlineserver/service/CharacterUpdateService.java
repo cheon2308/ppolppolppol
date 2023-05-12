@@ -29,12 +29,13 @@ public class CharacterUpdateService {
 
 	// service
 	private final CharacterReadService characterReadService;
+	private final OxGameService oxGameService;
 
 	/**
 	 * 그룹 방에 입장 시
 	 */
 	@Transactional
-	public WebSocketResponse<?> enterGroup(Long groupId, UserIdDto userIdDto) {
+	public WebSocketResponse<?> enterGroup(String groupId, UserIdDto userIdDto) {
 
 		UserCharacter userCharacter = characterReadService.getUserCharacter(userIdDto.getUserId());
 
@@ -51,6 +52,10 @@ public class CharacterUpdateService {
 
 		characterReadService.setCharacterSet(groupId, characterSet);
 
+		if(groupId.startsWith("OX1025")) {
+			oxGameService.enterGame(userIdDto.getUserId(), userCharacter.getUser().getUsername(), groupId);
+		}
+
 		return getWebSocketResponse(character, EventType.ENTER);
 	}
 
@@ -58,7 +63,7 @@ public class CharacterUpdateService {
 	 * 그룹 방에서 퇴장 시
 	 */
 	@Transactional
-	public WebSocketResponse<?> leaveGroup(Long groupId, Long userId) {
+	public WebSocketResponse<?> leaveGroup(String groupId, Long userId) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -78,7 +83,7 @@ public class CharacterUpdateService {
 	 * 캐릭터 이동 시
 	 */
 	@Transactional
-	public WebSocketResponse<?> moveCharacter(Long groupId, MoveDto moveDto) {
+	public WebSocketResponse<?> moveCharacter(String groupId, MoveDto moveDto) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
@@ -98,7 +103,7 @@ public class CharacterUpdateService {
 	 * 캐릭터 타입 변경 시
 	 */
 	@Transactional
-	public WebSocketResponse<?> updateCharacter(Long groupId, TypeUpdateDto typeUpdateDto) {
+	public WebSocketResponse<?> updateCharacter(String groupId, TypeUpdateDto typeUpdateDto) {
 
 		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 

@@ -23,7 +23,7 @@ public class OnlineController {
 	private final CharacterReadService characterReadService;
 
 	@GetMapping("/{groupId}")
-	public ResponseEntity<?> readGroupCharacters(@PathVariable Long groupId) {
+	public ResponseEntity<?> readGroupCharacters(@PathVariable String groupId) {
 
 		Map<String, Set<CharacterDto>> returnObject = characterReadService.readGroupCharacterList(groupId);
 

@@ -6,7 +6,7 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 
-import com.ppol.onlineserver.util.UserMap;
+import com.ppol.onlineserver.util.UserUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ public class CustomInterceptor implements ChannelInterceptor {
 			String destination = (String)message.getHeaders().get("simpDestination");
 
 			if (destination != null) {
-				if (destination.startsWith("/pub/ox")) {
+				if (destination.startsWith("/pub/OX1025")) {
 
 					log.info("session id : {} and user id : {} is connected to ox", sessionId, userId);
 
@@ -41,7 +41,7 @@ public class CustomInterceptor implements ChannelInterceptor {
 					long groupId = Long.parseLong(destination.substring(5));
 
 					// sessionId를 key로 userId, groupId를 등록
-					UserMap.put(sessionId, userId, groupId);
+					UserUtil.put(sessionId, userId, groupId);
 
 					log.info("session id : {} and user id : {} is connected", sessionId, userId);
 				}

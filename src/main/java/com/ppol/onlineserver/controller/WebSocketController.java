@@ -12,6 +12,7 @@ import com.ppol.onlineserver.dto.request.UserIdDto;
 import com.ppol.onlineserver.dto.response.OxLobbyDto;
 import com.ppol.onlineserver.service.CharacterUpdateService;
 import com.ppol.onlineserver.service.LobbyService;
+import com.ppol.onlineserver.service.OxGameService;
 import com.ppol.onlineserver.util.response.WebSocketResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,10 @@ public class WebSocketController {
 
 	// service
 	private final CharacterUpdateService characterUpdateService;
+
 	private final LobbyService lobbyService;
+
+	private final OxGameService oxGameService;
 
 	/**
 	 * 그룹 방
@@ -35,7 +39,7 @@ public class WebSocketController {
 
 	// 그룹 방 참여
 	@MessageMapping("/entering/{groupId}")
-	public void enter(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+	public void enter(@DestinationVariable String groupId, @Payload UserIdDto userIdDto) {
 
 		log.info("group entering : {}, {}", groupId, userIdDto);
 
@@ -46,7 +50,7 @@ public class WebSocketController {
 
 	// 그룹 방 이동
 	@MessageMapping("/moving/{groupId}")
-	public void move(@DestinationVariable Long groupId, @Payload MoveDto moveDto) {
+	public void move(@DestinationVariable String groupId, @Payload MoveDto moveDto) {
 
 		log.info("group moving : {}, {}", groupId, moveDto);
 
@@ -57,7 +61,7 @@ public class WebSocketController {
 
 	// 그룹 방 캐릭터 타입 변경
 	@MessageMapping("/type/{groupId}")
-	public void update(@DestinationVariable Long groupId, @Payload TypeUpdateDto typeUpdateDto) {
+	public void update(@DestinationVariable String groupId, @Payload TypeUpdateDto typeUpdateDto) {
 
 		log.info("group type : {}, {}", groupId, typeUpdateDto);
 
@@ -68,7 +72,7 @@ public class WebSocketController {
 
 	// 그룹 방 떠나기
 	@MessageMapping("/leaving/{groupId}")
-	public void leave(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+	public void leave(@DestinationVariable String groupId, @Payload UserIdDto userIdDto) {
 
 		log.info("group leave : {}, {}", groupId, userIdDto);
 
@@ -78,19 +82,12 @@ public class WebSocketController {
 	}
 
 	/**
-	 * 그룹 구독 경로를 불러오는 메서드
-	 */
-	private String getDestinationTopic(Long groupId) {
-		return "/pub/" + groupId;
-	}
-
-	/**
 	 * OX 퀴즈 방 시작 전 과정
 	 */
 
 	// ox 게임 방 생성
 	@MessageMapping("/ox/making/{groupId}")
-	public void makeOx(@DestinationVariable Long groupId, @Payload OxLobbyDto oxLobbyDto) {
+	public void makeOx(@DestinationVariable String groupId, @Payload OxLobbyDto oxLobbyDto) {
 
 		log.info("ox lobby making : {}, {}", groupId, oxLobbyDto);
 
@@ -101,7 +98,7 @@ public class WebSocketController {
 
 	// ox 게임 방 파토내기
 	@MessageMapping("/ox/destroying/{groupId}")
-	public void destroyOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+	public void destroyOx(@DestinationVariable String groupId, @Payload UserIdDto userIdDto) {
 
 		log.info("ox lobby making : {}, {}", groupId, userIdDto);
 
@@ -113,7 +110,7 @@ public class WebSocketController {
 
 	// ox 게임 로비에서 참여
 	@MessageMapping("/ox/ready/{groupId}")
-	public void readyOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+	public void readyOx(@DestinationVariable String groupId, @Payload UserIdDto userIdDto) {
 
 		log.info("ox lobby ready : {}, {}", groupId, userIdDto);
 
@@ -124,7 +121,7 @@ public class WebSocketController {
 
 	// ox 게임 로비에서 나가기
 	@MessageMapping("/ox/cancellation-ready/{groupId}")
-	public void leaveOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
+	public void leaveOx(@DestinationVariable String groupId, @Payload UserIdDto userIdDto) {
 
 		log.info("ox lobby cancel : {}, {}", groupId, userIdDto);
 
@@ -133,45 +130,34 @@ public class WebSocketController {
 		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
 	}
 
+	// ox 게임 시작
+	@MessageMapping("/ox/starting/{groupId}")
+	public void startOx(@DestinationVariable String groupId, @Payload OxLobbyDto oxLobbyDto) {
+
+		log.info("ox game start !! : {}, {}", groupId, oxLobbyDto);
+
+		WebSocketResponse<?> returnObject = oxGameService.startGame(groupId, oxLobbyDto);
+
+		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
+	}
+
 	/**
 	 * OX 퀴즈 방 시작 후 과정
 	 */
 
-	// ox 게임 방 서버로 참여
-	@MessageMapping("/ox/entering/{groupId}")
-	public void enterOx(@DestinationVariable Long groupId, @Payload UserIdDto userIdDto) {
-
-		log.info("ox entering : {}, {}", groupId, userIdDto);
-
-		// messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), "");
-	}
-
-	// ox 방에서 이동
-	@MessageMapping("/ox/moving/{groupId}")
-	public void moveOx(@DestinationVariable Long groupId, @Payload MoveDto moveDto) {
-
-		log.info("ox moving : {}, {}", groupId, moveDto);
-
-		// WebSocketResponse returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
-		//
-		// messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), returnObject);
-	}
-
 	// ox 정답 불러오기
 	@MessageMapping("/ox/answer/{groupId}")
-	public void answerOx(@DestinationVariable Long groupId, @Payload MoveDto moveDto) {
+	public void answerOx(@DestinationVariable String groupId, @Payload MoveDto moveDto) {
 
 		log.info("ox answer : {}, {}", groupId, moveDto);
 
-		// WebSocketResponse returnObject = characterUpdateService.moveCharacter(groupId, moveDto);
-		//
-		// messagingTemplate.convertAndSend(getOxDestinationTopic(groupId), returnObject);
+		oxGameService.answerGame(groupId, moveDto);
 	}
 
 	/**
-	 * ox 구독 경로를 불러오는 메서드
+	 * 그룹 구독 경로를 불러오는 메서드
 	 */
-	private String getOxDestinationTopic(Long groupId) {
-		return "/pub/ox/" + groupId;
+	private String getDestinationTopic(String channel) {
+		return "/pub/" + channel;
 	}
 }
