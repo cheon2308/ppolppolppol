@@ -6,7 +6,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import com.ppol.onlineserver.dto.response.WebSocketResponse;
+import com.ppol.onlineserver.util.response.WebSocketResponse;
 import com.ppol.onlineserver.service.CharacterUpdateService;
 import com.ppol.onlineserver.util.UserMap;
 
@@ -32,7 +32,7 @@ public class WebSocketEventListener {
 		Long groupId = UserMap.getGroupId(sessionId);
 		Long userId = UserMap.getUserId(sessionId);
 
-		WebSocketResponse response = characterUpdateService.leaveGroup(groupId, userId);
+		WebSocketResponse<?> response = characterUpdateService.leaveGroup(groupId, userId);
 
 		log.info("{} is leave from {}", userId, groupId);
 		log.info("{}", response);
