@@ -52,6 +52,9 @@ public class CommentCreateService {
 		ArticleComment comment = commentRepository.save(
 				commentCreateMapping(commentCreateDto, article, user, tagUserList));
 
+		// 게시글의 댓글 수 ++
+		article.addComment();
+
 		// 태그당한 사용자들에게 알람 생성 (비동기 처리)
 		alarmSendService.makeCommentTagAlarm(comment, tagUserList);
 
