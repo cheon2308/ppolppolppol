@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ppol/models/articleModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:ppol/screen/articleDetailPage.dart';
+import 'package:ppol/screen/commentScreen.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -156,18 +156,18 @@ class _ArticleCardState extends State<ArticleCard> {
                     ),
                   ],
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ArticleDetailScreen(article: widget.article),
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.more_horiz),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) =>
+                //             CommentsPage(postId: '',),
+                //       ),
+                //     );
+                //   },
+                //   icon: Icon(Icons.more_horiz),
+                // ),
               ],
             ),
           ),
@@ -279,16 +279,27 @@ class _ArticleCardState extends State<ArticleCard> {
           ),
           if (widget.article.comment != null)
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: Text(
-                  '댓글 모두 보기',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                CommentsPage(postId: widget.article.articleId.toString(),),
+                          ),
+                        );
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
+                  child: Text(
+                    '댓글 모두 보기',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
