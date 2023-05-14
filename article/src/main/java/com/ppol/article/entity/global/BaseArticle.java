@@ -50,6 +50,9 @@ public abstract class BaseArticle extends BaseEntity {
 	// 게시글 좋아요 수
 	protected int likeCount;
 
+	// 게시글 댓글 수
+	protected int commentCount;
+
 	// 상태 (0: 정상, 1: 삭제)
 	protected int state;
 

@@ -32,11 +32,11 @@ public class Article extends BaseArticle {
 
 	// Builder
 	@Builder
-	public Article(Long id, String content, List<String> imageList, User writer, int likeCount,
+	public Article(Long id, String content, List<String> imageList, User writer, int likeCount, int commentCount,
 		int state, OpenStatus openStatus) {
 
 		// 부모 생성자
-		super(id, content, imageList, writer, likeCount, state);
+		super(id, content, imageList, writer, likeCount, commentCount, state);
 
 		// Article 변수들
 		this.openStatus = openStatus;
@@ -56,5 +56,9 @@ public class Article extends BaseArticle {
 		} else {
 			likeCount--;
 		}
+	}
+
+	public void addComment() {
+		commentCount++;
 	}
 }
