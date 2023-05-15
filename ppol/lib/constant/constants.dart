@@ -44,7 +44,8 @@ final kDarkTheme = ThemeData(
 
 final kLightTheme = ThemeData(
   brightness: Brightness.light,
-  fontFamily: 'SFProText',
+  // fontFamily: 'SFProText',
+  fontFamily: 'Maplestory',
   primaryColor: kLightPrimaryColor,
   canvasColor: kLightPrimaryColor,
   backgroundColor: kLightSecondaryColor,

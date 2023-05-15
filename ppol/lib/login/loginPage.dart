@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ppol/login/customInputField.dart';
+import 'package:ppol/widgets/customInputField.dart';
 import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
 import 'package:http/http.dart' as http;
@@ -55,7 +55,7 @@ class _loginPageState extends State<loginPage> {
         var refreshToken = responseData['data']['refreshToken'];
         // AccessToken과 refreshToken을 저장
         // await storage.write(key: 'accessToken', value: accessToken);
-        await storage.write(key: 'accessToken', value: "1");
+        await storage.write(key: 'accessToken', value: accessToken);
         // await storage.write(key: 'refreshToken', value: refreshToken);
 
         Navigator.push(context,MaterialPageRoute(

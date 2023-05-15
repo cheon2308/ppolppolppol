@@ -18,6 +18,7 @@ Future<Dio> authDio(BuildContext context) async {
 
     // 매 요청마다 헤더에 AccessToken을 포함
     options.headers['Authorization'] = '$accessToken';
+    options.headers['Accept-Charset']= 'utf-8';
     return handler.next(options);
   }, onError: (error, handler) async {
 

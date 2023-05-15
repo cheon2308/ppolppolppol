@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ppol/login/articleAdd.dart';
 import 'package:ppol/login/profilePage.dart';
+import 'package:ppol/main.dart';
+import 'package:ppol/screen/gameScreen.dart';
+
 import '../screen/articlePage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -13,6 +16,7 @@ class homePage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      body: gameScreen(),
       backgroundColor: Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
