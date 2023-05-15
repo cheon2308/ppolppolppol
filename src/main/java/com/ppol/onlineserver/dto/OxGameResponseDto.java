@@ -19,5 +19,6 @@ public class OxGameResponseDto implements Serializable {
 
 	private OxGameDto oxGame;
 	private String nextQuestion;
+	private boolean answer;
 	private String commentary;
 }
