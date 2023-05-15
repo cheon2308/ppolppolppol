@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ppol/models/articleModel.dart';
-import 'package:ppol/screen/comment_section.dart';
+import 'package:ppol/screen/commentScreen.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   final ArticleModel article;
