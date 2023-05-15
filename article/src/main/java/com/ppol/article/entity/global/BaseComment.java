@@ -64,6 +64,7 @@ public abstract class BaseComment extends BaseEntity {
 	// 댓글 삭제 메서드
 	public void delete() {
 		this.state = 1;
+		this.content = "삭제된 댓글입니다.";
 	}
 
 	// 삭제된 게시글에 대해서 내용을 처리해주기 위한 PrePersist
