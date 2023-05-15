@@ -84,7 +84,7 @@ public class ArticleController {
 		Long userId = RequestUtils.getUserId();
 		ArticleDetailDto returnObject = articleCreateService.articleCreate(userId, articleCreateDto);
 
-		return ResponseBuilder.created(returnObject);
+		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 게시글 수정하기
@@ -95,7 +95,7 @@ public class ArticleController {
 		Long userId = RequestUtils.getUserId();
 		ArticleDetailDto returnObject = articleUpdateService.articleUpdate(articleUpdateDto, articleId, userId);
 
-		return ResponseBuilder.created(returnObject);
+		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 게시글 삭제하기
@@ -153,7 +153,7 @@ public class ArticleController {
 		Long userId = RequestUtils.getUserId();
 		CommentResponseDto returnObject = commentUpdateService.commentUpdate(commentUpdateDto, commentId, userId);
 
-		return ResponseBuilder.created(returnObject);
+		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 댓글 삭제하기
@@ -163,7 +163,7 @@ public class ArticleController {
 		Long userId = RequestUtils.getUserId();
 		commentDeleteService.commentDelete(commentId, userId);
 
-		return ResponseBuilder.created("");
+		return ResponseBuilder.ok("");
 	}
 
 	// 게시글 좋아요/취소
