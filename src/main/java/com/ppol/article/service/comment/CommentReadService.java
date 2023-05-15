@@ -158,6 +158,7 @@ public class CommentReadService {
 			.content(comment.getContent())
 			.parent(comment.getParent())
 			.isLike(userInteractionReadService.getArticleCommentLike(userId, comment.getId()))
+			.state(comment.getState())
 			.createString(DateTimeUtils.getString(comment.getCreatedAt()))
 			.createdAt(comment.getCreatedAt())
 			.build();

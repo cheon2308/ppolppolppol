@@ -29,6 +29,8 @@ public class CommentResponseDto {
 
 	private UserResponseDto writer;
 
+	private int state;
+
 	private LocalDateTime createdAt;
 
 	private String createString;
