@@ -76,7 +76,7 @@ public class OxGameService {
 	 */
 	public void answerGame(String gameRoomId, MoveDto moveDto) {
 
-		Boolean answer = moveDto.getX() >= 0;
+		Boolean answer = moveDto.getX() < 0;
 
 		OxGameDto oxGame = gameUtil.getOxGame(gameRoomId);
 		List<Long> questions = oxGame.getPreviousQuestions();
