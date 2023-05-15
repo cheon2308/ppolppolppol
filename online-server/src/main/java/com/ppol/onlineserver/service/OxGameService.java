@@ -122,6 +122,7 @@ public class OxGameService {
 				.oxGame(oxGame)
 				.nextQuestion(oxQuiz.getQuestion())
 				.commentary(oxQuiz.getCommentary())
+				.answer(oxQuiz.getAnswer())
 				.build();
 
 			oxGame.getPreviousQuestions().add(oxQuiz.getId());
