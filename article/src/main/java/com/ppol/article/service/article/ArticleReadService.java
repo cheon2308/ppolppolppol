@@ -127,6 +127,7 @@ public class ArticleReadService {
 			.writer(UserResponseDto.of(article.getWriter()))
 			.openStatus(article.getOpenStatus())
 			.likeCount(article.getLikeCount())
+			.commentCount(article.getCommentCount())
 			.comment(commentReadService.getArticlePresentComment(article.getId(), article.getWriter().getId(), userId))
 			.build();
 	}
