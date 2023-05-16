@@ -15,7 +15,7 @@ public interface MessageChannelRepository extends MongoRepository<MessageChannel
 	@Query("{'userList.userId': ?0}")
 	List<MessageChannel> findByUserIdInUserList(Long userId, Sort sort);
 
-	@Query("{'userList.id': {$all: [?0, ?1]}, 'groupId': null}")
+	@Query("{'userList.userId': {$all: [?0, ?1]}, 'groupId': null}")
 	Optional<MessageChannel> findByTwoUsersInUserListAndGroupIdNull(Long userId, Long receiverId);
 
 	Optional<MessageChannel> findByGroupId(Long groupId);
