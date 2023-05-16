@@ -136,16 +136,14 @@ public class OxGameService {
 	}
 
 	private void sentOxGameResponse(String gameRoomId) {
+		log.info("{} 에서 다음 문제", gameRoomId);
 		messagingTemplate.convertAndSend("/pub/" + gameRoomId, getOxGameResponse(gameRoomId));
 	}
 
 	private void scheduleTask(String gameRoomId, int second) {
 		Instant startTime = Instant.now().plusSeconds(second);
 
-		future = taskScheduler.schedule(() -> {
-			log.info("{} 에서 다음 문제", gameRoomId);
-			sentOxGameResponse(gameRoomId);
-		}, startTime);
+		future = taskScheduler.schedule(() -> sentOxGameResponse(gameRoomId), startTime);
 	}
 
 	private void rescheduleTask(String gameRoomId) {
