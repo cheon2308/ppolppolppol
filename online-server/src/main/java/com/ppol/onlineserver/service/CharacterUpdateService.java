@@ -4,16 +4,16 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.ppol.onlineserver.dto.request.UserIdDto;
 import com.ppol.onlineserver.dto.request.MoveDto;
 import com.ppol.onlineserver.dto.request.TypeUpdateDto;
+import com.ppol.onlineserver.dto.request.UserIdDto;
 import com.ppol.onlineserver.dto.response.CharacterDto;
 import com.ppol.onlineserver.dto.response.CharacterLocation;
 import com.ppol.onlineserver.dto.response.CharacterRotation;
 import com.ppol.onlineserver.dto.response.CharacterType;
-import com.ppol.onlineserver.util.response.WebSocketResponse;
 import com.ppol.onlineserver.entity.UserCharacter;
 import com.ppol.onlineserver.util.constant.enums.EventType;
+import com.ppol.onlineserver.util.response.WebSocketResponse;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class CharacterUpdateService {
 
 		characterReadService.setCharacterSet(groupId, characterSet);
 
-		if(groupId.startsWith("OX1025")) {
+		if (groupId.startsWith("OX1025")) {
 			oxGameService.enterGame(userIdDto.getUserId(), userCharacter.getUser().getUsername(), groupId);
 		}
 
