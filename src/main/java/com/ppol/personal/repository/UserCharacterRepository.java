@@ -15,6 +15,6 @@ public interface UserCharacterRepository extends JpaRepository<UserCharacter, Lo
 
 	@Query("SELECT uc FROM UserCharacter uc " +
 		"INNER JOIN Follow f ON uc.user.id = f.following.id " +
-		"WHERE f.follower = :userId AND f.isFollow = true")
+		"WHERE f.follower.id = :userId AND f.isFollow = true and f.following.id != :userId")
 	List<UserCharacter> findFollowingsCharacters(@Param("userId") Long userId);
 }
