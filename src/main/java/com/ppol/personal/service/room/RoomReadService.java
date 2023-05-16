@@ -41,6 +41,7 @@ public class RoomReadService {
 		PersonalRoom room = targetUserId == null ? getRoomByUser(userId) : getRoomByUser(targetUserId);
 
 		List<AlbumListDto> albums = albumReadService.getAblumList(room.getId());
+		List<UserCharacterDto> npc = userReadService.getNpcList(userId).stream().map(UserCharacterDto::of).toList();
 
 		return RoomResponseDto.builder()
 			.roomId(room.getId())
@@ -49,6 +50,7 @@ public class RoomReadService {
 			.isMyRoom(room.getOwner().getId().equals(userId) ? 1 : 0)
 			.roomOwner(UserCharacterDto.of(userReadService.getUserCharacter(room.getOwner().getId())))
 			.player(UserCharacterDto.of(userReadService.getUserCharacter(userId)))
+			.npc(npc)
 			.albums(albums)
 			.build();
 	}

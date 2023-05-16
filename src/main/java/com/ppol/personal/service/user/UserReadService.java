@@ -1,5 +1,8 @@
 package com.ppol.personal.service.user;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.ppol.personal.entity.user.User;
@@ -25,6 +28,18 @@ public class UserReadService {
 	// repository
 	private final UserRepository userRepository;
 	private final UserCharacterRepository characterRepository;
+
+	/**
+	 * 개인 룸에 표시해줄 npc 목록을 불러오는 메서드
+	 */
+	public List<UserCharacter> getNpcList(Long userId) {
+
+		List<UserCharacter> characterList = characterRepository.findFollowingsCharacters(userId);
+
+		Collections.shuffle(characterList);
+
+		return characterList.subList(0, Math.min(characterList.size(), 5));
+	}
 
 	/**
 	 * 사용자 Entity를 불러오는 메서드, 예외처리 포함
