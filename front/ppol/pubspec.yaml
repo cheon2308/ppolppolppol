@@ -3,7 +3,6 @@ description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -27,11 +26,14 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+client_sse:
+  git:
+    url: https://github.com/pratikbaid3/flutter_client_sse
+    path:
+
 dependencies:
   flutter:
     sdk: flutter
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -39,7 +41,22 @@ dependencies:
   line_awesome_flutter: ^1.0.1
   flutter_screenutil: ^5.7.0
   animated_theme_switcher: ^2.0.8
+  #splash page
   flutter_native_splash: ^2.2.19
+  # image carousel slider
+  carousel_slider: ^4.0.0
+
+  #dots indicator
+  smooth_page_indicator: ^0.3.0-nullsafety.0
+  universal_html: ^2.0.0
+  #dio
+  dio: ^5.1.1
+
+  flutter_secure_storage: ^8.0.0
+  cached_network_image: ^3.2.3
+  intl: ^0.17.0
+
+  flutter_client_sse: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -53,8 +70,17 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   http: ^0.13.4
   image_picker: ^0.8.4+4
+
+
+  #multi image
+  multi_image_picker: ^4.8.1
+
+
   shared_preferences: ^2.0.11
+
   provider: ^6.0.1
+
+  path_provider: ^2.0.15
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -66,7 +92,7 @@ flutter_native_splash:
   android: true
   ios: true
   android_gravity: fill
-  fullscreen: true
+  fullscreen: false
 
   android_12:
     image: assets/main_logo/Ellipse 70.png
@@ -75,8 +101,18 @@ flutter_native_splash:
     icon_background_color_dark: "#272727"
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: text
+      fonts:
+        - asset: assets/fonts/Maplestory_Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Maplestory_Light.ttf
+          weight: 300
+
   assets:
+    - assets/plus_picture.png
     - assets/main_logo/
+    - assets/icon.png
 
 
   # The following line ensures that the Material Icons font is
@@ -100,17 +136,25 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  fonts:
+    - family: Maplestory
+      fonts:
+      - asset: assets/fonts/Maplestory_Light.ttf
+        weight: 300
+      - asset: assets/fonts/Maplestory_Bold.ttf
+        weight: 700
+
+#   fonts:
+#     - family: Schyler
+#       fonts:
+#         - asset: fonts/Schyler-Regular.ttf
+#         - asset: fonts/Schyler-Italic.ttf
+#           style: italic
+#     - family: Trajan Pro
+#       fonts:
+#         - asset: fonts/TrajanPro.ttf
+#         - asset: fonts/TrajanPro_Bold.ttf
+#           weight: 700
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

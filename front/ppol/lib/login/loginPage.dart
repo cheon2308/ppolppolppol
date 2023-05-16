@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ppol/login/customInputField.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:ppol/widgets/customInputField.dart';
 import 'package:ppol/login/homePage.dart';
 import 'package:ppol/login/registPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_client_sse/flutter_client_sse.dart';
 
 void main() {
   runApp(MaterialApp(title: 'Login App', home: loginPage()));
@@ -44,9 +46,18 @@ class _loginPageState extends State<loginPage> {
         headers: {"Content-Type": "application/json"},
         body: body,
       );
+      final storage = FlutterSecureStorage();
       if (response.statusCode == 200) {
         // The API call was successful, and you can parse the response body here.
         print('Response data: ${response.body}');
+        var responseData = json.decode(response.body);
+        var accessToken = responseData['data']['accessToken'];
+        var refreshToken = responseData['data']['refreshToken'];
+        // AccessToken과 refreshToken을 저장
+        // await storage.write(key: 'accessToken', value: accessToken);
+        await storage.write(key: 'accessToken', value: accessToken);
+        // await storage.write(key: 'refreshToken', value: refreshToken);
+
         Navigator.push(context,MaterialPageRoute(
                 builder: (c) => homePage()));
       } else {
@@ -57,6 +68,19 @@ class _loginPageState extends State<loginPage> {
       // An exception occurred during the API call. You can handle the exception here.
       print('Error: $e');
     }
+
+    SSEClient.subscribeToSSE(
+        url:
+        'http://k8e106.p.ssafy.io:8000/alarm-service/alarms/connect',
+        header: {
+          "Authorization":'1',
+          "Accept": "text/event-stream",
+          "Cache-Control": "no-cache",
+        }).listen((event) {
+      print('Id: ' + event.id!);
+      print('Event: ' + event.event!);
+      print('Data: ' + event.data!);
+    });
   }
 
 
