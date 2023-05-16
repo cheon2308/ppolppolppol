@@ -25,16 +25,18 @@ public class SearchController {
 	private final ArticleSearchService articleSearchService;
 	private final UserSearchService userSearchService;
 
+	// 해쉬 태그 검색
 	@GetMapping("/articles/hash-tag")
 	public ResponseEntity<?> articleSearchByHashTag(@RequestParam(defaultValue = "20") int size,
 		@RequestParam(defaultValue = "0") int page, @RequestParam String keyword) {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<ArticleListDto> returnObject = articleSearchService.searchArticleByContent(userId, page, size, keyword);
+		Slice<ArticleListDto> returnObject = articleSearchService.searchArticleByHashTag(userId, page, size, keyword);
 
 		return ResponseBuilder.ok(returnObject);
 	}
 
+	// 내용 검색
 	@GetMapping("/articles/content")
 	public ResponseEntity<?> articleSearchByContent(@RequestParam(defaultValue = "20") int size,
 		@RequestParam(defaultValue = "0") int page, @RequestParam String keyword) {

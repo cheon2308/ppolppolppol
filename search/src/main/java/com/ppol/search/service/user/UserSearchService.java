@@ -35,13 +35,11 @@ public class UserSearchService {
 
 		Pageable pageable = PageRequest.of(page, size);
 
-		NativeQuery query = NativeQuery.builder().withQuery(q -> q.bool(b -> {
-			b.mustNot(mn -> mn.match(match -> match.field("id").query(userId)));
-			b.should(s -> s.match(match -> match.field("username").query(keyword)));
-			return b;
-		})).withPageable(pageable)
-			.withMinScore(5)
-			.build();
+		NativeQuery query = NativeQuery.builder().withQuery(q -> {
+			q.bool(b -> b.mustNot(mn -> mn.match(match -> match.field("id").query(userId))));
+			q.fuzzy(f -> f.field("username").value(keyword).fuzziness("3").prefixLength(1).maxExpansions(100));
+			return q;
+		}).withPageable(pageable).build();
 
 		SearchHits<User> searchHits = operations.search(query, User.class);
 

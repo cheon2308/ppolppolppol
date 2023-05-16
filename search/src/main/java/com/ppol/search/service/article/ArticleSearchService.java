@@ -53,7 +53,6 @@ public class ArticleSearchService {
 		NativeQuery query = NativeQuery.builder()
 			.withQuery(q -> q.bool(b -> b.should(s -> s.match(match -> match.field("content").query(keyword)))))
 			.withPageable(pageable)
-			.withMinScore(5)
 			.build();
 
 		SearchHits<Article> searchHits = operations.search(query, Article.class);
