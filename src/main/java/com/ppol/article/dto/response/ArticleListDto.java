@@ -32,6 +32,8 @@ public class ArticleListDto {
 
 	private int likeCount;
 
+	private int commentCount;
+
 	private OpenStatus openStatus;
 
 	private LocalDateTime createdAt;
