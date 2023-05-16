@@ -202,7 +202,7 @@ public class ArticleController {
 		@RequestParam(required = false) Long lastArticleId, @RequestParam(defaultValue = "10") int size) {
 
 		Long userId = RequestUtils.getUserId();
-		Slice<ArticleListDto> returnObject = userArticleReadService.userArticleListRead(targetUserId, userId,
+		Slice<ArticleListDto> returnObject = userArticleReadService.userArticleListRead(userId, targetUserId,
 			lastArticleId, size);
 
 		return ResponseBuilder.ok(returnObject);
