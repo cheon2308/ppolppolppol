@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
@@ -61,6 +62,9 @@ public class User extends BaseEntity {
 	@Column(length = ValidationConstants.USERNAME_MAX_SIZE, unique = true)
 	private String username;
 
+	// 사용자 프로필 이미지 경로
+	private String image;
+
 	// 팔로워 수
 	private int followerCount;
 
@@ -70,4 +74,10 @@ public class User extends BaseEntity {
 	// 사용자 상태 (1인 경우 삭제된 상태)
 	private int state;
 
+	@PrePersist
+	private void prePersist() {
+		this.image = this.image == null ?
+			"https://ppolppol-bucket.s3.ap-northeast-2.amazonaws.com/8a99ebdd-b4b8-45cc-ad26-a4022a2c8d0a.jpg" :
+			this.image;
+	}
 }
