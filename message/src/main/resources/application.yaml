@@ -61,3 +61,8 @@ feign:
     auth:
       service: auth-service/
       controller: auth
+
+logging:
+  level:
+    org.springframework.web.socket: DEBUG
+    org.springframework.messaging: DEBUG
