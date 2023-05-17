@@ -64,10 +64,11 @@ public class OxGameService {
 	public void enterGame(Long userId, String username, String gameRoomId) {
 		int count = gameUtil.addPlayer(gameRoomId, OxGameUserDto.builder().userId(userId).username(username).build());
 
+
 		if (count == 6) {
 			scheduleTask(gameRoomId, 10);
 		} else {
-			rescheduleTask(gameRoomId);
+			rescheduleTask(gameRoomId, 20);
 		}
 	}
 
@@ -94,7 +95,7 @@ public class OxGameService {
 			gameUtil.save(gameRoomId, oxGame);
 		}
 
-		rescheduleTask(gameRoomId);
+		rescheduleTask(gameRoomId, 5);
 	}
 
 	/**
@@ -146,11 +147,11 @@ public class OxGameService {
 		future = taskScheduler.schedule(() -> sentOxGameResponse(gameRoomId), startTime);
 	}
 
-	private void rescheduleTask(String gameRoomId) {
+	private void rescheduleTask(String gameRoomId, int second) {
 		if (future != null) {
 			future.cancel(false);
 		}
 
-		scheduleTask(gameRoomId, 20);
+		scheduleTask(gameRoomId, second);
 	}
 }
