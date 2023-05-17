@@ -23,6 +23,4 @@ public class MessageRequestDto {
 	@NotNull
 	@Size(min = 1, max = ValidationConstants.MESSAGE_MAX_LENGTH, message = ValidationMessages.MESSAGE_SIZE_MSG)
 	private String content;
-
-	private String image;
 }
