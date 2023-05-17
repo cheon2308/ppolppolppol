@@ -94,10 +94,11 @@
 
 ## 개발환경
 
+![image](/uploads/3c5ad5a0ef6a498f645dc33fef3cc567/image.png)
 
 
 ## Entity Relationship Diagram
 
-![diagram](/uploads/a23dff536aff7eac4c3e71150f428af0/diagram.png)
+![diagram](/uploads/2a0e4c153f2820aef2c1dc2c785a68c1/diagram.png)
 
 
