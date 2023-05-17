@@ -17,6 +17,7 @@ import com.ppol.message.repository.mongo.MessageRepository;
 import com.ppol.message.service.user.UserAuthService;
 import com.ppol.message.service.user.UserReadService;
 import com.ppol.message.util.constatnt.ValidationConstants;
+import com.ppol.message.util.feign.AuthFeign;
 import com.ppol.message.util.s3.S3Uploader;
 
 import jakarta.transaction.Transactional;
@@ -37,12 +38,12 @@ public class MessageSaveService {
 	// services
 	private final MessageReadService messageReadService;
 	private final MessageSseService messageSseService;
-	private final UserAuthService userAuthService;
 	private final UserReadService userReadService;
 
 	// others
 	private final RedisTemplate<String, Object> redisTemplate;
 	private final S3Uploader s3Uploader;
+	private final AuthFeign authFeign;
 
 	/**
 	 * 채팅 메시지를 MongoDB에 저장하고 Redis에 메시지를 업데이트
@@ -52,7 +53,7 @@ public class MessageSaveService {
 	public void createMessage(MessageRequestDto messageRequestDto, String accessToken, String messageChannelId) {
 
 		// 웹 소켓 컨트롤러에서는 AOP 사용이 안되서 직접 userId를 불러오는 부분을 호출한다.
-		Long userId = userAuthService.getUserId(accessToken);
+		Long userId = authFeign.accessToken(accessToken);
 
 		Message message = createMessageMapping(messageRequestDto, userReadService.findUser(userId), messageChannelId);
 
@@ -81,7 +82,7 @@ public class MessageSaveService {
 	}
 
 	/**
-	 *	받아온 메시지 DTO를 Document로 매핑하는 메서드
+	 * 받아온 메시지 DTO를 Document로 매핑하는 메서드
 	 */
 	public Message createMessageMapping(MessageRequestDto messageRequestDto, MessageUser messageUser,
 		String messageChannelId) {
