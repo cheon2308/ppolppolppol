@@ -13,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 	사용자 정보 엔티티
+ * 사용자 정보 엔티티
  */
 @Getter
 @NoArgsConstructor
@@ -111,5 +112,12 @@ public class User extends BaseEntity {
 	public void updateFollowingCount(boolean isFollow) {
 		int count = isFollow ? 1 : -1;
 		followingCount += count;
+	}
+
+	@PrePersist
+	private void prePersist() {
+		this.image = this.image == null ?
+			"https://ppolppol-bucket.s3.ap-northeast-2.amazonaws.com/8a99ebdd-b4b8-45cc-ad26-a4022a2c8d0a.jpg" :
+			this.image;
 	}
 }
