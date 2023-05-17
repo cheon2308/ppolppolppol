@@ -91,7 +91,6 @@ public class MessageSaveService {
 			.messageChannelId(new ObjectId(messageChannelId))
 			.sender(messageUser)
 			.timestamp(LocalDateTime.now())
-			.image(messageRequestDto.getImage())
 			.build();
 	}
 }
