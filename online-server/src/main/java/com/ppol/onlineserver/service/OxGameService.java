@@ -95,7 +95,7 @@ public class OxGameService {
 			gameUtil.save(gameRoomId, oxGame);
 		}
 
-		rescheduleTask(gameRoomId, 5);
+		rescheduleTask(gameRoomId, 10);
 	}
 
 	/**
