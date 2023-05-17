@@ -151,6 +151,6 @@ public class OxGameService {
 			future.cancel(false);
 		}
 
-		scheduleTask(gameRoomId, 5);
+		scheduleTask(gameRoomId, 20);
 	}
 }
