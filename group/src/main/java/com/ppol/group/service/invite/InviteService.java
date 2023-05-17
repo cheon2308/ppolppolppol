@@ -108,6 +108,7 @@ public class InviteService {
 	 * 초대 Entity를 불러오는 메서드 예외처리 포함
 	 */
 	public GroupInvite getInvite(Long userId, Long groupId) {
+		log.info("user : {}, group : {}", userId, groupId);
 		return inviteRepository.findByUser_IdAndGroup_Id(userId, groupId)
 			.orElseThrow(() -> new EntityNotFoundException("그룹 초대"));
 	}
