@@ -90,11 +90,12 @@
 
 ## 기술스택
 
+![image](/uploads/3c5ad5a0ef6a498f645dc33fef3cc567/image.png)
 
 
 ## 개발환경
 
-![image](/uploads/3c5ad5a0ef6a498f645dc33fef3cc567/image.png)
+
 
 
 ## Entity Relationship Diagram
