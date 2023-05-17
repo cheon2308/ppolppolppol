@@ -1,8 +1,6 @@
 # 💙 뽈뽈뽈(PpolPpolPpol) 💙
 
-
 ![뽈뽈뽈_with_us](/uploads/fe829137e57f690434ad3a68a4deb912/뽈뽈뽈_with_us.png)
-
 
 # 💭 주제
 3D 온라인 SNS 서비스
