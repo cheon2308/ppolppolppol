@@ -17,7 +17,6 @@ import com.ppol.alarm.repository.jpa.AlarmReferenceRepository;
 import com.ppol.alarm.repository.jpa.AlarmRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +35,6 @@ public class AlarmReadService {
 	/**
 	 * 사용자의 lastAlarmId 이전 생성된 알람들을 size 만큼 불러오는 메서드
 	 */
-	@Transactional
 	public Slice<AlarmResponseDto> readAlarmList(Long userId, Long lastAlarmId, int size) {
 		LocalDateTime timestamp = lastAlarmId == null ? LocalDateTime.now() : getAlarm(lastAlarmId).getCreatedAt();
 		Pageable pageable = PageRequest.of(0, size);
