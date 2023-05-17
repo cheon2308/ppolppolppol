@@ -1,7 +1,9 @@
 package com.ppol.onlineserver.service;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -40,7 +42,7 @@ public class OxGameService {
 	// other
 	private final OxGameUtil gameUtil;
 	private final TaskScheduler taskScheduler;
-	private ScheduledFuture<?> future;
+	private final Map<String, ScheduledFuture<?>> futures = new HashMap<>();
 
 	/**
 	 * OX 게임 최초 생성 메서드
@@ -144,12 +146,12 @@ public class OxGameService {
 	private void scheduleTask(String gameRoomId, int second) {
 		Instant startTime = Instant.now().plusSeconds(second);
 
-		future = taskScheduler.schedule(() -> sentOxGameResponse(gameRoomId), startTime);
+		futures.put(gameRoomId, taskScheduler.schedule(() -> sentOxGameResponse(gameRoomId), startTime));
 	}
 
 	private void rescheduleTask(String gameRoomId, int second) {
-		if (future != null) {
-			future.cancel(false);
+		if (futures.get(gameRoomId) != null) {
+			futures.get(gameRoomId).cancel(false);
 		}
 
 		scheduleTask(gameRoomId, second);
