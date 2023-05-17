@@ -65,7 +65,9 @@ public class AlarmReadService {
 			.state(alarm.getState())
 			.alarmType(alarm.getAlarmType().name())
 			.userId(alarm.getUser().getId())
-			.alarmImage(alarm.getImage())
+			.alarmImage(alarm.getImage() == null ?
+				"https://github.com/ppolppolppol/front/blob/9c34d7a3980b1dc3a5dafc90f997c75e6b680d5b/ppol/assets/ppolppol_white.png" :
+				alarm.getImage())
 			.alarmReferenceDtoList(getAlarmReferenceList(alarm.getId()))
 			.build();
 	}
