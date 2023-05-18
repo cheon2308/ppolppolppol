@@ -27,14 +27,13 @@ public class WebSocketMessageController {
 	 * 메시지 전송 요청 처리
 	 */
 	@MessageMapping("/messages/{messageChannelId}")
-	public void sendMessage(@RequestHeader(name = "Authorization") String accessToken,
+	public void sendMessage(
 		@DestinationVariable String messageChannelId, @Payload MessageRequestDto messageRequestDto) {
 
-		log.info("{}", accessToken);
 		log.info("{}", messageChannelId);
 		log.info("{}", messageRequestDto);
 
-		MessageResponseDto returnObject = messageSaveService.createMessage(messageRequestDto, accessToken,
+		MessageResponseDto returnObject = messageSaveService.createMessage(messageRequestDto,
 			messageChannelId); // MongoDB에 채팅 메시지 저장
 
 		String destinationTopic = "/pub/channels/" + messageChannelId;
