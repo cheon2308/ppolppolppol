@@ -52,14 +52,16 @@ public class MessageReadService {
 	/**
 	 * Mongo 디비로 부터 특정 채팅방의 이전 메시지들을 size 만큼 불러오는 메서드
 	 */
-	public Slice<MessageResponseDto> findPreviousMessages(String messageChannelId, ObjectId messageId, int size) {
+	public Slice<MessageResponseDto> findPreviousMessages(String messageChannelId, String messageId, int size) {
 
 		Pageable pageable = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "timestamp"));
 
-		Message message = getMessage(messageId);
+		Message message = messageId == null ? null : getMessage(new ObjectId(messageId));
 
-		Slice<Message> slice = messageRepository.findByMessageChannelIdAndTimestampAfterOrderByTimestampDesc(
-			new ObjectId(messageChannelId), message.getTimestamp(), pageable);
+		Slice<Message> slice = message != null ?
+			messageRepository.findByMessageChannelIdAndTimestampAfterOrderByTimestampDesc(
+				new ObjectId(messageChannelId), message.getTimestamp(), pageable) :
+			messageRepository.findByMessageChannelIdOrderByTimestampDesc(new ObjectId(messageChannelId), pageable);
 
 		List<MessageResponseDto> content = slice.stream().map(MessageResponseDto::of).toList();
 

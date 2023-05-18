@@ -2,7 +2,6 @@ package com.ppol.message.controller;
 
 import java.util.List;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,11 +52,12 @@ public class MessageController {
 
 	// 이전 메시지를 불러옴 (무한 스크롤 처리)
 	@GetMapping("/previous-messages/{messageChannelId}")
-	public ResponseEntity<?> readPreviousMessages(@PathVariable String messageChannelId, @RequestParam String messageId,
-		@RequestParam int size) {
+	public ResponseEntity<?> readPreviousMessages(@PathVariable String messageChannelId,
+		@RequestParam(required = false) String messageId,
+		@RequestParam(defaultValue = "100") int size) {
 
 		Slice<MessageResponseDto> returnObject = messageReadService.findPreviousMessages(messageChannelId,
-			new ObjectId(messageId), size);
+			messageId, size);
 
 		return ResponseBuilder.ok(returnObject);
 	}
