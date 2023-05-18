@@ -88,15 +88,7 @@ public class OxGameService {
 
 			log.info("{}", oxGame);
 
-			OxGameUserDto oxGameUserDto = oxGame.getOxPlayers()
-				.stream()
-				.filter(oxGameUser -> oxGameUser.getUserId().equals(moveDto.getUserId()))
-				.findAny()
-				.orElseThrow();
-
-			oxGameUserDto.setAnswerCount(oxGameUserDto.getAnswerCount() + 1);
-
-			gameUtil.save(gameRoomId, oxGame);
+			gameUtil.addPlayerCount(gameRoomId, moveDto.getUserId());
 		}
 
 		rescheduleTask(gameRoomId, 10);
@@ -114,6 +106,7 @@ public class OxGameService {
 		if (oxGame.getProblemNum() <= oxGame.getPreviousQuestions().size()) {
 
 			// OX 퀴즈가 종료되었으므로 종료되었음을 알리는 메시지를 전송하고 레디스에서 삭제
+			gameUtil.endGame(gameRoomId);
 
 			oxGameResponseDto = OxGameResponseDto.builder().oxGame(oxGame).build();
 
