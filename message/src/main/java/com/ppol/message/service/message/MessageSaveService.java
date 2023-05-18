@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +13,6 @@ import com.ppol.message.document.mongodb.MessageUser;
 import com.ppol.message.dto.request.MessageRequestDto;
 import com.ppol.message.dto.response.MessageResponseDto;
 import com.ppol.message.repository.mongo.MessageRepository;
-import com.ppol.message.service.user.UserAuthService;
 import com.ppol.message.service.user.UserReadService;
 import com.ppol.message.util.constatnt.ValidationConstants;
 import com.ppol.message.util.feign.AuthFeign;
@@ -48,9 +46,9 @@ public class MessageSaveService {
 	/**
 	 * 채팅 메시지를 MongoDB에 저장하고 Redis에 메시지를 업데이트
 	 */
-	@Async
 	@Transactional
-	public void createMessage(MessageRequestDto messageRequestDto, String accessToken, String messageChannelId) {
+	public MessageResponseDto createMessage(MessageRequestDto messageRequestDto, String accessToken,
+		String messageChannelId) {
 
 		// 웹 소켓 컨트롤러에서는 AOP 사용이 안되서 직접 userId를 불러오는 부분을 호출한다.
 		Long userId = authFeign.accessToken(accessToken);
@@ -71,6 +69,8 @@ public class MessageSaveService {
 
 		// SSE를 통해 채팅방 사용자들에게 새로운 메시지를 알림
 		messageSseService.sendMessage(MessageResponseDto.of(message));
+
+		return MessageResponseDto.of(message);
 	}
 
 	/**
