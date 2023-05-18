@@ -26,6 +26,8 @@ public class CharacterUpdateService {
 	@Transactional
 	public void updateCharacter(Long userId, CharacterDto characterDto) {
 
+		log.info("{} : {}", userId, characterDto);
+
 		UserCharacter userCharacter = userReadService.getUserCharacter(userId);
 
 		userCharacter.updateFaceType(characterDto.getFaceType());
