@@ -23,4 +23,5 @@ public class OxGameDto implements Serializable {
 	private int problemSec;
 	private Set<OxGameUserDto> oxPlayers;
 	private List<Long> previousQuestions;
+	private int playerCount;
 }
