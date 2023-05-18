@@ -45,7 +45,9 @@ public class WebSocketController {
 
 		WebSocketResponse<?> returnObject = characterUpdateService.enterGroup(groupId, userIdDto);
 
-		messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
+		if(returnObject != null) {
+			messagingTemplate.convertAndSend(getDestinationTopic(groupId), returnObject);
+		}
 	}
 
 	// 그룹 방 이동
