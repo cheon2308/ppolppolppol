@@ -94,6 +94,8 @@ public class InviteService {
 
 			channel.addUser(user);
 
+			messageChannelRepository.save(channel);
+
 			alarmSendService.createUserEnterAlarm(group, user);
 
 			returnString = "참여함";
