@@ -232,9 +232,9 @@ public class PersonalController {
 
 	// 캐릭터의 내용 수정
 	@PutMapping("/characters/type")
-	public ResponseEntity<?> updateCharacterFaceType(@RequestBody CharacterDto characterDto) {
+	public ResponseEntity<?> updateType(@RequestBody CharacterDto characterDto) {
 
-		Long userId = RequestUtils.getUserId();
+		Long userId = characterDto.getUserId();
 		characterUpdateService.updateCharacter(userId, characterDto);
 
 		return ResponseBuilder.ok("updated");
