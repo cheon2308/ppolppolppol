@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ppol.message.dto.request.MessageRequestDto;
+import com.ppol.message.dto.response.MessageResponseDto;
 import com.ppol.message.service.message.MessageSaveService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,10 @@ public class WebSocketMessageController {
 	public void sendMessage(@RequestHeader(name = "Authorization") String accessToken,
 		@DestinationVariable String messageChannelId, @Payload MessageRequestDto messageRequestDto) {
 
-		messageSaveService.createMessage(messageRequestDto, accessToken, messageChannelId); // MongoDB에 채팅 메시지 저장
+		MessageResponseDto returnObject = messageSaveService.createMessage(messageRequestDto, accessToken,
+			messageChannelId); // MongoDB에 채팅 메시지 저장
 
 		String destinationTopic = "/pub/channels/" + messageChannelId;
-		messagingTemplate.convertAndSend(destinationTopic, messageRequestDto);
+		messagingTemplate.convertAndSend(destinationTopic, returnObject);
 	}
 }
