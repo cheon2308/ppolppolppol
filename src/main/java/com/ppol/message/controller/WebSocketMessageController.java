@@ -12,9 +12,11 @@ import com.ppol.message.dto.response.MessageResponseDto;
 import com.ppol.message.service.message.MessageSaveService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class WebSocketMessageController {
 
 	private final MessageSaveService messageSaveService;
@@ -27,6 +29,10 @@ public class WebSocketMessageController {
 	@MessageMapping("/messages/{messageChannelId}")
 	public void sendMessage(@RequestHeader(name = "Authorization") String accessToken,
 		@DestinationVariable String messageChannelId, @Payload MessageRequestDto messageRequestDto) {
+
+		log.info("{}", accessToken);
+		log.info("{}", messageChannelId);
+		log.info("{}", messageRequestDto);
 
 		MessageResponseDto returnObject = messageSaveService.createMessage(messageRequestDto, accessToken,
 			messageChannelId); // MongoDB에 채팅 메시지 저장
