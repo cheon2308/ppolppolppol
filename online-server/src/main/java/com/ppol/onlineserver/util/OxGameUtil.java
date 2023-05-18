@@ -1,7 +1,9 @@
 package com.ppol.onlineserver.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +22,8 @@ public class OxGameUtil {
 
 	// redis
 	private final RedisTemplate<String, OxGameDto> redisTemplate;
+
+	private final Map<String, Set<OxGameUserDto>> oxUsers = new HashMap<>();
 
 	private static final Set<String> gameKeySet = new HashSet<>();
 
@@ -44,7 +48,11 @@ public class OxGameUtil {
 	 * Redis에서 객체 불러오기
 	 */
 	public OxGameDto getOxGame(String gameRoomId) {
-		return redisTemplate.opsForValue().get(getGameKey(gameRoomId));
+		OxGameDto oxGame = redisTemplate.opsForValue().get(getGameKey(gameRoomId));
+
+		oxGame.setOxPlayers(oxUsers.get(gameRoomId));
+
+		return oxGame;
 	}
 
 	/**
@@ -62,9 +70,20 @@ public class OxGameUtil {
 
 		String gameRoomId = makeGameRoomId();
 
+		oxUsers.put(gameRoomId, new HashSet<>());
+
 		save(gameRoomId, oxGame);
 
 		return gameRoomId;
+	}
+
+	/**
+	 * 게임 종료 시 실행
+	 */
+	public void endGame(String gameRoomId) {
+
+		delete(gameRoomId);
+		oxUsers.remove(gameRoomId);
 	}
 
 	public int getPlayerCount(String gameRoomId) {
@@ -89,6 +108,8 @@ public class OxGameUtil {
 
 		save(gameRoomId, oxGameDto);
 
+		oxUsers.get(gameRoomId).add(user);
+
 		return oxGameDto.getOxPlayers().size();
 	}
 
@@ -102,6 +123,26 @@ public class OxGameUtil {
 		oxGameDto.getOxPlayers().removeIf(user -> user.getUserId().equals(userId));
 
 		save(gameRoomId, oxGameDto);
+
+		OxGameUserDto oxGameUserDto = oxUsers.get(gameRoomId)
+			.stream()
+			.filter(user -> user.getUserId().equals(userId))
+			.findAny()
+			.orElseThrow();
+
+		oxUsers.get(gameRoomId).remove(oxGameUserDto);
+	}
+
+	/**
+	 * 문제 맞춘 개수 추가
+	 */
+	public void addPlayerCount(String gameRoomId, Long userId) {
+		oxUsers.get(gameRoomId)
+			.stream()
+			.filter(user -> user.getUserId().equals(userId))
+			.findAny()
+			.orElseThrow()
+			.addCount();
 	}
 
 	/**
