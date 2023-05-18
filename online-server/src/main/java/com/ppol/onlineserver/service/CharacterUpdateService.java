@@ -53,6 +53,7 @@ public class CharacterUpdateService {
 		characterReadService.setCharacterSet(groupId, characterSet);
 
 		if (groupId.startsWith("OX1025")) {
+			log.info("{} connect to OX {}", userIdDto.getUserId(), groupId);
 			oxGameService.enterGame(userIdDto.getUserId(), userCharacter.getUser().getUsername(), groupId);
 		}
 

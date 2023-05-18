@@ -66,11 +66,10 @@ public class OxGameService {
 	public void enterGame(Long userId, String username, String gameRoomId) {
 		int count = gameUtil.addPlayer(gameRoomId, OxGameUserDto.builder().userId(userId).username(username).build());
 
-
-		if (count == 6) {
-			scheduleTask(gameRoomId, 10);
+		if (count == gameUtil.getPlayerCount(gameRoomId)) {
+			rescheduleTask(gameRoomId, 5);
 		} else {
-			rescheduleTask(gameRoomId, 20);
+			rescheduleTask(gameRoomId, 180);
 		}
 	}
 

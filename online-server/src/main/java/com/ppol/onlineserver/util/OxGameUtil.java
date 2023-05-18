@@ -57,6 +57,7 @@ public class OxGameUtil {
 			.problemSec(oxLobbyDto.getProblemSec())
 			.oxPlayers(new HashSet<>())
 			.previousQuestions(new ArrayList<>())
+			.playerCount(oxLobbyDto.getOxPlayers().size())
 			.build();
 
 		String gameRoomId = makeGameRoomId();
@@ -64,6 +65,17 @@ public class OxGameUtil {
 		save(gameRoomId, oxGame);
 
 		return gameRoomId;
+	}
+
+	public int getPlayerCount(String gameRoomId) {
+		return getOxGame(gameRoomId).getPlayerCount();
+	}
+
+	public void setPlayerCount(String gameRoomId, int count) {
+		OxGameDto oxGameDto = getOxGame(gameRoomId);
+		oxGameDto.setPlayerCount(count);
+
+		save(gameRoomId, oxGameDto);
 	}
 
 	/**
