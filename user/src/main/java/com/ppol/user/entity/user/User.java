@@ -117,7 +117,7 @@ public class User extends BaseEntity {
 	@PrePersist
 	private void prePersist() {
 		this.image = this.image == null ?
-			"https://ppolppol-bucket.s3.ap-northeast-2.amazonaws.com/8a99ebdd-b4b8-45cc-ad26-a4022a2c8d0a.jpg" :
+			"https://ppolppol-bucket.s3.ap-northeast-2.amazonaws.com/19fd599a-8d87-40fb-9fac-91ad8ddb778e.png" :
 			this.image;
 	}
 }
