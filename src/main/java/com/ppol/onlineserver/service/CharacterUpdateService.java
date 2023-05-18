@@ -54,6 +54,11 @@ public class CharacterUpdateService {
 				.build();
 
 			Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
+
+			if(characterSet.stream().anyMatch(characterDto -> characterDto.getUserId().equals(userIdDto.getUserId()))) {
+				return null;
+			}
+
 			characterSet.add(character);
 
 			characterReadService.setCharacterSet(groupId, characterSet);
