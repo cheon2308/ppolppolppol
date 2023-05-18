@@ -2,6 +2,7 @@ package com.ppol.onlineserver.service;
 
 import java.util.Set;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.ppol.onlineserver.dto.request.MoveDto;
@@ -128,6 +129,8 @@ public class CharacterUpdateService {
 
 			characterReadService.setCharacterSet(groupId, characterSet);
 
+			updateCharacterType(typeUpdateDto);
+
 			return getWebSocketResponse(character, EventType.TYPE_UPDATE);
 		}
 	}
@@ -188,4 +191,14 @@ public class CharacterUpdateService {
 		return CharacterRotation.builder().rx(0.0).ry(0.0).rz(0.0).build();
 	}
 
+	@Async
+	@Transactional
+	public void updateCharacterType(TypeUpdateDto typeUpdateDto) {
+
+		UserCharacter userCharacter = characterReadService.getUserCharacter(typeUpdateDto.getUserId());
+
+		userCharacter.updateColor(typeUpdateDto.getColor());
+		userCharacter.updateFaceType(typeUpdateDto.getFaceType());
+		userCharacter.updateMeshType(typeUpdateDto.getMeshType());
+	}
 }
