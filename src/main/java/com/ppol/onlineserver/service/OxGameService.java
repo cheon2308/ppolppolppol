@@ -145,7 +145,11 @@ public class OxGameService {
 	}
 
 	private void rescheduleTask(String gameRoomId, int second) {
+
+		log.info("다시");
+
 		if (futures.get(gameRoomId) != null) {
+			log.info("취소");
 			futures.get(gameRoomId).cancel(false);
 		}
 
