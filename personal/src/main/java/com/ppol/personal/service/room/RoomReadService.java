@@ -56,6 +56,14 @@ public class RoomReadService {
 	}
 
 	/**
+	 * 랜덤 방 정보 DTO 불러오는 메서드
+	 */
+	public RoomResponseDto readRandomRoom() {
+
+		return readRoom(userReadService.getRandomUserId(), null);
+	}
+
+	/**
 	 * 기본 ID를 통해 방 엔티티를 찾고 사용자 ID를 통해 권한이 있는지 확인하는 메서드 (반드시 소유주만 접근해야 하는 경우 사용)
 	 */
 	public PersonalRoom getRoomOnlyOwner(Long roomId, Long userId) {

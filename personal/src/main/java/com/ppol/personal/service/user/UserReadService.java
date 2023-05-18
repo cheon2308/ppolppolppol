@@ -42,6 +42,17 @@ public class UserReadService {
 	}
 
 	/**
+	 * 랜덤 사용자 아이디를 불러오는 메서드
+	 */
+	public Long getRandomUserId() {
+		List<User> userList = userRepository.findAll();
+
+		Collections.shuffle(userList);
+
+		return userList.get(0).getId();
+	}
+
+	/**
 	 * 사용자 Entity를 불러오는 메서드, 예외처리 포함
 	 */
 	public User getUser(Long userId) {

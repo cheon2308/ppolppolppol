@@ -101,7 +101,9 @@ public class PersonalController {
 	@GetMapping("/random")
 	public ResponseEntity<?> readRandomRoom() {
 
-		return ResponseBuilder.ok("");
+		RoomResponseDto returnObject = roomReadService.readRandomRoom();
+
+		return ResponseBuilder.ok(returnObject);
 	}
 
 	// 앨범 생성
