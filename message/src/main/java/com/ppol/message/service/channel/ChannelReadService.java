@@ -112,6 +112,7 @@ public class ChannelReadService {
 
 		responseDto.setNewContent(newContent);
 		responseDto.setNewMessageCount(newMessageCount);
+		responseDto.setLastMessageTimestamp(newMessage == null ? null : newMessage.getTimestamp());
 
 		return responseDto;
 	}
