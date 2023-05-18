@@ -31,33 +31,39 @@ public class CharacterUpdateService {
 	private final CharacterReadService characterReadService;
 	private final OxGameService oxGameService;
 
+	// other
+	private final Object taskLock = new Object();
+
 	/**
 	 * 그룹 방에 입장 시
 	 */
 	@Transactional
 	public WebSocketResponse<?> enterGroup(String groupId, UserIdDto userIdDto) {
 
-		UserCharacter userCharacter = characterReadService.getUserCharacter(userIdDto.getUserId());
+		synchronized (taskLock) {
 
-		CharacterDto character = CharacterDto.builder()
-			.userId(userIdDto.getUserId())
-			.username(userCharacter.getUser().getUsername())
-			.type(getType(userCharacter))
-			.location(getDefaultLocation())
-			.rotation(getDefaultRotation())
-			.build();
+			UserCharacter userCharacter = characterReadService.getUserCharacter(userIdDto.getUserId());
 
-		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
-		characterSet.add(character);
+			CharacterDto character = CharacterDto.builder()
+				.userId(userIdDto.getUserId())
+				.username(userCharacter.getUser().getUsername())
+				.type(getType(userCharacter))
+				.location(getDefaultLocation())
+				.rotation(getDefaultRotation())
+				.build();
 
-		characterReadService.setCharacterSet(groupId, characterSet);
+			Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
+			characterSet.add(character);
 
-		if (groupId.startsWith("OX1025")) {
-			log.info("{} connect to OX {}", userIdDto.getUserId(), groupId);
-			oxGameService.enterGame(userIdDto.getUserId(), userCharacter.getUser().getUsername(), groupId);
+			characterReadService.setCharacterSet(groupId, characterSet);
+
+			if (groupId.startsWith("OX1025")) {
+				log.info("{} connect to OX {}", userIdDto.getUserId(), groupId);
+				oxGameService.enterGame(userIdDto.getUserId(), userCharacter.getUser().getUsername(), groupId);
+			}
+
+			return getWebSocketResponse(character, EventType.ENTER);
 		}
-
-		return getWebSocketResponse(character, EventType.ENTER);
 	}
 
 	/**
@@ -66,18 +72,20 @@ public class CharacterUpdateService {
 	@Transactional
 	public WebSocketResponse<?> leaveGroup(String groupId, Long userId) {
 
-		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
+		synchronized (taskLock) {
+			Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
-		CharacterDto character = characterSet.stream()
-			.filter(c -> c.getUserId().equals(userId))
-			.findAny()
-			.orElseThrow();
+			CharacterDto character = characterSet.stream()
+				.filter(c -> c.getUserId().equals(userId))
+				.findAny()
+				.orElseThrow();
 
-		characterSet.remove(character);
+			characterSet.remove(character);
 
-		characterReadService.setCharacterSet(groupId, characterSet);
+			characterReadService.setCharacterSet(groupId, characterSet);
 
-		return getWebSocketResponse(character, EventType.LEAVE);
+			return getWebSocketResponse(character, EventType.LEAVE);
+		}
 	}
 
 	/**
@@ -86,18 +94,20 @@ public class CharacterUpdateService {
 	@Transactional
 	public WebSocketResponse<?> moveCharacter(String groupId, MoveDto moveDto) {
 
-		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
+		synchronized (taskLock) {
+			Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
-		CharacterDto character = characterSet.stream()
-			.filter(c -> c.getUserId().equals(moveDto.getUserId()))
-			.findAny()
-			.orElseThrow();
+			CharacterDto character = characterSet.stream()
+				.filter(c -> c.getUserId().equals(moveDto.getUserId()))
+				.findAny()
+				.orElseThrow();
 
-		updateLocation(character, moveDto);
+			updateLocation(character, moveDto);
 
-		characterReadService.setCharacterSet(groupId, characterSet);
+			characterReadService.setCharacterSet(groupId, characterSet);
 
-		return getWebSocketResponse(character, EventType.MOVE);
+			return getWebSocketResponse(character, EventType.MOVE);
+		}
 	}
 
 	/**
@@ -106,18 +116,20 @@ public class CharacterUpdateService {
 	@Transactional
 	public WebSocketResponse<?> updateCharacter(String groupId, TypeUpdateDto typeUpdateDto) {
 
-		Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
+		synchronized (taskLock) {
+			Set<CharacterDto> characterSet = characterReadService.getCharacterSet(groupId);
 
-		CharacterDto character = characterSet.stream()
-			.filter(c -> c.getUserId().equals(typeUpdateDto.getUserId()))
-			.findAny()
-			.orElseThrow();
+			CharacterDto character = characterSet.stream()
+				.filter(c -> c.getUserId().equals(typeUpdateDto.getUserId()))
+				.findAny()
+				.orElseThrow();
 
-		updateType(character, typeUpdateDto);
+			updateType(character, typeUpdateDto);
 
-		characterReadService.setCharacterSet(groupId, characterSet);
+			characterReadService.setCharacterSet(groupId, characterSet);
 
-		return getWebSocketResponse(character, EventType.TYPE_UPDATE);
+			return getWebSocketResponse(character, EventType.TYPE_UPDATE);
+		}
 	}
 
 	/**
