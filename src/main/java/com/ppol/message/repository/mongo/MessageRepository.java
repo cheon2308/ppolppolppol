@@ -15,7 +15,7 @@ public interface MessageRepository extends MongoRepository<Message, ObjectId> {
 	Slice<Message> findByMessageChannelIdAndTimestampAfterOrderByTimestampDesc(ObjectId messageChannelId,
 		LocalDateTime timestamp, Pageable pageable);
 
-	Optional<Message> findTopByMessageChannelIdOrderByTimestamp(ObjectId channelId);
+	Optional<Message> findTopByMessageChannelIdOrderByTimestampDesc(ObjectId channelId);
 
 	int countByMessageChannelIdAndTimestampAfter(ObjectId channelId, LocalDateTime timestamp);
 

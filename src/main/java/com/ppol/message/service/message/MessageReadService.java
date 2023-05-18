@@ -91,7 +91,7 @@ public class MessageReadService {
 	 * 특정 채팅방의 최신 메시지를 가져오는 메서드, 예외처리를 포함한다.
 	 */
 	public Message getNewMessage(ObjectId channelId) {
-		return messageRepository.findTopByMessageChannelIdOrderByTimestamp(channelId).orElse(null);
+		return messageRepository.findTopByMessageChannelIdOrderByTimestampDesc(channelId).orElse(null);
 	}
 
 	/**
