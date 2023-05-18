@@ -46,7 +46,7 @@ public class AlarmSendService {
 			.alarmImage(comment.getWriter().getImage())
 			.build();
 
-		createAlarm(alarmRequestDto);
+		//createAlarm(alarmRequestDto);
 	}
 
 	/**
