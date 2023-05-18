@@ -47,11 +47,11 @@ public class MessageSaveService {
 	 * 채팅 메시지를 MongoDB에 저장하고 Redis에 메시지를 업데이트
 	 */
 	@Transactional
-	public MessageResponseDto createMessage(MessageRequestDto messageRequestDto, String accessToken,
+	public MessageResponseDto createMessage(MessageRequestDto messageRequestDto,
 		String messageChannelId) {
 
 		// 웹 소켓 컨트롤러에서는 AOP 사용이 안되서 직접 userId를 불러오는 부분을 호출한다.
-		Long userId = authFeign.accessToken(accessToken);
+		Long userId = authFeign.accessToken(messageRequestDto.getAccessToken());
 
 		Message message = createMessageMapping(messageRequestDto, userReadService.findUser(userId), messageChannelId);
 
