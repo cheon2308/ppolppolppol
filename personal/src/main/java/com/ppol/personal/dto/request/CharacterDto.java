@@ -16,6 +16,8 @@ import lombok.ToString;
 @ToString
 public class CharacterDto {
 
+	private Long userId;
+
 	@NotNull
 	private CharacterColor color;
 
