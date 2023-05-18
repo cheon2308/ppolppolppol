@@ -13,6 +13,7 @@ import com.ppol.message.document.mongodb.MessageUser;
 import com.ppol.message.dto.request.MessageRequestDto;
 import com.ppol.message.dto.response.MessageResponseDto;
 import com.ppol.message.repository.mongo.MessageRepository;
+import com.ppol.message.service.channel.ChannelUserUpdateService;
 import com.ppol.message.service.user.UserReadService;
 import com.ppol.message.util.constatnt.ValidationConstants;
 import com.ppol.message.util.feign.AuthFeign;
@@ -37,6 +38,7 @@ public class MessageSaveService {
 	private final MessageReadService messageReadService;
 	private final MessageSseService messageSseService;
 	private final UserReadService userReadService;
+	private final ChannelUserUpdateService channelUserUpdateService;
 
 	// others
 	private final RedisTemplate<String, Object> redisTemplate;
@@ -65,10 +67,14 @@ public class MessageSaveService {
 		}
 		lastMessages.add(message);
 
+		log.info("{}", lastMessages);
+
 		redisTemplate.opsForValue().set(messageChannelId, lastMessages);
 
 		// SSE를 통해 채팅방 사용자들에게 새로운 메시지를 알림
 		messageSseService.sendMessage(MessageResponseDto.of(message));
+
+		channelUserUpdateService.updateUserLastReadMessage(messageChannelId, message.getId().toString(), userId);
 
 		return MessageResponseDto.of(message);
 	}

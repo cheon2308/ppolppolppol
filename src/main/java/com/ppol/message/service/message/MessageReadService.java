@@ -77,6 +77,8 @@ public class MessageReadService {
 			lastMessages = new ArrayList<>();
 		}
 
+		log.info("{}", lastMessages);
+
 		return lastMessages;
 	}
 
