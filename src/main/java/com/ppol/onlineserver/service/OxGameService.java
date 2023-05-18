@@ -85,6 +85,9 @@ public class OxGameService {
 		OxQuiz oxQuiz = quizReadService.getOxQuiz(questions.get(questions.size() - 1));
 
 		if (answer.equals(oxQuiz.getAnswer())) {
+
+			log.info("{}", oxGame);
+
 			OxGameUserDto oxGameUserDto = oxGame.getOxPlayers()
 				.stream()
 				.filter(oxGameUser -> oxGameUser.getUserId().equals(moveDto.getUserId()))
