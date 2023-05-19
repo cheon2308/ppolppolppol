@@ -119,40 +119,58 @@
 
   <img src="./exec/imgs/main.jpg"   width="220px"/>
 
+<br />
+
 - ⚪ 캐릭터 변경 창
 
   <img src="./exec/imgs/changeCharacter.jpg"   width="220px"/>
+
+<br />
 
 - 📱 채팅 목록, 채팅 창
 
   <img src="./exec/imgs/chat_main.jpg"   width="220px"/> 
   <img src="./exec/imgs/chatting.jpg"   width="220px"/>
 
+<br />
+
 - 😸 마이페이지
 
   <img src="./exec/imgs/myfeed.jpg"   width="220px"/>
 
+<br />
+
 - 📘 앨범 + 앨범 댓글
 
   <img src="./exec/imgs/feedAndComment.jpg"   width="220px"/>
+
+<br />
 
 - 👫 그룹 목록, 그룹 방
 
   <img src="./exec/imgs/group_main.jpg"   width="220px"/> 
   <img src="./exec/imgs/groupRoom.jpg"   width="220px"/>
 
+<br />
+
 - ❓ O, X 퀴즈 대기방, 퀴즈방
 
   <img src="./exec/imgs/ox_quiz_main.jpg"   width="220px"/> 
   <img src="./exec/imgs/ox_quiz.jpg"   width="220px"/>
 
+<br />
+
 - 🔥 업로드 창
 
   <img src="./exec/imgs/addPhoto.jpg"   width="220px"/>
 
+<br />
+
 - 😇 전체 피드
 
   <img src="./exec/imgs/totalFeed.jpg"   width="220px"/>
+
+<br />
 
 - 💥 알림창
 
